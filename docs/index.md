@@ -24,5 +24,5 @@ provider "readarr" {
 
 ### Optional
 
-- **api_key** (String, Sensitive) API key for Readarr authentication. Can be specified via the `READARR_API_KEY` environment variable.
-- **url** (String) Full Readarr URL with protocol and port (e.g. `https://test.readarr.lib:8787`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `READARR_URL` environment variable.
+- `api_key` (String, Sensitive) API key for Readarr authentication. Can be specified via the `READARR_API_KEY` environment variable.
+- `url` (String) Full Readarr URL with protocol and port (e.g. `https://test.readarr.lib:8787`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `READARR_URL` environment variable.
