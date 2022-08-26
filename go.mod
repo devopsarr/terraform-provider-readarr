@@ -1,4 +1,4 @@
-module github.com/Fuochi/terraform-provider-readarr
+module github.com/devopsarr/terraform-provider-readarr
 
 go 1.18
 
