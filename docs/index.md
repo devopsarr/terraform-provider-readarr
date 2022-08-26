@@ -3,12 +3,12 @@
 page_title: "readarr Provider"
 subcategory: ""
 description: |-
-  
+  The Readarr provider is used to interact with any Readarr https://readarr.com/ installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.
 ---
 
 # readarr Provider
 
-
+The Readarr provider is used to interact with any [Readarr](https://readarr.com/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.
 
 ## Example Usage
 
