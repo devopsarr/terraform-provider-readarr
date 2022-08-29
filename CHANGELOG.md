@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.0.0...v1.1.0) (2022-08-29)
+
+
+### Features
+
+* add validators ([535541e](https://github.com/devopsarr/terraform-provider-readarr/commit/535541e4c9f1273af47a3bb7f0f1bd18979c605a))
+
+
+### Bug Fixes
+
+* remove set parameter for framework 0.9.0 ([47d31ee](https://github.com/devopsarr/terraform-provider-readarr/commit/47d31ee2c95cb6576204790deb48452c4df2f12f))
+* repo reference ([d214aae](https://github.com/devopsarr/terraform-provider-readarr/commit/d214aae942cb0576605c9126af427f6ac9d4b5dc))
+
 ## 1.0.0 (2022-03-15)
 
 
