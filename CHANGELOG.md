@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.2.0...v1.2.1) (2022-09-06)
+
+
+### Bug Fixes
+
+* categories rendering ([a32f718](https://github.com/devopsarr/terraform-provider-readarr/commit/a32f718463a5c40f7c445a9673b73f239f234311))
+
 ## [1.2.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.1.0...v1.2.0) (2022-09-06)
 
 
