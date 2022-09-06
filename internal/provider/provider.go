@@ -123,7 +123,9 @@ func (p *readarrProvider) GetResources(ctx context.Context) (map[string]provider
 
 func (p *readarrProvider) GetDataSources(ctx context.Context) (map[string]provider.DataSourceType, diag.Diagnostics) {
 	return map[string]provider.DataSourceType{
-		"readarr_tags": dataTagsType{},
+		"readarr_system_status": dataSystemStatusType{},
+		"readarr_tag":           dataTagType{},
+		"readarr_tags":          dataTagsType{},
 	}, nil
 }
 
