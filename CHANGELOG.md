@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.1.0...v1.2.0) (2022-09-06)
+
+
+### Features
+
+* add system status datasource ([e208594](https://github.com/devopsarr/terraform-provider-readarr/commit/e208594062f1b2e5454fd0b15e149e18c29f7e56))
+* add tag datasource ([f3fc1d9](https://github.com/devopsarr/terraform-provider-readarr/commit/f3fc1d9da59640cafe1bed84b473e6e905ac8c92))
+
 ## [1.1.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.0.0...v1.1.0) (2022-08-29)
 
 
