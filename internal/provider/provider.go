@@ -2,11 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"os"
 
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"golift.io/starr"
@@ -17,35 +18,49 @@ import (
 // var stderr = os.Stderr
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ provider.Provider = &readarrProvider{}
+var _ provider.Provider = &ReadarrProvider{}
+var _ provider.ProviderWithMetadata = &ReadarrProvider{}
 
-// provider satisfies the provider.Provider interface and usually is included
-// with all Resource and DataSource implementations.
-type readarrProvider struct {
-	// client can contain the upstream provider SDK or HTTP client used to
-	// communicate with the upstream service. Resource and DataSource
-	// implementations can then make calls using this client.
-	client readarr.Readarr
-
-	// configured is set to true at the end of the Configure method.
-	// This can be used in Resource and DataSource implementations to verify
-	// that the provider was previously configured.
-	configured bool
-
+// ScaffoldingProvider defines the provider implementation.
+type ReadarrProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// providerData can be used to store data from the Terraform configuration.
-type providerData struct {
+// Readarr describes the provider data model.
+type Readarr struct {
 	APIKey types.String `tfsdk:"api_key"`
 	URL    types.String `tfsdk:"url"`
 }
 
-func (p *readarrProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data providerData
+func (p *ReadarrProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "readarr"
+	resp.Version = p.version
+}
+
+func (p *ReadarrProvider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
+	return tfsdk.Schema{
+		MarkdownDescription: "The Readarr provider is used to interact with any [Readarr](https://readarr.com/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.",
+		Attributes: map[string]tfsdk.Attribute{
+			"api_key": {
+				MarkdownDescription: "API key for Readarr authentication. Can be specified via the `READARR_API_KEY` environment variable.",
+				Optional:            true,
+				Type:                types.StringType,
+				Sensitive:           true,
+			},
+			"url": {
+				MarkdownDescription: "Full Readarr URL with protocol and port (e.g. `https://test.readarr.lib:8787`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `READARR_URL` environment variable.",
+				Optional:            true,
+				Type:                types.StringType,
+			},
+		},
+	}, nil
+}
+
+func (p *ReadarrProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data Readarr
 	diags := req.Config.Get(ctx, &data)
 	resp.Diagnostics.Append(diags...)
 
@@ -110,79 +125,30 @@ func (p *readarrProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 	// If the upstream provider SDK or HTTP client requires configuration, such
 	// as authentication or logging, this is a great opportunity to do so.
-	c := *readarr.New(starr.New(key, url, 0))
-	p.client = c
-	p.configured = true
+	client := readarr.New(starr.New(key, url, 0))
+	resp.DataSourceData = client
+	resp.ResourceData = client
 }
 
-func (p *readarrProvider) GetResources(ctx context.Context) (map[string]provider.ResourceType, diag.Diagnostics) {
-	return map[string]provider.ResourceType{
-		"readarr_tag": resourceTagType{},
-	}, nil
+func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resource {
+	return []func() resource.Resource{
+		NewTagResource,
+	}
 }
 
-func (p *readarrProvider) GetDataSources(ctx context.Context) (map[string]provider.DataSourceType, diag.Diagnostics) {
-	return map[string]provider.DataSourceType{
-		"readarr_system_status": dataSystemStatusType{},
-		"readarr_tag":           dataTagType{},
-		"readarr_tags":          dataTagsType{},
-	}, nil
+func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{
+		NewSystemStatusDataSource,
+		NewTagDataSource,
+		NewTagsDataSource,
+	}
 }
 
-func (p *readarrProvider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
-		MarkdownDescription: "The Readarr provider is used to interact with any [Readarr](https://readarr.com/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.",
-		Attributes: map[string]tfsdk.Attribute{
-			"api_key": {
-				MarkdownDescription: "API key for Readarr authentication. Can be specified via the `READARR_API_KEY` environment variable.",
-				Optional:            true,
-				Type:                types.StringType,
-				Sensitive:           true,
-			},
-			"url": {
-				MarkdownDescription: "Full Readarr URL with protocol and port (e.g. `https://test.readarr.lib:8787`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `READARR_URL` environment variable.",
-				Optional:            true,
-				Type:                types.StringType,
-			},
-		},
-	}, nil
-}
-
+// New returns the provider with a specific version.
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &readarrProvider{
+		return &ReadarrProvider{
 			version: version,
 		}
 	}
-}
-
-// convertProviderType is a helper function for NewResource and NewDataSource
-// implementations to associate the concrete provider type. Alternatively,
-// this helper can be skipped and the provider type can be directly type
-// asserted (e.g. provider: in.(*readarrProvider)), however using this can prevent
-// potential panics.
-func convertProviderType(in provider.Provider) (readarrProvider, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	p, ok := in.(*readarrProvider)
-
-	if !ok {
-		diags.AddError(
-			"Unexpected Provider Instance Type",
-			fmt.Sprintf("While creating the data source or resource, an unexpected provider type (%T) was received. This is always a bug in the provider code and should be reported to the provider developers.", p),
-		)
-
-		return readarrProvider{}, diags
-	}
-
-	if p == nil {
-		diags.AddError(
-			"Unexpected Provider Instance Type",
-			"While creating the data source or resource, an unexpected empty provider instance was received. This is always a bug in the provider code and should be reported to the provider developers.",
-		)
-
-		return readarrProvider{}, diags
-	}
-
-	return *p, diags
 }
