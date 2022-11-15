@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.2.1...v1.3.0) (2022-11-15)
+
+
+### Features
+
+* add notification resource ([2ebbb68](https://github.com/devopsarr/terraform-provider-readarr/commit/2ebbb682070a338bf360e0d0502f5e4ca5c03a60))
+* add notification webhook resource ([cbba1dd](https://github.com/devopsarr/terraform-provider-readarr/commit/cbba1dd4fd844d479e6e957509e75131dc8ed0d3))
+* add notifications data source ([03e41f9](https://github.com/devopsarr/terraform-provider-readarr/commit/03e41f9ae07e20872658c652118f9714e8157dda))
+* add notiication datasource ([fb0abdb](https://github.com/devopsarr/terraform-provider-readarr/commit/fb0abdbd96225714c42aa115e8797e52569de077))
+
 ## [1.2.1](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.2.0...v1.2.1) (2022-09-06)
 
 
