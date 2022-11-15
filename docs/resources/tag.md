@@ -9,8 +9,7 @@ description: |-
 
 # readarr_tag (Resource)
 
-[subcategory:Tags]: #
-Tag resource.
+<!-- subcategory:Tags -->Tag resource.
 For more information refer to [Tags](https://wiki.servarr.com/readarr/settings#tags) documentation.
 
 ## Example Usage
@@ -26,11 +25,11 @@ resource "readarr_tag" "example" {
 
 ### Required
 
-- `label` (String) Tag value
+- `label` (String) Tag label. It must be lowercase.
 
 ### Read-Only
 
-- `id` (Number) Tag ID
+- `id` (Number) Tag ID.
 
 ## Import
 
