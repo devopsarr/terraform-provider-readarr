@@ -139,6 +139,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 
 func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewNotificationDataSource,
 		NewNotificationsDataSource,
 		NewSystemStatusDataSource,
 		NewTagDataSource,
