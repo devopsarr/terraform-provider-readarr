@@ -9,8 +9,7 @@ description: |-
 
 # readarr_system_status (Data Source)
 
-[subcategory:Status]: #
-System Status resource. User must have rights to read `config.xml`.
+<!-- subcategory:Status -->System Status resource. User must have rights to read `config.xml`.
 For more information refer to [System Status](https://wiki.servarr.com/readarr/system#status) documentation.
 
 ## Example Usage
@@ -26,10 +25,14 @@ data "readarr_system_status" "example" {
 ### Read-Only
 
 - `app_data` (String) App data folder.
+- `app_name` (String) App name.
 - `authentication` (String) Authentication.
 - `branch` (String) Branch.
 - `build_time` (String) Build time.
+- `database_type` (String) Database type.
+- `database_version` (String) Database version.
 - `id` (Number) Delay Profile ID.
+- `instance_name` (String) Instance name.
 - `is_admin` (Boolean) Is admin flag.
 - `is_debug` (Boolean) Is debug flag.
 - `is_docker` (Boolean) Is docker flag.
@@ -49,7 +52,6 @@ data "readarr_system_status" "example" {
 - `package_version` (String) Package version.
 - `runtime_name` (String) Runtime name.
 - `runtime_version` (String) Runtime version.
-- `sqlite_version` (String) SQLite version.
 - `start_time` (String) Start time.
 - `startup_path` (String) Startup path.
 - `url_base` (String) Base URL.

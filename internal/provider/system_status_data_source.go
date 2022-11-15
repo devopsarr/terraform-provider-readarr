@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/devopsarr/terraform-provider-sonarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -11,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"golift.io/starr/readarr"
 )
+
+const systemStatusDataSourceName = "system_status"
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ datasource.DataSource = &SystemStatusDataSource{}
@@ -47,7 +50,6 @@ type SystemStatus struct {
 	Mode                   types.String `tfsdk:"mode"`
 	Branch                 types.String `tfsdk:"branch"`
 	Authentication         types.String `tfsdk:"authentication"`
-	SqliteVersion          types.String `tfsdk:"sqlite_version"`
 	URLBase                types.String `tfsdk:"url_base"`
 	RuntimeVersion         types.String `tfsdk:"runtime_version"`
 	RuntimeName            types.String `tfsdk:"runtime_name"`
@@ -56,16 +58,20 @@ type SystemStatus struct {
 	PackageUpdateMechanism types.String `tfsdk:"package_update_mechanism"`
 	BuildTime              types.String `tfsdk:"build_time"`
 	StartTime              types.String `tfsdk:"start_time"`
+	AppName                types.String `tfsdk:"app_name"`
+	DatabaseType           types.String `tfsdk:"database_type"`
+	DatabaseVersion        types.String `tfsdk:"database_version"`
+	InstanceName           types.String `tfsdk:"instance_name"`
 }
 
 func (d *SystemStatusDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_system_status"
+	resp.TypeName = req.ProviderTypeName + "_" + systemStatusDataSourceName
 }
 
 func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "[subcategory:Status]: #\nSystem Status resource. User must have rights to read `config.xml`.\nFor more information refer to [System Status](https://wiki.servarr.com/readarr/system#status) documentation.",
+		MarkdownDescription: "<!-- subcategory:Status -->System Status resource. User must have rights to read `config.xml`.\nFor more information refer to [System Status](https://wiki.servarr.com/readarr/system#status) documentation.",
 		Attributes: map[string]tfsdk.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": {
@@ -168,8 +174,8 @@ func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, d
 				Computed:            true,
 				Type:                types.StringType,
 			},
-			"sqlite_version": {
-				MarkdownDescription: "SQLite version.",
+			"app_name": {
+				MarkdownDescription: "App name.",
 				Computed:            true,
 				Type:                types.StringType,
 			},
@@ -213,6 +219,21 @@ func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, d
 				Computed:            true,
 				Type:                types.StringType,
 			},
+			"database_type": {
+				MarkdownDescription: "Database type.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"database_version": {
+				MarkdownDescription: "Database version.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"instance_name": {
+				MarkdownDescription: "Instance name.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
 		},
 	}, nil
 }
@@ -226,7 +247,7 @@ func (d *SystemStatusDataSource) Configure(ctx context.Context, req datasource.C
 	client, ok := req.ProviderData.(*readarr.Readarr)
 	if !ok {
 		resp.Diagnostics.AddError(
-			UnexpectedDataSourceConfigureType,
+			tools.UnexpectedDataSourceConfigureType,
 			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
@@ -240,12 +261,12 @@ func (d *SystemStatusDataSource) Read(ctx context.Context, req datasource.ReadRe
 	// Get naming current value
 	response, err := d.client.GetSystemStatusContext(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError(ClientError, fmt.Sprintf("Unable to read system status, got error: %s", err))
+		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", systemStatusDataSourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read system status")
+	tflog.Trace(ctx, "read "+systemStatusDataSourceName)
 
 	result := writeSystemStatus(response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &result)...)
@@ -253,34 +274,37 @@ func (d *SystemStatusDataSource) Read(ctx context.Context, req datasource.ReadRe
 
 func writeSystemStatus(status *readarr.SystemStatus) *SystemStatus {
 	return &SystemStatus{
-		IsDebug:                types.Bool{Value: status.IsDebug},
-		IsProduction:           types.Bool{Value: status.IsProduction},
-		IsAdmin:                types.Bool{Value: status.IsProduction},
-		IsUserInteractive:      types.Bool{Value: status.IsUserInteractive},
-		IsNetCore:              types.Bool{Value: status.IsNetCore},
-		IsMono:                 types.Bool{Value: status.IsMono},
-		IsLinux:                types.Bool{Value: status.IsLinux},
-		IsOsx:                  types.Bool{Value: status.IsOsx},
-		IsWindows:              types.Bool{Value: status.IsWindows},
-		IsDocker:               types.Bool{Value: status.IsDocker},
-		ID:                     types.Int64{Value: int64(1)},
-		MigrationVersion:       types.Int64{Value: int64(status.MigrationVersion)},
-		Version:                types.String{Value: status.Version},
-		StartupPath:            types.String{Value: status.StartupPath},
-		AppData:                types.String{Value: status.AppData},
-		OsName:                 types.String{Value: status.OsName},
-		OsVersion:              types.String{Value: status.OsVersion},
-		Mode:                   types.String{Value: status.Mode},
-		Branch:                 types.String{Value: status.Branch},
-		Authentication:         types.String{Value: status.Authentication},
-		SqliteVersion:          types.String{Value: status.SqliteVersion},
-		URLBase:                types.String{Value: status.URLBase},
-		RuntimeVersion:         types.String{Value: status.RuntimeVersion},
-		RuntimeName:            types.String{Value: status.RuntimeName},
-		PackageVersion:         types.String{Value: status.PackageVersion},
-		PackageAuthor:          types.String{Value: status.PackageAuthor},
-		PackageUpdateMechanism: types.String{Value: status.PackageUpdateMechanism},
-		BuildTime:              types.String{Value: status.BuildTime.String()},
-		StartTime:              types.String{Value: status.StartTime.String()},
+		IsDebug:                types.BoolValue(status.IsDebug),
+		IsProduction:           types.BoolValue(status.IsProduction),
+		IsAdmin:                types.BoolValue(status.IsProduction),
+		IsUserInteractive:      types.BoolValue(status.IsUserInteractive),
+		IsNetCore:              types.BoolValue(status.IsNetCore),
+		IsMono:                 types.BoolValue(status.IsMono),
+		IsLinux:                types.BoolValue(status.IsLinux),
+		IsOsx:                  types.BoolValue(status.IsOsx),
+		IsWindows:              types.BoolValue(status.IsWindows),
+		IsDocker:               types.BoolValue(status.IsDocker),
+		ID:                     types.Int64Value(int64(1)),
+		MigrationVersion:       types.Int64Value(status.MigrationVersion),
+		Version:                types.StringValue(status.Version),
+		StartupPath:            types.StringValue(status.StartupPath),
+		AppData:                types.StringValue(status.AppData),
+		OsName:                 types.StringValue(status.OsName),
+		OsVersion:              types.StringValue(status.OsVersion),
+		Mode:                   types.StringValue(status.Mode),
+		Branch:                 types.StringValue(status.Branch),
+		Authentication:         types.StringValue(status.Authentication),
+		URLBase:                types.StringValue(status.URLBase),
+		RuntimeVersion:         types.StringValue(status.RuntimeVersion),
+		RuntimeName:            types.StringValue(status.RuntimeName),
+		PackageVersion:         types.StringValue(status.PackageVersion),
+		PackageAuthor:          types.StringValue(status.PackageAuthor),
+		PackageUpdateMechanism: types.StringValue(status.PackageUpdateMechanism),
+		BuildTime:              types.StringValue(status.BuildTime.String()),
+		StartTime:              types.StringValue(status.StartTime.String()),
+		AppName:                types.StringValue(status.AppName),
+		DatabaseType:           types.StringValue(status.DatabaseType),
+		DatabaseVersion:        types.StringValue(status.DatabaseVersion),
+		InstanceName:           types.StringValue(status.InstanceName),
 	}
 }
