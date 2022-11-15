@@ -134,6 +134,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 	return []func() resource.Resource{
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
+		NewNotificationWebhookResource,
 		NewTagResource,
 	}
 }
