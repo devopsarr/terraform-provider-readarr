@@ -8,7 +8,6 @@ resource "readarr_notification_custom_script" "example" {
   on_book_file_delete             = false
   on_book_file_delete_for_upgrade = true
   on_health_issue                 = false
-  on_application_update           = false
   on_book_retag                   = false
   on_author_delete                = false
   on_release_import               = false
