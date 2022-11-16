@@ -45,7 +45,6 @@ type NotificationWebhook struct {
 	Method                     types.Int64  `tfsdk:"method"`
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
-	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
 	OnRename                   types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
@@ -72,7 +71,6 @@ func (n NotificationWebhook) toNotification() *Notification {
 		OnReleaseImport:            n.OnReleaseImport,
 		OnAuthorDelete:             n.OnAuthorDelete,
 		IncludeHealthWarnings:      n.IncludeHealthWarnings,
-		OnApplicationUpdate:        n.OnApplicationUpdate,
 		OnHealthIssue:              n.OnHealthIssue,
 		OnBookDelete:               n.OnBookDelete,
 		OnBookFileDelete:           n.OnBookFileDelete,
@@ -97,7 +95,6 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.OnBookFileDeleteForUpgrade = notification.OnBookFileDeleteForUpgrade
 	n.OnBookFileDelete = notification.OnBookFileDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
-	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnAuthorDelete = notification.OnAuthorDelete
 	n.OnBookDelete = notification.OnBookDelete
@@ -174,11 +171,6 @@ func (r *NotificationWebhookResource) GetSchema(ctx context.Context) (tfsdk.Sche
 			},
 			"on_release_import": {
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
-				Type:                types.BoolType,
-			},
-			"on_application_update": {
-				MarkdownDescription: "On application update flag.",
 				Required:            true,
 				Type:                types.BoolType,
 			},
@@ -384,7 +376,6 @@ func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.N
 		OnDownloadFailure:          types.BoolValue(notification.OnDownloadFailure),
 		OnImportFailure:            types.BoolValue(notification.OnImportFailure),
 		OnBookRetag:                types.BoolValue(notification.OnBookRetag),
-		OnApplicationUpdate:        types.BoolValue(notification.OnApplicationUpdate),
 		IncludeHealthWarnings:      types.BoolValue(notification.IncludeHealthWarnings),
 		ID:                         types.Int64Value(notification.ID),
 		Name:                       types.StringValue(notification.Name),
@@ -413,7 +404,6 @@ func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationInp
 		OnDownloadFailure:          n.OnDownloadFailure.ValueBool(),
 		OnImportFailure:            n.OnImportFailure.ValueBool(),
 		OnBookRetag:                n.OnBookRetag.ValueBool(),
-		OnApplicationUpdate:        n.OnApplicationUpdate.ValueBool(),
 		IncludeHealthWarnings:      n.IncludeHealthWarnings.ValueBool(),
 		ConfigContract:             NotificationWebhookConfigContrat,
 		Implementation:             NotificationWebhookImplementation,

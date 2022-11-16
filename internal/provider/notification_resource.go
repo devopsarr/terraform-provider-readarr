@@ -116,7 +116,6 @@ type Notification struct {
 	UseEuEndpoint              types.Bool   `tfsdk:"use_eu_endpoint"`
 	UpdateLibrary              types.Bool   `tfsdk:"update_library"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
-	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	OnRename                   types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
 	OnReleaseImport            types.Bool   `tfsdk:"on_release_import"`
@@ -194,11 +193,6 @@ func (r *NotificationResource) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 			},
 			"on_release_import": {
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
-				Type:                types.BoolType,
-			},
-			"on_application_update": {
-				MarkdownDescription: "On application update flag.",
 				Required:            true,
 				Type:                types.BoolType,
 			},
@@ -885,7 +879,6 @@ func (n *Notification) read(ctx context.Context) *readarr.NotificationInput {
 		OnDownloadFailure:          n.OnDownloadFailure.ValueBool(),
 		OnImportFailure:            n.OnImportFailure.ValueBool(),
 		OnBookRetag:                n.OnBookRetag.ValueBool(),
-		OnApplicationUpdate:        n.OnApplicationUpdate.ValueBool(),
 		IncludeHealthWarnings:      n.IncludeHealthWarnings.ValueBool(),
 		ID:                         n.ID.ValueInt64(),
 		Name:                       n.Name.ValueString(),

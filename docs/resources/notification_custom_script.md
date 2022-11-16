@@ -25,7 +25,6 @@ resource "readarr_notification_custom_script" "example" {
   on_book_file_delete             = false
   on_book_file_delete_for_upgrade = true
   on_health_issue                 = false
-  on_application_update           = false
   on_book_retag                   = false
   on_author_delete                = false
   on_release_import               = false
@@ -44,7 +43,6 @@ resource "readarr_notification_custom_script" "example" {
 
 - `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationCustomScript name.
-- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.

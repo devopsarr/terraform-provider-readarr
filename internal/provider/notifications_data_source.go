@@ -113,11 +113,6 @@ func (d *NotificationsDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, 
 						Computed:            true,
 						Type:                types.BoolType,
 					},
-					"on_application_update": {
-						MarkdownDescription: "On application update flag.",
-						Computed:            true,
-						Type:                types.BoolType,
-					},
 					"include_health_warnings": {
 						MarkdownDescription: "Include health warnings.",
 						Computed:            true,
