@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.4.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.3.0...v1.4.0) (2022-11-17)
+
+
+### Features
+
+* add download client config datasource ([309d41d](https://github.com/devopsarr/terraform-provider-readarr/commit/309d41d0f17b6186fc27265ee92a5a5a868574f8))
+* add download client config resource ([9d53e74](https://github.com/devopsarr/terraform-provider-readarr/commit/9d53e7484bd1ebdd3e7baa4fc98a24a87d580cf9))
+* add download client datasource ([900feba](https://github.com/devopsarr/terraform-provider-readarr/commit/900feba8048e1b8b6737ca4003f138d4a8ede04a))
+* add download client resource ([cafcb43](https://github.com/devopsarr/terraform-provider-readarr/commit/cafcb4392338d24a71c777cf0200b48979781314))
+* add download client transmission resource ([04f277d](https://github.com/devopsarr/terraform-provider-readarr/commit/04f277d324b9ef96c2ef691008a5c15264e9dd32))
+* add download clients datasource ([b196538](https://github.com/devopsarr/terraform-provider-readarr/commit/b19653864f1162b080d083eeea26026b8852d555))
+* add remote path mapping datasource ([64ab078](https://github.com/devopsarr/terraform-provider-readarr/commit/64ab078f7dcb7fab86e4167d48d3e71b2c438d90))
+* add remote path mapping resource ([0c11750](https://github.com/devopsarr/terraform-provider-readarr/commit/0c117501ac966ca0c313c95c4a3b624fef1f1b4a))
+* add remote path mappings datasource ([8cd16d6](https://github.com/devopsarr/terraform-provider-readarr/commit/8cd16d69b393e9219f99d7a53534200913d4366c))
+
+
+### Bug Fixes
+
+* remove on_application_update notification flag ([4cfb1b8](https://github.com/devopsarr/terraform-provider-readarr/commit/4cfb1b82a154ddca0c4e17985682f2b8d42ebc7b))
+
 ## [1.3.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.2.1...v1.3.0) (2022-11-15)
 
 
