@@ -150,6 +150,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewDownloadClientsDataSource,
 		NewNotificationDataSource,
 		NewNotificationsDataSource,
+		NewRemotePathMappingDataSource,
 		NewRemotePathMappingsDataSource,
 		NewSystemStatusDataSource,
 		NewTagDataSource,
