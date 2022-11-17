@@ -29,39 +29,38 @@ type SystemStatusDataSource struct {
 
 // SystemStatus describes the system status data model.
 type SystemStatus struct {
-	IsDebug           types.Bool `tfsdk:"is_debug"`
-	IsProduction      types.Bool `tfsdk:"is_production"`
-	IsAdmin           types.Bool `tfsdk:"is_admin"`
-	IsUserInteractive types.Bool `tfsdk:"is_user_interactive"`
-	IsNetCore         types.Bool `tfsdk:"is_net_core"`
-	IsMono            types.Bool `tfsdk:"is_mono"`
-	IsLinux           types.Bool `tfsdk:"is_linux"`
-	IsOsx             types.Bool `tfsdk:"is_osx"`
-	IsWindows         types.Bool `tfsdk:"is_windows"`
-	IsDocker          types.Bool `tfsdk:"is_docker"`
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	ID                     types.Int64  `tfsdk:"id"`
-	MigrationVersion       types.Int64  `tfsdk:"migration_version"`
+	PackageAuthor          types.String `tfsdk:"package_author"`
+	RuntimeName            types.String `tfsdk:"runtime_name"`
+	AppData                types.String `tfsdk:"app_data"`
+	DatabaseVersion        types.String `tfsdk:"database_version"`
+	OsName                 types.String `tfsdk:"os_name"`
+	AppName                types.String `tfsdk:"app_name"`
+	OsVersion              types.String `tfsdk:"os_version"`
+	StartTime              types.String `tfsdk:"start_time"`
+	BuildTime              types.String `tfsdk:"build_time"`
+	PackageUpdateMechanism types.String `tfsdk:"package_update_mechanism"`
+	PackageVersion         types.String `tfsdk:"package_version"`
+	RuntimeVersion         types.String `tfsdk:"runtime_version"`
 	Version                types.String `tfsdk:"version"`
 	StartupPath            types.String `tfsdk:"startup_path"`
-	AppData                types.String `tfsdk:"app_data"`
-	OsName                 types.String `tfsdk:"os_name"`
-	OsVersion              types.String `tfsdk:"os_version"`
+	InstanceName           types.String `tfsdk:"instance_name"`
+	DatabaseType           types.String `tfsdk:"database_type"`
+	URLBase                types.String `tfsdk:"url_base"`
 	Mode                   types.String `tfsdk:"mode"`
 	Branch                 types.String `tfsdk:"branch"`
 	Authentication         types.String `tfsdk:"authentication"`
-	URLBase                types.String `tfsdk:"url_base"`
-	RuntimeVersion         types.String `tfsdk:"runtime_version"`
-	RuntimeName            types.String `tfsdk:"runtime_name"`
-	PackageVersion         types.String `tfsdk:"package_version"`
-	PackageAuthor          types.String `tfsdk:"package_author"`
-	PackageUpdateMechanism types.String `tfsdk:"package_update_mechanism"`
-	BuildTime              types.String `tfsdk:"build_time"`
-	StartTime              types.String `tfsdk:"start_time"`
-	AppName                types.String `tfsdk:"app_name"`
-	DatabaseType           types.String `tfsdk:"database_type"`
-	DatabaseVersion        types.String `tfsdk:"database_version"`
-	InstanceName           types.String `tfsdk:"instance_name"`
+	MigrationVersion       types.Int64  `tfsdk:"migration_version"`
+	ID                     types.Int64  `tfsdk:"id"`
+	IsLinux                types.Bool   `tfsdk:"is_linux"`
+	IsProduction           types.Bool   `tfsdk:"is_production"`
+	IsDebug                types.Bool   `tfsdk:"is_debug"`
+	IsDocker               types.Bool   `tfsdk:"is_docker"`
+	IsWindows              types.Bool   `tfsdk:"is_windows"`
+	IsOsx                  types.Bool   `tfsdk:"is_osx"`
+	IsMono                 types.Bool   `tfsdk:"is_mono"`
+	IsNetCore              types.Bool   `tfsdk:"is_net_core"`
+	IsUserInteractive      types.Bool   `tfsdk:"is_user_interactive"`
+	IsAdmin                types.Bool   `tfsdk:"is_admin"`
 }
 
 func (d *SystemStatusDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
