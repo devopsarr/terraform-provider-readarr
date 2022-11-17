@@ -138,6 +138,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
+		NewRemotePathMappingResource,
 		NewTagResource,
 	}
 }
