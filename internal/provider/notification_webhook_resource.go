@@ -6,9 +6,13 @@ import (
 	"strconv"
 
 	"github.com/devopsarr/terraform-provider-sonarr/tools"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -110,124 +114,103 @@ func (r *NotificationWebhookResource) Metadata(ctx context.Context, req resource
 	resp.TypeName = req.ProviderTypeName + "_" + notificationWebhookResourceName
 }
 
-func (r *NotificationWebhookResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Webhook resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Webhook](https://wiki.servarr.com/readarr/supported#webhook).",
-		Attributes: map[string]tfsdk.Attribute{
-			"on_grab": {
+		Attributes: map[string]schema.Attribute{
+			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_download_failure": {
+			"on_download_failure": schema.BoolAttribute{
 				MarkdownDescription: "On download failure flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_upgrade": {
+			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_rename": {
+			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_author_delete": {
+			"on_author_delete": schema.BoolAttribute{
 				MarkdownDescription: "On author deleted flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_book_delete": {
+			"on_book_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book delete flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_book_file_delete": {
+			"on_book_file_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_book_file_delete_for_upgrade": {
+			"on_book_file_delete_for_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete for upgrade flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_health_issue": {
+			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_import_failure": {
+			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_book_retag": {
+			"on_book_retag": schema.BoolAttribute{
 				MarkdownDescription: "On book retag flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"on_release_import": {
+			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"include_health_warnings": {
+			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
 				Required:            true,
-				Type:                types.BoolType,
 			},
-			"name": {
+			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationWebhook name.",
 				Required:            true,
-				Type:                types.StringType,
 			},
-			"tags": {
+			"tags": schema.SetAttribute{
 				MarkdownDescription: "List of associated tags.",
 				Optional:            true,
 				Computed:            true,
-				Type: types.SetType{
-					ElemType: types.Int64Type,
-				},
+				ElementType:         types.Int64Type,
 			},
-			"id": {
+			"id": schema.Int64Attribute{
 				MarkdownDescription: "Notification ID.",
 				Computed:            true,
-				Type:                types.Int64Type,
-				PlanModifiers: tfsdk.AttributePlanModifiers{
-					resource.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.UseStateForUnknown(),
 				},
 			},
 			// Field values
-			"url": {
+			"url": schema.StringAttribute{
 				MarkdownDescription: "URL.",
 				Required:            true,
-				Type:                types.StringType,
 			},
-			"username": {
+			"username": schema.StringAttribute{
 				MarkdownDescription: "Username.",
 				Optional:            true,
 				Computed:            true,
-				Type:                types.StringType,
 			},
-			"password": {
+			"password": schema.StringAttribute{
 				MarkdownDescription: "password.",
 				Optional:            true,
 				Computed:            true,
-				Type:                types.StringType,
 			},
-			"method": {
+			"method": schema.Int64Attribute{
 				MarkdownDescription: "Method. `1` POST, `2` PUT.",
 				Required:            true,
-				Type:                types.Int64Type,
-				Validators: []tfsdk.AttributeValidator{
-					tools.IntMatch([]int64{1, 2}),
+				Validators: []validator.Int64{
+					int64validator.OneOf(1, 2),
 				},
 			},
 		},
-	}, nil
+	}
 }
 
 func (r *NotificationWebhookResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
