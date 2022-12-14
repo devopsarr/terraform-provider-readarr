@@ -18,7 +18,6 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ provider.Provider = &ReadarrProvider{}
-var _ provider.ProviderWithMetadata = &ReadarrProvider{}
 
 // ScaffoldingProvider defines the provider implementation.
 type ReadarrProvider struct {
