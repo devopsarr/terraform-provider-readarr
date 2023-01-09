@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -16,13 +17,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const (
 	notificationWebhookResourceName   = "notification_webhook"
-	NotificationWebhookImplementation = "Webhook"
-	NotificationWebhookConfigContrat  = "WebhookSettings"
+	notificationWebhookImplementation = "Webhook"
+	notificationWebhookConfigContract = "WebhookSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -37,7 +37,7 @@ func NewNotificationWebhookResource() resource.Resource {
 
 // NotificationWebhookResource defines the notification implementation.
 type NotificationWebhookResource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 // NotificationWebhook describes the notification data model.
@@ -221,11 +221,11 @@ func (r *NotificationWebhookResource) Configure(ctx context.Context, req resourc
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -247,14 +247,14 @@ func (r *NotificationWebhookResource) Create(ctx context.Context, req resource.C
 	// Create new NotificationWebhook
 	request := notification.read(ctx)
 
-	response, err := r.client.AddNotificationContext(ctx, request)
+	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", notificationWebhookResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "created "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -271,14 +271,14 @@ func (r *NotificationWebhookResource) Read(ctx context.Context, req resource.Rea
 	}
 
 	// Get NotificationWebhook current value
-	response, err := r.client.GetNotificationContext(ctx, int(notification.ID.ValueInt64()))
+	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationWebhookResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "read "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -297,14 +297,14 @@ func (r *NotificationWebhookResource) Update(ctx context.Context, req resource.U
 	// Update NotificationWebhook
 	request := notification.read(ctx)
 
-	response, err := r.client.UpdateNotificationContext(ctx, request)
+	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", notificationWebhookResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "updated "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -320,7 +320,7 @@ func (r *NotificationWebhookResource) Delete(ctx context.Context, req resource.D
 	}
 
 	// Delete NotificationWebhook current value
-	err := r.client.DeleteNotificationContext(ctx, notification.ID.ValueInt64())
+	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationWebhookResourceName, err))
 
@@ -347,54 +347,55 @@ func (r *NotificationWebhookResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
 
-func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.NotificationOutput) {
+func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.NotificationResource) {
 	genericNotification := Notification{
-		OnGrab:                     types.BoolValue(notification.OnGrab),
-		OnReleaseImport:            types.BoolValue(notification.OnReleaseImport),
-		OnUpgrade:                  types.BoolValue(notification.OnUpgrade),
-		OnRename:                   types.BoolValue(notification.OnRename),
-		OnAuthorDelete:             types.BoolValue(notification.OnAuthorDelete),
-		OnBookDelete:               types.BoolValue(notification.OnBookDelete),
-		OnBookFileDelete:           types.BoolValue(notification.OnBookFileDelete),
-		OnBookFileDeleteForUpgrade: types.BoolValue(notification.OnBookFileDeleteForUpgrade),
-		OnHealthIssue:              types.BoolValue(notification.OnHealthIssue),
-		OnDownloadFailure:          types.BoolValue(notification.OnDownloadFailure),
-		OnImportFailure:            types.BoolValue(notification.OnImportFailure),
-		OnBookRetag:                types.BoolValue(notification.OnBookRetag),
-		IncludeHealthWarnings:      types.BoolValue(notification.IncludeHealthWarnings),
-		ID:                         types.Int64Value(notification.ID),
-		Name:                       types.StringValue(notification.Name),
-		Tags:                       types.SetValueMust(types.Int64Type, nil),
+		OnGrab:          types.BoolValue(notification.GetOnGrab()),
+		OnReleaseImport: types.BoolValue(notification.GetOnReleaseImport()),
+		OnUpgrade:       types.BoolValue(notification.GetOnUpgrade()),
+		OnRename:        types.BoolValue(notification.GetOnRename()),
+		// OnAuthorDelete:             types.BoolValue(notification.GetOnAuthorDelete()),
+		// OnBookDelete:               types.BoolValue(notification.GetOnBookDelete()),
+		// OnBookFileDelete:           types.BoolValue(notification.GetOnBookFileDelete()),
+		// OnBookFileDeleteForUpgrade: types.BoolValue(notification.GetOnBookFileDeleteForUpgrade()),
+		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
+		OnDownloadFailure:     types.BoolValue(notification.GetOnDownloadFailure()),
+		OnImportFailure:       types.BoolValue(notification.GetOnImportFailure()),
+		OnBookRetag:           types.BoolValue(notification.GetOnBookRetag()),
+		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
+		ID:                    types.Int64Value(int64(notification.GetId())),
+		Name:                  types.StringValue(notification.GetName()),
+		Tags:                  types.SetValueMust(types.Int64Type, nil),
 	}
 	tfsdk.ValueFrom(ctx, notification.Tags, genericNotification.Tags.Type(ctx), &genericNotification.Tags)
 	genericNotification.writeFields(ctx, notification.Fields)
 	n.fromNotification(&genericNotification)
 }
 
-func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationInput {
-	var tags []int
+func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationResource {
+	var tags []*int32
 
 	tfsdk.ValueAs(ctx, n.Tags, &tags)
 
-	return &readarr.NotificationInput{
-		OnGrab:                     n.OnGrab.ValueBool(),
-		OnReleaseImport:            n.OnReleaseImport.ValueBool(),
-		OnUpgrade:                  n.OnUpgrade.ValueBool(),
-		OnRename:                   n.OnRename.ValueBool(),
-		OnAuthorDelete:             n.OnAuthorDelete.ValueBool(),
-		OnBookDelete:               n.OnBookDelete.ValueBool(),
-		OnBookFileDelete:           n.OnBookFileDelete.ValueBool(),
-		OnBookFileDeleteForUpgrade: n.OnBookFileDeleteForUpgrade.ValueBool(),
-		OnHealthIssue:              n.OnHealthIssue.ValueBool(),
-		OnDownloadFailure:          n.OnDownloadFailure.ValueBool(),
-		OnImportFailure:            n.OnImportFailure.ValueBool(),
-		OnBookRetag:                n.OnBookRetag.ValueBool(),
-		IncludeHealthWarnings:      n.IncludeHealthWarnings.ValueBool(),
-		ConfigContract:             NotificationWebhookConfigContrat,
-		Implementation:             NotificationWebhookImplementation,
-		ID:                         n.ID.ValueInt64(),
-		Name:                       n.Name.ValueString(),
-		Tags:                       tags,
-		Fields:                     n.toNotification().readFields(ctx),
-	}
+	notification := readarr.NewNotificationResource()
+	notification.SetOnGrab(n.OnGrab.ValueBool())
+	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
+	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
+	notification.SetOnRename(n.OnRename.ValueBool())
+	// notification.SetOnAuthorDelete(n.OnAuthorDelete.ValueBool())
+	// notification.SetOnBookDelete(n.OnBookDelete.ValueBool())
+	// notification.SetOnBookFileDelete(n.OnBookFileDelete.ValueBool())
+	// notification.SetOnBookFileDeleteForUpgrade(n.OnBookFileDeleteForUpgrade.ValueBool())
+	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
+	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
+	notification.SetOnBookRetag(n.OnBookRetag.ValueBool())
+	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
+	notification.SetConfigContract(notificationWebhookConfigContract)
+	notification.SetImplementation(notificationWebhookImplementation)
+	notification.SetId(int32(n.ID.ValueInt64()))
+	notification.SetName(n.Name.ValueString())
+	notification.SetTags(tags)
+	notification.SetFields(n.toNotification().readFields(ctx))
+
+	return notification
 }

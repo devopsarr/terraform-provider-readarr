@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const remotePathMappingsDataSourceName = "remote_path_mappings"
@@ -25,7 +25,7 @@ func NewRemotePathMappingsDataSource() datasource.DataSource {
 
 // RemotePathMappingsDataSource defines the remote path mappings implementation.
 type RemotePathMappingsDataSource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 // RemotePathMappings describes the remote path mappings data model.
@@ -81,11 +81,11 @@ func (d *RemotePathMappingsDataSource) Configure(ctx context.Context, req dataso
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -103,7 +103,7 @@ func (d *RemotePathMappingsDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 	// Get remotePathMappings current value
-	response, err := d.client.GetRemotePathMappingsContext(ctx)
+	response, _, err := d.client.RemotePathMappingApi.ListRemotePathMapping(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", remotePathMappingsDataSourceName, err))
 
@@ -117,7 +117,7 @@ func (d *RemotePathMappingsDataSource) Read(ctx context.Context, req datasource.
 		mappings[i].write(p)
 	}
 
-	tfsdk.ValueFrom(ctx, mappings, data.RemotePathMappings.Type(context.Background()), &data.RemotePathMappings)
+	tfsdk.ValueFrom(ctx, mappings, data.RemotePathMappings.Type(ctx), &data.RemotePathMappings)
 	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 	data.ID = types.StringValue(strconv.Itoa(len(response)))
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

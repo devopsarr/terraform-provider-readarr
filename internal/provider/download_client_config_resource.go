@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -13,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const downloadClientConfigResourceName = "download_client_config"
@@ -30,7 +30,7 @@ func NewDownloadClientConfigResource() resource.Resource {
 
 // DownloadClientConfigResource defines the download client config implementation.
 type DownloadClientConfigResource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 // DownloadClientConfig describes the download client config data model.
@@ -88,11 +88,11 @@ func (r *DownloadClientConfigResource) Configure(ctx context.Context, req resour
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -112,18 +112,18 @@ func (r *DownloadClientConfigResource) Create(ctx context.Context, req resource.
 	}
 
 	// Build Create resource
-	data := config.read()
-	data.ID = 1
+	request := config.read()
+	request.SetId(1)
 
 	// Create new DownloadClientConfig
-	response, err := r.client.UpdateDownloadClientConfigContext(ctx, data)
+	response, _, err := r.client.DownloadClientConfigApi.UpdateDownloadClientConfig(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientConfigResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", downloadClientConfigResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "created "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	config.write(response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
@@ -140,14 +140,14 @@ func (r *DownloadClientConfigResource) Read(ctx context.Context, req resource.Re
 	}
 
 	// Get downloadClientConfig current value
-	response, err := r.client.GetDownloadClientConfigContext(ctx)
+	response, _, err := r.client.DownloadClientConfigApi.GetDownloadClientConfig(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientConfigResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "read "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	config.write(response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
@@ -164,17 +164,17 @@ func (r *DownloadClientConfigResource) Update(ctx context.Context, req resource.
 	}
 
 	// Build Update resource
-	data := config.read()
+	request := config.read()
 
 	// Update DownloadClientConfig
-	response, err := r.client.UpdateDownloadClientConfigContext(ctx, data)
+	response, _, err := r.client.DownloadClientConfigApi.UpdateDownloadClientConfig(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientConfigResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", downloadClientConfigResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "updated "+downloadClientConfigResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	config.write(response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
@@ -192,22 +192,23 @@ func (r *DownloadClientConfigResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), 1)...)
 }
 
-func (c *DownloadClientConfig) write(downloadClientConfig *readarr.DownloadClientConfig) {
-	c.EnableCompletedDownloadHandling = types.BoolValue(downloadClientConfig.EnableCompletedDownloadHandling)
-	c.AutoRedownloadFailed = types.BoolValue(downloadClientConfig.AutoRedownloadFailed)
-	c.RemoveCompletedDownloads = types.BoolValue(downloadClientConfig.RemoveCompletedDownloads)
-	c.RemoveFailedDownloads = types.BoolValue(downloadClientConfig.RemoveFailedDownloads)
-	c.ID = types.Int64Value(downloadClientConfig.ID)
-	c.DownloadClientWorkingFolders = types.StringValue(downloadClientConfig.DownloadClientWorkingFolders)
+func (c *DownloadClientConfig) write(downloadClientConfig *readarr.DownloadClientConfigResource) {
+	c.EnableCompletedDownloadHandling = types.BoolValue(downloadClientConfig.GetEnableCompletedDownloadHandling())
+	c.AutoRedownloadFailed = types.BoolValue(downloadClientConfig.GetAutoRedownloadFailed())
+	c.RemoveCompletedDownloads = types.BoolValue(downloadClientConfig.GetRemoveCompletedDownloads())
+	c.RemoveFailedDownloads = types.BoolValue(downloadClientConfig.GetRemoveFailedDownloads())
+	c.ID = types.Int64Value(int64(downloadClientConfig.GetId()))
+	c.DownloadClientWorkingFolders = types.StringValue(downloadClientConfig.GetDownloadClientWorkingFolders())
 }
 
-func (c *DownloadClientConfig) read() *readarr.DownloadClientConfig {
-	return &readarr.DownloadClientConfig{
-		EnableCompletedDownloadHandling: c.EnableCompletedDownloadHandling.ValueBool(),
-		AutoRedownloadFailed:            c.AutoRedownloadFailed.ValueBool(),
-		RemoveCompletedDownloads:        c.RemoveCompletedDownloads.ValueBool(),
-		RemoveFailedDownloads:           c.RemoveFailedDownloads.ValueBool(),
-		ID:                              c.ID.ValueInt64(),
-		DownloadClientWorkingFolders:    c.DownloadClientWorkingFolders.ValueString(),
-	}
+func (c *DownloadClientConfig) read() *readarr.DownloadClientConfigResource {
+	config := readarr.NewDownloadClientConfigResource()
+	config.SetEnableCompletedDownloadHandling(c.EnableCompletedDownloadHandling.ValueBool())
+	config.SetAutoRedownloadFailed(c.AutoRedownloadFailed.ValueBool())
+	config.SetRemoveCompletedDownloads(c.RemoveCompletedDownloads.ValueBool())
+	config.SetRemoveFailedDownloads(c.RemoveFailedDownloads.ValueBool())
+	config.SetId(int32(c.ID.ValueInt64()))
+	config.SetDownloadClientWorkingFolders(c.DownloadClientWorkingFolders.ValueString())
+
+	return config
 }
