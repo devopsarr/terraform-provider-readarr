@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const downloadClientConfigDataSourceName = "download_client_config"
@@ -22,7 +22,7 @@ func NewDownloadClientConfigDataSource() datasource.DataSource {
 
 // DownloadClientConfigDataSource defines the download client config implementation.
 type DownloadClientConfigDataSource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 func (d *DownloadClientConfigDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -68,11 +68,11 @@ func (d *DownloadClientConfigDataSource) Configure(ctx context.Context, req data
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -83,7 +83,7 @@ func (d *DownloadClientConfigDataSource) Configure(ctx context.Context, req data
 
 func (d *DownloadClientConfigDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get indexer config current value
-	response, err := d.client.GetDownloadClientConfigContext(ctx)
+	response, _, err := d.client.DownloadClientConfigApi.GetDownloadClientConfig(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientConfigDataSourceName, err))
 

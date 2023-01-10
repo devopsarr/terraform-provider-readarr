@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const downloadClientsDataSourceName = "download_clients"
@@ -25,7 +25,7 @@ func NewDownloadClientsDataSource() datasource.DataSource {
 
 // DownloadClientsDataSource defines the download clients implementation.
 type DownloadClientsDataSource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 // DownloadClients describes the download clients data model.
@@ -234,11 +234,11 @@ func (d *DownloadClientsDataSource) Configure(ctx context.Context, req datasourc
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -256,7 +256,7 @@ func (d *DownloadClientsDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 	// Get download clients current value
-	response, err := d.client.GetDownloadClientsContext(ctx)
+	response, _, err := d.client.DownloadClientApi.ListDownloadClient(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientsDataSourceName, err))
 

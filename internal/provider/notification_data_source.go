@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/readarr-go/readarr"
+	"github.com/devopsarr/terraform-provider-readarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/readarr"
 )
 
 const notificationDataSourceName = "notification"
@@ -23,7 +23,7 @@ func NewNotificationDataSource() datasource.DataSource {
 
 // NotificationDataSource defines the notification implementation.
 type NotificationDataSource struct {
-	client *readarr.Readarr
+	client *readarr.APIClient
 }
 
 func (d *NotificationDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -389,11 +389,11 @@ func (d *NotificationDataSource) Configure(ctx context.Context, req datasource.C
 		return
 	}
 
-	client, ok := req.ProviderData.(*readarr.Readarr)
+	client, ok := req.ProviderData.(*readarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *readarr.Readarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -411,7 +411,7 @@ func (d *NotificationDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 	// Get notification current value
-	response, err := d.client.GetNotificationsContext(ctx)
+	response, _, err := d.client.NotificationApi.ListNotification(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationDataSourceName, err))
 
@@ -430,9 +430,9 @@ func (d *NotificationDataSource) Read(ctx context.Context, req datasource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findNotification(name string, notifications []*readarr.NotificationOutput) (*readarr.NotificationOutput, error) {
+func findNotification(name string, notifications []*readarr.NotificationResource) (*readarr.NotificationResource, error) {
 	for _, i := range notifications {
-		if i.Name == name {
+		if i.GetName() == name {
 			return i, nil
 		}
 	}
