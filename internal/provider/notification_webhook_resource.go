@@ -349,22 +349,22 @@ func (r *NotificationWebhookResource) ImportState(ctx context.Context, req resou
 
 func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.NotificationResource) {
 	genericNotification := Notification{
-		OnGrab:          types.BoolValue(notification.GetOnGrab()),
-		OnReleaseImport: types.BoolValue(notification.GetOnReleaseImport()),
-		OnUpgrade:       types.BoolValue(notification.GetOnUpgrade()),
-		OnRename:        types.BoolValue(notification.GetOnRename()),
-		// OnAuthorDelete:             types.BoolValue(notification.GetOnAuthorDelete()),
-		// OnBookDelete:               types.BoolValue(notification.GetOnBookDelete()),
-		// OnBookFileDelete:           types.BoolValue(notification.GetOnBookFileDelete()),
-		// OnBookFileDeleteForUpgrade: types.BoolValue(notification.GetOnBookFileDeleteForUpgrade()),
-		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
-		OnDownloadFailure:     types.BoolValue(notification.GetOnDownloadFailure()),
-		OnImportFailure:       types.BoolValue(notification.GetOnImportFailure()),
-		OnBookRetag:           types.BoolValue(notification.GetOnBookRetag()),
-		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
-		ID:                    types.Int64Value(int64(notification.GetId())),
-		Name:                  types.StringValue(notification.GetName()),
-		Tags:                  types.SetValueMust(types.Int64Type, nil),
+		OnGrab:                     types.BoolValue(notification.GetOnGrab()),
+		OnReleaseImport:            types.BoolValue(notification.GetOnReleaseImport()),
+		OnUpgrade:                  types.BoolValue(notification.GetOnUpgrade()),
+		OnRename:                   types.BoolValue(notification.GetOnRename()),
+		OnAuthorDelete:             types.BoolValue(notification.GetOnAuthorDelete()),
+		OnBookDelete:               types.BoolValue(notification.GetOnBookDelete()),
+		OnBookFileDelete:           types.BoolValue(notification.GetOnBookFileDelete()),
+		OnBookFileDeleteForUpgrade: types.BoolValue(notification.GetOnBookFileDeleteForUpgrade()),
+		OnHealthIssue:              types.BoolValue(notification.GetOnHealthIssue()),
+		OnDownloadFailure:          types.BoolValue(notification.GetOnDownloadFailure()),
+		OnImportFailure:            types.BoolValue(notification.GetOnImportFailure()),
+		OnBookRetag:                types.BoolValue(notification.GetOnBookRetag()),
+		IncludeHealthWarnings:      types.BoolValue(notification.GetIncludeHealthWarnings()),
+		ID:                         types.Int64Value(int64(notification.GetId())),
+		Name:                       types.StringValue(notification.GetName()),
+		Tags:                       types.SetValueMust(types.Int64Type, nil),
 	}
 	tfsdk.ValueFrom(ctx, notification.Tags, genericNotification.Tags.Type(ctx), &genericNotification.Tags)
 	genericNotification.writeFields(ctx, notification.Fields)
@@ -381,10 +381,10 @@ func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationRes
 	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
 	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
 	notification.SetOnRename(n.OnRename.ValueBool())
-	// notification.SetOnAuthorDelete(n.OnAuthorDelete.ValueBool())
-	// notification.SetOnBookDelete(n.OnBookDelete.ValueBool())
-	// notification.SetOnBookFileDelete(n.OnBookFileDelete.ValueBool())
-	// notification.SetOnBookFileDeleteForUpgrade(n.OnBookFileDeleteForUpgrade.ValueBool())
+	notification.SetOnAuthorDelete(n.OnAuthorDelete.ValueBool())
+	notification.SetOnBookDelete(n.OnBookDelete.ValueBool())
+	notification.SetOnBookFileDelete(n.OnBookFileDelete.ValueBool())
+	notification.SetOnBookFileDeleteForUpgrade(n.OnBookFileDeleteForUpgrade.ValueBool())
 	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
 	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
 	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
