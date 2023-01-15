@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/devopsarr/readarr-go v0.0.0-20230110043448-ae29b9bf062a
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
-	github.com/hashicorp/terraform-plugin-framework v1.0.1
+	github.com/hashicorp/terraform-plugin-framework v1.1.1
 	github.com/hashicorp/terraform-plugin-framework-validators v0.9.0
 	github.com/hashicorp/terraform-plugin-go v0.14.3
 	github.com/hashicorp/terraform-plugin-log v0.7.0
