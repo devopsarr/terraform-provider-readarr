@@ -2,7 +2,7 @@
 version: "3.9"
 services:
   readarr:
-    image: linuxserver/readarr:0.1.1-nightly
+    image: linuxserver/readarr:0.1.2-nightly
     container_name: readarr
     depends_on:
       - transmission
