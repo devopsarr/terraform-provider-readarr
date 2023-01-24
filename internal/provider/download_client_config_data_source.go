@@ -2,10 +2,9 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/readarr-go/readarr"
-	"github.com/devopsarr/terraform-provider-readarr/tools"
+	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -63,29 +62,16 @@ func (d *DownloadClientConfigDataSource) Schema(ctx context.Context, req datasou
 }
 
 func (d *DownloadClientConfigDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+		d.client = client
 	}
-
-	client, ok := req.ProviderData.(*readarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *readarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	d.client = client
 }
 
 func (d *DownloadClientConfigDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get indexer config current value
 	response, _, err := d.client.DownloadClientConfigApi.GetDownloadClientConfig(ctx).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientConfigDataSourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientConfigDataSourceName, err))
 
 		return
 	}
