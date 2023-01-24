@@ -2,13 +2,14 @@
 version: "3.9"
 services:
   readarr:
-    image: linuxserver/readarr:0.1.1-nightly
+    image: hotio/readarr:testing-0.1.2.1532@sha256:5eb6305081fe60e515d3219bb5d06748a697d03bb77c1472ae60aed34fe5c19b
     container_name: readarr
     depends_on:
       - transmission
     environment:
       - PUID=1000
       - PGID=1000
+      - UMASK=002
       - TZ=Europe/London
     volumes:
       - ./test.sh:/scripts/test.sh
@@ -17,7 +18,7 @@ services:
       - 8787:8787
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", " http://localhost:8787/system/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:8787/system/status"]
   transmission:
     image: linuxserver/transmission:latest
     container_name: transmission

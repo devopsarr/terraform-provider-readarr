@@ -3,7 +3,7 @@ module github.com/devopsarr/terraform-provider-readarr
 go 1.19
 
 require (
-	github.com/devopsarr/readarr-go v0.0.0-20230110043448-ae29b9bf062a
+	github.com/devopsarr/readarr-go v0.1.0
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-framework v1.1.1
 	github.com/hashicorp/terraform-plugin-framework-validators v0.9.0
@@ -11,6 +11,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 	github.com/stretchr/testify v1.7.2
+	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157
 )
 
 require (
@@ -64,7 +65,6 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/zclconf/go-cty v1.12.1 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
-	golang.org/x/exp v0.0.0-20230118134722-a68e582fa157
 	golang.org/x/net v0.3.0 // indirect
 	golang.org/x/oauth2 v0.3.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
