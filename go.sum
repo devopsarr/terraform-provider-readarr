@@ -40,6 +40,8 @@ github.com/devopsarr/readarr-go v0.0.0-20230109064825-d338aeb37de3 h1:i0X9OQYSpR
 github.com/devopsarr/readarr-go v0.0.0-20230109064825-d338aeb37de3/go.mod h1:v8vl5hVmUnPhfvQh1FIRB1SY1P+1owzCENj0NmAUqco=
 github.com/devopsarr/readarr-go v0.0.0-20230110043448-ae29b9bf062a h1:Xzgs9DGRGWDNoqBFNOo1+JMzmPX4dbn49fI3/oAWNaA=
 github.com/devopsarr/readarr-go v0.0.0-20230110043448-ae29b9bf062a/go.mod h1:v8vl5hVmUnPhfvQh1FIRB1SY1P+1owzCENj0NmAUqco=
+github.com/devopsarr/readarr-go v0.1.0 h1:xQ/DgOtMpZk5cIfyGhXAzZfkE8zw32zvQOa1/Mv99xo=
+github.com/devopsarr/readarr-go v0.1.0/go.mod h1:v8vl5hVmUnPhfvQh1FIRB1SY1P+1owzCENj0NmAUqco=
 github.com/emirpasic/gods v1.12.0 h1:QAUIPSaCu4G+POclxeqb3F+WPpdKqFGlw36+yOzGlrg=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
