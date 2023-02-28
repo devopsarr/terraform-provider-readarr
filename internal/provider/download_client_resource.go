@@ -30,7 +30,7 @@ var (
 var downloadClientFields = helpers.Fields{
 	Bools:                  []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly", "watchFolder"},
 	Ints:                   []string{"port", "recentTvPriority", "olderTvPriority", "initialState", "intialState"},
-	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "tvCategory", "tvImportedCategory", "tvDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension"},
+	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "tvImportedCategory", "tvDirectory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension"},
 	StringSlices:           []string{"fieldTags", "postImTags"},
 	StringSlicesExceptions: []string{"tags"},
 	IntSlices:              []string{"additionalTags"},
@@ -62,19 +62,20 @@ type DownloadClient struct {
 	Host                types.String `tfsdk:"host"`
 	ConfigContract      types.String `tfsdk:"config_contract"`
 	Destination         types.String `tfsdk:"destination"`
-	TvDirectory         types.String `tfsdk:"tv_directory"`
+	TvDirectory         types.String `tfsdk:"book_directory"`
+	MusicDirectory      types.String `tfsdk:"bookdirectory"`
 	Username            types.String `tfsdk:"username"`
-	TvImportedCategory  types.String `tfsdk:"tv_imported_category"`
-	TvCategory          types.String `tfsdk:"tv_category"`
+	TvImportedCategory  types.String `tfsdk:"book_imported_category"`
+	MusicCategory       types.String `tfsdk:"book_category"`
 	Password            types.String `tfsdk:"password"`
 	SecretToken         types.String `tfsdk:"secret_token"`
 	RPCPath             types.String `tfsdk:"rpc_path"`
 	URLBase             types.String `tfsdk:"url_base"`
 	APIKey              types.String `tfsdk:"api_key"`
-	RecentTvPriority    types.Int64  `tfsdk:"recent_tv_priority"`
+	RecentTvPriority    types.Int64  `tfsdk:"recent_book_priority"`
 	IntialState         types.Int64  `tfsdk:"intial_state"`
 	InitialState        types.Int64  `tfsdk:"initial_state"`
-	OlderTvPriority     types.Int64  `tfsdk:"older_tv_priority"`
+	OlderTvPriority     types.Int64  `tfsdk:"older_book_priority"`
 	Priority            types.Int64  `tfsdk:"priority"`
 	Port                types.Int64  `tfsdk:"port"`
 	ID                  types.Int64  `tfsdk:"id"`
@@ -191,7 +192,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"recent_tv_priority": schema.Int64Attribute{
+			"recent_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -199,7 +200,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 					int64validator.OneOf(0, 1),
 				},
 			},
-			"older_tv_priority": schema.Int64Attribute{
+			"older_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -255,18 +256,24 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_imported_category": schema.StringAttribute{
-				MarkdownDescription: "TV imported category.",
+			"book_imported_category": schema.StringAttribute{
+				MarkdownDescription: "Book imported category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_directory": schema.StringAttribute{
-				MarkdownDescription: "TV directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
+				Optional:            true,
+				Computed:            true,
+			},
+			// needed to manage both tvDirectory and musicDirectory
+			"bookdirectory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},

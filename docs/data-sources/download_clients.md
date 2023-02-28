@@ -34,6 +34,10 @@ Read-Only:
 - `add_stopped` (Boolean) Add stopped flag.
 - `additional_tags` (Set of Number) Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.
 - `api_key` (String) API key.
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
+- `book_imported_category` (String) Book imported category.
+- `bookdirectory` (String) Book directory.
 - `category` (String) Category.
 - `config_contract` (String) DownloadClient configuration template.
 - `destination` (String) Destination.
@@ -48,14 +52,14 @@ Read-Only:
 - `magnet_file_extension` (String) Magnet file extension.
 - `name` (String) Download Client name.
 - `nzb_folder` (String) NZB folder.
-- `older_tv_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_book_priority` (Number) Older TV priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
 - `post_im_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `read_only` (Boolean) Read only flag.
-- `recent_tv_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_book_priority` (Number) Recent TV priority. `0` Last, `1` First.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `secret_token` (String) Secret token.
@@ -64,9 +68,6 @@ Read-Only:
 - `strm_folder` (String) STRM folder.
 - `tags` (Set of Number) List of associated tags.
 - `torrent_folder` (String) Torrent folder.
-- `tv_category` (String) TV category.
-- `tv_directory` (String) TV directory.
-- `tv_imported_category` (String) TV imported category.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
 - `username` (String) Username.
