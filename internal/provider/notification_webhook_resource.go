@@ -342,13 +342,12 @@ func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.N
 		Tags:                       types.SetValueMust(types.Int64Type, nil),
 	}
 	tfsdk.ValueFrom(ctx, notification.Tags, genericNotification.Tags.Type(ctx), &genericNotification.Tags)
-	genericNotification.writeFields(ctx, notification.Fields)
+	genericNotification.writeFields(ctx, notification.GetFields())
 	n.fromNotification(&genericNotification)
 }
 
 func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(n.Tags.Elements()))
 	tfsdk.ValueAs(ctx, n.Tags, &tags)
 
 	notification := readarr.NewNotificationResource()

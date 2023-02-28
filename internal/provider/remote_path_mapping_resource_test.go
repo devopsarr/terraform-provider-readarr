@@ -14,7 +14,7 @@ func TestAccRemotePathMappingResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create a DownloadClient to have a value to check
+			// Create a resource to have a value to check
 			{
 				Config: testAccDownloadClientResourceConfig("remotemapResourceTest", "false"),
 			},

@@ -452,7 +452,7 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.Down
 	d.FieldTags = types.SetValueMust(types.StringType, nil)
 	d.PostImTags = types.SetValueMust(types.StringType, nil)
 	tfsdk.ValueFrom(ctx, downloadClient.Tags, d.Tags.Type(ctx), &d.Tags)
-	d.writeFields(ctx, downloadClient.Fields)
+	d.writeFields(ctx, downloadClient.GetFields())
 }
 
 func (d *DownloadClient) writeFields(ctx context.Context, fields []*readarr.Field) {
@@ -492,8 +492,7 @@ func (d *DownloadClient) writeFields(ctx context.Context, fields []*readarr.Fiel
 }
 
 func (d *DownloadClient) read(ctx context.Context) *readarr.DownloadClientResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(d.Tags.Elements()))
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
 	client := readarr.NewDownloadClientResource()

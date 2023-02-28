@@ -319,13 +319,12 @@ func (d *DownloadClientTransmission) write(ctx context.Context, downloadClient *
 		Tags:     types.SetValueMust(types.Int64Type, nil),
 	}
 	tfsdk.ValueFrom(ctx, downloadClient.Tags, genericDownloadClient.Tags.Type(ctx), &genericDownloadClient.Tags)
-	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
+	genericDownloadClient.writeFields(ctx, downloadClient.GetFields())
 	d.fromDownloadClient(&genericDownloadClient)
 }
 
 func (d *DownloadClientTransmission) read(ctx context.Context) *readarr.DownloadClientResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(d.Tags.Elements()))
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
 	client := readarr.NewDownloadClientResource()
