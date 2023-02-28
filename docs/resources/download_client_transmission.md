@@ -35,16 +35,16 @@ resource "readarr_download_client_transmission" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `older_tv_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_book_priority` (Number) Older TV priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
-- `recent_tv_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_book_priority` (Number) Recent TV priority. `0` Last, `1` First.
 - `tags` (Set of Number) List of associated tags.
-- `tv_category` (String) TV category.
-- `tv_directory` (String) TV directory.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
 - `username` (String) Username.

@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golang.org/x/exp/slices"
 )
 
 const downloadClientResourceName = "download_client"
@@ -28,13 +27,14 @@ var (
 	_ resource.ResourceWithImportState = &DownloadClientResource{}
 )
 
-var (
-	downloadClientBoolFields        = []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly", "watchFolder"}
-	downloadClientIntFields         = []string{"port", "recentTvPriority", "olderTvPriority", "initialState", "intialState"}
-	downloadClientStringFields      = []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "tvCategory", "tvImportedCategory", "tvDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension"}
-	downloadClientStringSliceFields = []string{"fieldTags", "postImTags"}
-	downloadClientIntSliceFields    = []string{"additionalTags"}
-)
+var downloadClientFields = helpers.Fields{
+	Bools:                  []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly", "watchFolder"},
+	Ints:                   []string{"port", "recentTvPriority", "olderTvPriority", "initialState", "intialState"},
+	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "tvImportedCategory", "tvDirectory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension"},
+	StringSlices:           []string{"fieldTags", "postImTags"},
+	StringSlicesExceptions: []string{"tags"},
+	IntSlices:              []string{"additionalTags"},
+}
 
 func NewDownloadClientResource() resource.Resource {
 	return &DownloadClientResource{}
@@ -62,19 +62,20 @@ type DownloadClient struct {
 	Host                types.String `tfsdk:"host"`
 	ConfigContract      types.String `tfsdk:"config_contract"`
 	Destination         types.String `tfsdk:"destination"`
-	TvDirectory         types.String `tfsdk:"tv_directory"`
+	TvDirectory         types.String `tfsdk:"book_directory"`
+	MusicDirectory      types.String `tfsdk:"bookdirectory"`
 	Username            types.String `tfsdk:"username"`
-	TvImportedCategory  types.String `tfsdk:"tv_imported_category"`
-	TvCategory          types.String `tfsdk:"tv_category"`
+	TvImportedCategory  types.String `tfsdk:"book_imported_category"`
+	MusicCategory       types.String `tfsdk:"book_category"`
 	Password            types.String `tfsdk:"password"`
 	SecretToken         types.String `tfsdk:"secret_token"`
 	RPCPath             types.String `tfsdk:"rpc_path"`
 	URLBase             types.String `tfsdk:"url_base"`
 	APIKey              types.String `tfsdk:"api_key"`
-	RecentTvPriority    types.Int64  `tfsdk:"recent_tv_priority"`
+	RecentTvPriority    types.Int64  `tfsdk:"recent_book_priority"`
 	IntialState         types.Int64  `tfsdk:"intial_state"`
 	InitialState        types.Int64  `tfsdk:"initial_state"`
-	OlderTvPriority     types.Int64  `tfsdk:"older_tv_priority"`
+	OlderTvPriority     types.Int64  `tfsdk:"older_book_priority"`
 	Priority            types.Int64  `tfsdk:"priority"`
 	Port                types.Int64  `tfsdk:"port"`
 	ID                  types.Int64  `tfsdk:"id"`
@@ -191,7 +192,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"recent_tv_priority": schema.Int64Attribute{
+			"recent_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -199,7 +200,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 					int64validator.OneOf(0, 1),
 				},
 			},
-			"older_tv_priority": schema.Int64Attribute{
+			"older_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -255,18 +256,24 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_imported_category": schema.StringAttribute{
-				MarkdownDescription: "TV imported category.",
+			"book_imported_category": schema.StringAttribute{
+				MarkdownDescription: "Book imported category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_directory": schema.StringAttribute{
-				MarkdownDescription: "TV directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
+				Optional:            true,
+				Computed:            true,
+			},
+			// needed to manage both tvDirectory and musicDirectory
+			"bookdirectory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -440,6 +447,7 @@ func (r *DownloadClientResource) ImportState(ctx context.Context, req resource.I
 }
 
 func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
+	d.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, downloadClient.Tags)
 	d.Enable = types.BoolValue(downloadClient.GetEnable())
 	d.Priority = types.Int64Value(int64(downloadClient.GetPriority()))
 	d.ID = types.Int64Value(int64(downloadClient.GetId()))
@@ -447,53 +455,14 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.Down
 	d.Implementation = types.StringValue(downloadClient.GetImplementation())
 	d.Name = types.StringValue(downloadClient.GetName())
 	d.Protocol = types.StringValue(string(downloadClient.GetProtocol()))
-	d.Tags = types.SetValueMust(types.Int64Type, nil)
 	d.AdditionalTags = types.SetValueMust(types.Int64Type, nil)
 	d.FieldTags = types.SetValueMust(types.StringType, nil)
 	d.PostImTags = types.SetValueMust(types.StringType, nil)
-	tfsdk.ValueFrom(ctx, downloadClient.Tags, d.Tags.Type(ctx), &d.Tags)
-	d.writeFields(ctx, downloadClient.Fields)
-}
-
-func (d *DownloadClient) writeFields(ctx context.Context, fields []*readarr.Field) {
-	for _, f := range fields {
-		if f.Value == nil {
-			continue
-		}
-
-		if slices.Contains(downloadClientStringFields, f.GetName()) {
-			helpers.WriteStringField(f, d)
-
-			continue
-		}
-
-		if slices.Contains(downloadClientBoolFields, f.GetName()) {
-			helpers.WriteBoolField(f, d)
-
-			continue
-		}
-
-		if slices.Contains(downloadClientIntFields, f.GetName()) {
-			helpers.WriteIntField(f, d)
-
-			continue
-		}
-
-		if slices.Contains(downloadClientIntSliceFields, f.GetName()) {
-			helpers.WriteIntSliceField(ctx, f, d)
-
-			continue
-		}
-
-		if slices.Contains(downloadClientStringSliceFields, f.GetName()) {
-			helpers.WriteStringSliceField(ctx, f, d)
-		}
-	}
+	helpers.WriteFields(ctx, d, downloadClient.GetFields(), downloadClientFields)
 }
 
 func (d *DownloadClient) read(ctx context.Context) *readarr.DownloadClientResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(d.Tags.Elements()))
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
 	client := readarr.NewDownloadClientResource()
@@ -505,43 +474,7 @@ func (d *DownloadClient) read(ctx context.Context) *readarr.DownloadClientResour
 	client.SetName(d.Name.ValueString())
 	client.SetProtocol(readarr.DownloadProtocol(d.Protocol.ValueString()))
 	client.SetTags(tags)
-	client.SetFields(d.readFields(ctx))
+	client.SetFields(helpers.ReadFields(ctx, d, downloadClientFields))
 
 	return client
-}
-
-func (d *DownloadClient) readFields(ctx context.Context) []*readarr.Field {
-	var output []*readarr.Field
-
-	for _, b := range downloadClientBoolFields {
-		if field := helpers.ReadBoolField(b, d); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, i := range downloadClientIntFields {
-		if field := helpers.ReadIntField(i, d); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range downloadClientStringFields {
-		if field := helpers.ReadStringField(s, d); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range downloadClientStringSliceFields {
-		if field := helpers.ReadStringSliceField(ctx, s, d); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range downloadClientIntSliceFields {
-		if field := helpers.ReadIntSliceField(ctx, s, d); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	return output
 }

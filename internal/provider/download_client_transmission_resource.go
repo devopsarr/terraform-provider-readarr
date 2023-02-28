@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -48,10 +47,10 @@ type DownloadClientTransmission struct {
 	URLBase          types.String `tfsdk:"url_base"`
 	Username         types.String `tfsdk:"username"`
 	Password         types.String `tfsdk:"password"`
-	TvCategory       types.String `tfsdk:"tv_category"`
-	TvDirectory      types.String `tfsdk:"tv_directory"`
-	RecentTvPriority types.Int64  `tfsdk:"recent_tv_priority"`
-	OlderTvPriority  types.Int64  `tfsdk:"older_tv_priority"`
+	MusicCategory    types.String `tfsdk:"book_category"`
+	TvDirectory      types.String `tfsdk:"book_directory"`
+	RecentTvPriority types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTvPriority  types.Int64  `tfsdk:"older_book_priority"`
 	Priority         types.Int64  `tfsdk:"priority"`
 	Port             types.Int64  `tfsdk:"port"`
 	ID               types.Int64  `tfsdk:"id"`
@@ -68,7 +67,7 @@ func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 		URLBase:          d.URLBase,
 		Username:         d.Username,
 		Password:         d.Password,
-		TvCategory:       d.TvCategory,
+		MusicCategory:    d.MusicCategory,
 		TvDirectory:      d.TvDirectory,
 		RecentTvPriority: d.RecentTvPriority,
 		OlderTvPriority:  d.OlderTvPriority,
@@ -78,6 +77,9 @@ func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 		AddPaused:        d.AddPaused,
 		UseSsl:           d.UseSsl,
 		Enable:           d.Enable,
+		Implementation:   types.StringValue(downloadClientTransmissionImplementation),
+		ConfigContract:   types.StringValue(downloadClientTransmissionConfigContract),
+		Protocol:         types.StringValue(downloadClientTransmissionProtocol),
 	}
 }
 
@@ -88,7 +90,7 @@ func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) 
 	d.URLBase = client.URLBase
 	d.Username = client.Username
 	d.Password = client.Password
-	d.TvCategory = client.TvCategory
+	d.MusicCategory = client.MusicCategory
 	d.TvDirectory = client.TvDirectory
 	d.RecentTvPriority = client.RecentTvPriority
 	d.OlderTvPriority = client.OlderTvPriority
@@ -152,7 +154,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Optional:            true,
 				Computed:            true,
 			},
-			"recent_tv_priority": schema.Int64Attribute{
+			"recent_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -160,7 +162,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 					int64validator.OneOf(0, 1),
 				},
 			},
-			"older_tv_priority": schema.Int64Attribute{
+			"older_book_priority": schema.Int64Attribute{
 				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -188,13 +190,13 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_directory": schema.StringAttribute{
-				MarkdownDescription: "TV directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -311,33 +313,11 @@ func (r *DownloadClientTransmissionResource) ImportState(ctx context.Context, re
 }
 
 func (d *DownloadClientTransmission) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
-	genericDownloadClient := DownloadClient{
-		Enable:   types.BoolValue(downloadClient.GetEnable()),
-		Priority: types.Int64Value(int64(downloadClient.GetPriority())),
-		ID:       types.Int64Value(int64(downloadClient.GetId())),
-		Name:     types.StringValue(downloadClient.GetName()),
-		Tags:     types.SetValueMust(types.Int64Type, nil),
-	}
-	tfsdk.ValueFrom(ctx, downloadClient.Tags, genericDownloadClient.Tags.Type(ctx), &genericDownloadClient.Tags)
-	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
-	d.fromDownloadClient(&genericDownloadClient)
+	genericDownloadClient := d.toDownloadClient()
+	genericDownloadClient.write(ctx, downloadClient)
+	d.fromDownloadClient(genericDownloadClient)
 }
 
 func (d *DownloadClientTransmission) read(ctx context.Context) *readarr.DownloadClientResource {
-	var tags []*int32
-
-	tfsdk.ValueAs(ctx, d.Tags, &tags)
-
-	client := readarr.NewDownloadClientResource()
-	client.SetEnable(d.Enable.ValueBool())
-	client.SetPriority(int32(d.Priority.ValueInt64()))
-	client.SetId(int32(d.ID.ValueInt64()))
-	client.SetConfigContract(downloadClientTransmissionConfigContract)
-	client.SetImplementation(downloadClientTransmissionImplementation)
-	client.SetName(d.Name.ValueString())
-	client.SetProtocol(downloadClientTransmissionProtocol)
-	client.SetTags(tags)
-	client.SetFields(d.toDownloadClient().readFields(ctx))
-
-	return client
+	return d.toDownloadClient().read(ctx)
 }

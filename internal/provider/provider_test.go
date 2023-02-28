@@ -27,3 +27,10 @@ func testAccPreCheck(t *testing.T) {
 		t.Skip("READARR_API_KEY must be set for acceptance tests")
 	}
 }
+
+const testUnauthorizedProvider = `
+provider "readarr" {
+	url = "http://localhost:8787"
+	api_key = "ErrorAPIKey"
+  }
+`
