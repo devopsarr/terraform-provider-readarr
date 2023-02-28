@@ -13,7 +13,7 @@ func TestAccRemotePathMappingsDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create a tag to have a value to check
+			// Create a resource to have a value to check
 			{
 				Config: testAccDownloadClientResourceConfig("remotemapDataSourceTest", "false") + testAccRemotePathMappingResourceConfig("remotemapDataSourceTest", "/test3/"),
 			},
