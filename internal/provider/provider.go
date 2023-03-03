@@ -141,6 +141,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		// Import Lists
 
 		// Media Management
+		NewNamingResource,
 		NewMediaManagementResource,
 		NewRemotePathMappingResource,
 
