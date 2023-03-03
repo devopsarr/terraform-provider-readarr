@@ -144,6 +144,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNamingResource,
 		NewMediaManagementResource,
 		NewRemotePathMappingResource,
+		NewRootFolderResource,
 
 		// Metadata
 
