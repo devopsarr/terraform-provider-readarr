@@ -176,6 +176,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewMediaManagementDataSource,
 		NewRemotePathMappingDataSource,
 		NewRemotePathMappingsDataSource,
+		NewRootFoldersDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
