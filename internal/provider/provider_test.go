@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
@@ -26,6 +27,14 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("READARR_API_KEY"); v == "" {
 		t.Skip("READARR_API_KEY must be set for acceptance tests")
 	}
+}
+
+func testAccAPIClient() *readarr.APIClient {
+	config := readarr.NewConfiguration()
+	config.AddDefaultHeader("X-Api-Key", os.Getenv("READARR_API_KEY"))
+	config.Servers[0].URL = os.Getenv("READARR_URL")
+
+	return readarr.NewAPIClient(config)
 }
 
 const testUnauthorizedProvider = `
