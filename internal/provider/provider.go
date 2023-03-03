@@ -131,27 +131,52 @@ func (p *ReadarrProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
 		NewDownloadClientTransmissionResource,
+
+		// Indexers
+
+		// Import Lists
+
+		// Media Management
+		NewMediaManagementResource,
+		NewRemotePathMappingResource,
+
+		// Metadata
+
+		// Notifications
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
-		NewRemotePathMappingResource,
+
+		// Profiles
+
+		// Tags
 		NewTagResource,
 	}
 }
 
 func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		// Download Clients
 		NewDownloadClientConfigDataSource,
 		NewDownloadClientDataSource,
 		NewDownloadClientsDataSource,
+
+		// Notifications
 		NewNotificationDataSource,
 		NewNotificationsDataSource,
+
+		// Media Management
 		NewRemotePathMappingDataSource,
 		NewRemotePathMappingsDataSource,
+
+		// System Status
 		NewSystemStatusDataSource,
+
+		// Tags
 		NewTagDataSource,
 		NewTagsDataSource,
 	}

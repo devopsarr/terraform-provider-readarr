@@ -15,7 +15,7 @@ For more information refer to [Remote Path Mapping](https://wiki.servarr.com/rea
 ## Example Usage
 
 ```terraform
-resource "sonarr_remote_path_mapping" "example" {
+resource "readarr_remote_path_mapping" "example" {
   host        = "www.transmission.com"
   remote_path = "/download/"
   local_path  = "/transmission-download/"
