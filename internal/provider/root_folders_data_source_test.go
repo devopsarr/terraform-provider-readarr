@@ -21,11 +21,11 @@ func TestAccRootFoldersDataSource(t *testing.T) {
 			},
 			// Create a resource to have a value to check
 			{
-				Config: testAccRootFolderResourceConfig("/tmp"),
+				Config: testAccRootFolderResourceConfig("/tmp", "DataTest"),
 			},
 			// Read testing
 			{
-				Config: testAccRootFoldersDataSourceConfig,
+				Config: testAccRootFolderResourceConfig("/tmp", "DataTest") + testAccRootFoldersDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckTypeSetElemNestedAttrs("data.readarr_root_folders.test", "root_folders.*", map[string]string{"path": "/tmp"}),
 				),

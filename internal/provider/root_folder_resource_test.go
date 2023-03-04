@@ -17,12 +17,12 @@ func TestAccRootFolderResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized Create
 			{
-				Config:      testAccRootFolderResourceConfig("/error") + testUnauthorizedProvider,
+				Config:      testAccRootFolderResourceConfig("/error", "Error") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Create and Read testing
 			{
-				Config: testAccRootFolderResourceConfig("/config/asp"),
+				Config: testAccRootFolderResourceConfig("/config/asp", "ResourceTest"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_root_folder.test", "path", "/config/asp"),
 					resource.TestCheckResourceAttrSet("readarr_root_folder.test", "id"),
@@ -30,12 +30,12 @@ func TestAccRootFolderResource(t *testing.T) {
 			},
 			// Unauthorized Read
 			{
-				Config:      testAccRootFolderResourceConfig("/error") + testUnauthorizedProvider,
+				Config:      testAccRootFolderResourceConfig("/error", "Error") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{
-				Config: testAccRootFolderResourceConfig("/config/logs"),
+				Config: testAccRootFolderResourceConfig("/config/logs", "ResourceTest"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_root_folder.test", "path", "/config/logs"),
 				),
@@ -51,18 +51,19 @@ func TestAccRootFolderResource(t *testing.T) {
 	})
 }
 
-func testAccRootFolderResourceConfig(path string) string {
+func testAccRootFolderResourceConfig(path, name string) string {
 	return fmt.Sprintf(`
 		resource "readarr_root_folder" "test" {
   			path = "%s"
-			name = "Config"
+			name = "%s"
 			default_metadata_profile_id = 1
 			default_quality_profile_id = 1
 			default_monitor_option = "all"
+			default_tags = []
 
 			output_profile = "default"
 
 			is_calibre_library = false
 		}
-	`, path)
+	`, path, name)
 }
