@@ -17,21 +17,17 @@ func TestAccTagDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized
 			{
-				Config:      testAccTagDataSourceConfig("error") + testUnauthorizedProvider,
+				Config:      testAccTagDataSourceConfig("\"error\"") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Not found testing
 			{
-				Config:      testAccTagDataSourceConfig("error"),
+				Config:      testAccTagDataSourceConfig("\"error\""),
 				ExpectError: regexp.MustCompile("Unable to find tag"),
-			},
-			// Create a resource be read
-			{
-				Config: testAccTagResourceConfig("test", "tag_datasource"),
 			},
 			// Read testing
 			{
-				Config: testAccTagResourceConfig("test", "tag_datasource") + testAccTagDataSourceConfig("tag_datasource"),
+				Config: testAccTagResourceConfig("test", "tag_datasource") + testAccTagDataSourceConfig("readarr_tag.test.label"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.readarr_tag.test", "id"),
 					resource.TestCheckResourceAttr("data.readarr_tag.test", "label", "tag_datasource"),
@@ -44,7 +40,7 @@ func TestAccTagDataSource(t *testing.T) {
 func testAccTagDataSourceConfig(label string) string {
 	return fmt.Sprintf(`
 	data "readarr_tag" "test" {
-		label = "%s"
+		label = %s
 	}
 	`, label)
 }
