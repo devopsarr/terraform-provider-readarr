@@ -206,6 +206,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewIndexersDataSource,
 
 		// Import Lists
+		NewImportListExclusionDataSource,
 		NewImportListExclusionsDataSource,
 
 		// Notifications
