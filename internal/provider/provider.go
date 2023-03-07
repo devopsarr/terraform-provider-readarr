@@ -185,6 +185,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 
 		// Indexers
 		NewIndexerConfigDataSource,
+		NewIndexerDataSource,
 		NewIndexersDataSource,
 
 		// Notifications
