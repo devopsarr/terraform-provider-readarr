@@ -3,13 +3,13 @@
 page_title: "readarr_download_client Resource - terraform-provider-readarr"
 subcategory: "Download Clients"
 description: |-
-  Download Client resource.
+  Generic Download Client resource. When possible use a specific resource instead.
   For more information refer to Download Client https://wiki.servarr.com/readarr/settings#download-clients.
 ---
 
 # readarr_download_client (Resource)
 
-<!-- subcategory:Download Clients -->Download Client resource.
+<!-- subcategory:Download Clients -->Generic Download Client resource. When possible use a specific resource instead.
 For more information refer to [Download Client](https://wiki.servarr.com/readarr/settings#download-clients).
 
 ## Example Usage
@@ -44,10 +44,6 @@ resource "readarr_download_client" "example" {
 - `add_stopped` (Boolean) Add stopped flag.
 - `additional_tags` (Set of Number) Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.
 - `api_key` (String) API key.
-- `book_category` (String) Book category.
-- `book_directory` (String) Book directory.
-- `book_imported_category` (String) Book imported category.
-- `bookdirectory` (String) Book directory.
 - `category` (String) Category.
 - `destination` (String) Destination.
 - `enable` (Boolean) Enable flag.
@@ -57,14 +53,18 @@ resource "readarr_download_client" "example" {
 - `initial_state` (Number) Initial state. `0` Start, `1` ForceStart, `2` Pause.
 - `intial_state` (Number) Initial state, with Stop support. `0` Start, `1` ForceStart, `2` Pause, `3` Stop.
 - `magnet_file_extension` (String) Magnet file extension.
+- `music_category` (String) Music category.
+- `music_directory` (String) Music directory.
+- `music_imported_category` (String) Music imported category.
+- `musicdirectory` (String) Music directory.
 - `nzb_folder` (String) NZB folder.
-- `older_book_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_book_priority` (Number) Older Book priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
-- `post_im_tags` (Set of String) Post import tags.
+- `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
 - `read_only` (Boolean) Read only flag.
-- `recent_book_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_book_priority` (Number) Recent Book priority. `0` Last, `1` First.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `secret_token` (String) Secret token.
@@ -76,7 +76,7 @@ resource "readarr_download_client" "example" {
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
 - `username` (String) Username.
-- `watch_folder` (Boolean) Watch folder flag.
+- `watch_folder` (String) Watch folder flag.
 
 ### Read-Only
 
