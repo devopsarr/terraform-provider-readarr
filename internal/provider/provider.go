@@ -154,6 +154,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationWebhookResource,
 
 		// Profiles
+		NewDelayProfileResource,
 		NewMetadataProfileResource,
 
 		// Tags
