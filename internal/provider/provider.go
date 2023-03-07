@@ -134,6 +134,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
+		NewDownloadClientAria2Resource,
 		NewDownloadClientTransmissionResource,
 
 		// Indexers
