@@ -157,6 +157,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDelayProfileResource,
 		NewMetadataProfileResource,
 		NewQualityDefinitionResource,
+		NewReleaseProfileResource,
 
 		// Tags
 		NewTagResource,
