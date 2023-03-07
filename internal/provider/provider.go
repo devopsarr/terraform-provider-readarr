@@ -137,6 +137,17 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDownloadClientTransmissionResource,
 
 		// Indexers
+		NewIndexerConfigResource,
+		NewIndexerResource,
+		NewIndexerFilelistResource,
+		NewIndexerGazelleResource,
+		NewIndexerIptorrentsResource,
+		NewIndexerNewznabResource,
+		NewIndexerNyaaResource,
+		NewIndexerRarbgResource,
+		NewIndexerTorrentRssResource,
+		NewIndexerTorrentleechResource,
+		NewIndexerTorznabResource,
 
 		// Import Lists
 
@@ -171,6 +182,11 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewDownloadClientConfigDataSource,
 		NewDownloadClientDataSource,
 		NewDownloadClientsDataSource,
+
+		// Indexers
+		NewIndexerConfigDataSource,
+		NewIndexerDataSource,
+		NewIndexersDataSource,
 
 		// Notifications
 		NewNotificationDataSource,
