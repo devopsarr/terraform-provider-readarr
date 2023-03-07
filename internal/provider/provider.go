@@ -166,6 +166,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewIndexerTorznabResource,
 
 		// Import Lists
+		NewImportListExclusionResource,
 
 		// Media Management
 		NewNamingResource,

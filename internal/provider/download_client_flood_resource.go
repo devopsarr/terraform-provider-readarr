@@ -184,7 +184,7 @@ func (r *DownloadClientFloodResource) Schema(ctx context.Context, req resource.S
 				ElementType:         types.StringType,
 			},
 			"additional_tags": schema.SetAttribute{
-				MarkdownDescription: "Additional tags, `0` Artist, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.",
+				MarkdownDescription: "Additional tags, `0` Author, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.Int64Type,
