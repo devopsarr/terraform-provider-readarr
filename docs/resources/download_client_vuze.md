@@ -35,10 +35,10 @@ resource "readarr_download_client_vuze" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
 - `older_book_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

@@ -35,9 +35,9 @@ resource "readarr_download_client_nzbvortex" "example" {
 
 ### Optional
 
+- `book_category` (String) Book category.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
 - `older_book_priority` (Number) Older Music priority. `-1` Low, `0` Normal, `1` High.
 - `port` (Number) Port.
 - `priority` (Number) Priority.

@@ -61,6 +61,6 @@ func testAccDownloadClientUtorrentResourceConfig(name, host string) string {
 		host = "%s"
 		url_base = "/utorrent/"
 		port = 9091
-		music_category = "tv-readarr"
+		book_category = "tv-readarr"
 	}`, name, host)
 }

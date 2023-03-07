@@ -47,50 +47,48 @@ type DownloadClientResource struct {
 
 // DownloadClient describes the download client data model.
 type DownloadClient struct {
-	Tags                     types.Set    `tfsdk:"tags"`
-	PostImportTags           types.Set    `tfsdk:"post_import_tags"`
-	FieldTags                types.Set    `tfsdk:"field_tags"`
-	AdditionalTags           types.Set    `tfsdk:"additional_tags"`
-	NzbFolder                types.String `tfsdk:"nzb_folder"`
-	Category                 types.String `tfsdk:"category"`
-	Implementation           types.String `tfsdk:"implementation"`
-	Name                     types.String `tfsdk:"name"`
-	Protocol                 types.String `tfsdk:"protocol"`
-	MagnetFileExtension      types.String `tfsdk:"magnet_file_extension"`
-	TorrentFolder            types.String `tfsdk:"torrent_folder"`
-	StrmFolder               types.String `tfsdk:"strm_folder"`
-	Host                     types.String `tfsdk:"host"`
-	ConfigContract           types.String `tfsdk:"config_contract"`
-	Destination              types.String `tfsdk:"destination"`
-	MusicDirectory           types.String `tfsdk:"musicdirectory"`
-	TVDirectory              types.String `tfsdk:"music_directory"`
-	Username                 types.String `tfsdk:"username"`
-	MusicImportedCategory    types.String `tfsdk:"music_imported_category"`
-	MusicCategory            types.String `tfsdk:"music_category"`
-	Password                 types.String `tfsdk:"password"`
-	SecretToken              types.String `tfsdk:"secret_token"`
-	RPCPath                  types.String `tfsdk:"rpc_path"`
-	URLBase                  types.String `tfsdk:"url_base"`
-	APIKey                   types.String `tfsdk:"api_key"`
-	WatchFolder              types.String `tfsdk:"watch_folder"`
-	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
-	IntialState              types.Int64  `tfsdk:"intial_state"`
-	InitialState             types.Int64  `tfsdk:"initial_state"`
-	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
-	Priority                 types.Int64  `tfsdk:"priority"`
-	Port                     types.Int64  `tfsdk:"port"`
-	ID                       types.Int64  `tfsdk:"id"`
-	AddStopped               types.Bool   `tfsdk:"add_stopped"`
-	SaveMagnetFiles          types.Bool   `tfsdk:"save_magnet_files"`
-	ReadOnly                 types.Bool   `tfsdk:"read_only"`
-	FirstAndLast             types.Bool   `tfsdk:"first_and_last"`
-	SequentialOrder          types.Bool   `tfsdk:"sequential_order"`
-	StartOnAdd               types.Bool   `tfsdk:"start_on_add"`
-	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
-	AddPaused                types.Bool   `tfsdk:"add_paused"`
-	Enable                   types.Bool   `tfsdk:"enable"`
-	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
-	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	PostImportTags        types.Set    `tfsdk:"post_import_tags"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
+	AdditionalTags        types.Set    `tfsdk:"additional_tags"`
+	NzbFolder             types.String `tfsdk:"nzb_folder"`
+	Category              types.String `tfsdk:"category"`
+	Implementation        types.String `tfsdk:"implementation"`
+	Name                  types.String `tfsdk:"name"`
+	Protocol              types.String `tfsdk:"protocol"`
+	MagnetFileExtension   types.String `tfsdk:"magnet_file_extension"`
+	TorrentFolder         types.String `tfsdk:"torrent_folder"`
+	StrmFolder            types.String `tfsdk:"strm_folder"`
+	Host                  types.String `tfsdk:"host"`
+	ConfigContract        types.String `tfsdk:"config_contract"`
+	Destination           types.String `tfsdk:"destination"`
+	MusicDirectory        types.String `tfsdk:"bookdirectory"`
+	TVDirectory           types.String `tfsdk:"book_directory"`
+	Username              types.String `tfsdk:"username"`
+	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
+	MusicCategory         types.String `tfsdk:"book_category"`
+	Password              types.String `tfsdk:"password"`
+	SecretToken           types.String `tfsdk:"secret_token"`
+	RPCPath               types.String `tfsdk:"rpc_path"`
+	URLBase               types.String `tfsdk:"url_base"`
+	APIKey                types.String `tfsdk:"api_key"`
+	WatchFolder           types.String `tfsdk:"watch_folder"`
+	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
+	IntialState           types.Int64  `tfsdk:"intial_state"`
+	InitialState          types.Int64  `tfsdk:"initial_state"`
+	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
+	Priority              types.Int64  `tfsdk:"priority"`
+	Port                  types.Int64  `tfsdk:"port"`
+	ID                    types.Int64  `tfsdk:"id"`
+	AddStopped            types.Bool   `tfsdk:"add_stopped"`
+	SaveMagnetFiles       types.Bool   `tfsdk:"save_magnet_files"`
+	ReadOnly              types.Bool   `tfsdk:"read_only"`
+	FirstAndLast          types.Bool   `tfsdk:"first_and_last"`
+	SequentialOrder       types.Bool   `tfsdk:"sequential_order"`
+	StartOnAdd            types.Bool   `tfsdk:"start_on_add"`
+	UseSsl                types.Bool   `tfsdk:"use_ssl"`
+	AddPaused             types.Bool   `tfsdk:"add_paused"`
+	Enable                types.Bool   `tfsdk:"enable"`
 }
 
 func (r *DownloadClientResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -253,24 +251,24 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_imported_category": schema.StringAttribute{
-				MarkdownDescription: "Music imported category.",
+			"book_imported_category": schema.StringAttribute{
+				MarkdownDescription: "Book imported category.",
 				Optional:            true,
 				Computed:            true,
 			},
 			// needed to manage both musicDirectory and tvDirectory.
-			"musicdirectory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
+			"bookdirectory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},

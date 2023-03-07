@@ -35,10 +35,10 @@ resource "readarr_download_client_deluge" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
+- `book_category` (String) Book category.
+- `book_imported_category` (String) Book imported category.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
-- `music_imported_category` (String) Music imported category.
 - `older_book_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

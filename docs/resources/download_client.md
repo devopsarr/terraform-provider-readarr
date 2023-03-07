@@ -44,6 +44,10 @@ resource "readarr_download_client" "example" {
 - `add_stopped` (Boolean) Add stopped flag.
 - `additional_tags` (Set of Number) Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.
 - `api_key` (String) API key.
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
+- `book_imported_category` (String) Book imported category.
+- `bookdirectory` (String) Book directory.
 - `category` (String) Category.
 - `destination` (String) Destination.
 - `enable` (Boolean) Enable flag.
@@ -53,10 +57,6 @@ resource "readarr_download_client" "example" {
 - `initial_state` (Number) Initial state. `0` Start, `1` ForceStart, `2` Pause.
 - `intial_state` (Number) Initial state, with Stop support. `0` Start, `1` ForceStart, `2` Pause, `3` Stop.
 - `magnet_file_extension` (String) Magnet file extension.
-- `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
-- `music_imported_category` (String) Music imported category.
-- `musicdirectory` (String) Music directory.
 - `nzb_folder` (String) NZB folder.
 - `older_book_priority` (Number) Older Book priority. `0` Last, `1` First.
 - `password` (String) Password.

@@ -46,7 +46,7 @@ type DownloadClientNzbvortex struct {
 	Host             types.String `tfsdk:"host"`
 	URLBase          types.String `tfsdk:"url_base"`
 	APIKey           types.String `tfsdk:"api_key"`
-	MusicCategory    types.String `tfsdk:"music_category"`
+	MusicCategory    types.String `tfsdk:"book_category"`
 	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
 	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
 	Priority         types.Int64  `tfsdk:"priority"`
@@ -161,8 +161,8 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: "API key.",
 				Required:            true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},

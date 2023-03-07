@@ -61,7 +61,7 @@ func testAccDownloadClientQbittorrentResourceConfig(name, host string) string {
 		host = "%s"
 		url_base = "/qbittorrent/"
 		port = 9091
-		music_category = "tv-readarr"
+		book_category = "tv-readarr"
 		first_and_last = true
 	}`, name, host)
 }

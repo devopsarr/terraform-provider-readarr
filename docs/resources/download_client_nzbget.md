@@ -35,9 +35,9 @@ resource "readarr_download_client_nzbget" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
+- `book_category` (String) Book category.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
 - `older_book_priority` (Number) Older Music priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

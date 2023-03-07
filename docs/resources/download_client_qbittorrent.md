@@ -22,7 +22,7 @@ resource "readarr_download_client_qbittorrent" "example" {
   host           = "qbittorrent"
   url_base       = "/qbittorrent/"
   port           = 9091
-  music_category = "tv-readarr"
+  book_category  = "tv-readarr"
   first_and_last = true
 }
 ```
@@ -36,12 +36,12 @@ resource "readarr_download_client_qbittorrent" "example" {
 
 ### Optional
 
+- `book_category` (String) Book category.
+- `book_imported_category` (String) Book imported category.
 - `enable` (Boolean) Enable flag.
 - `first_and_last` (Boolean) First and last flag.
 - `host` (String) host.
 - `initial_state` (Number) Initial state, with Stop support. `0` Start, `1` ForceStart, `2` Pause.
-- `music_category` (String) Music category.
-- `music_imported_category` (String) Music imported category.
 - `older_book_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

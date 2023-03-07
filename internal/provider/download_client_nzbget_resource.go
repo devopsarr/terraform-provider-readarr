@@ -47,7 +47,7 @@ type DownloadClientNzbget struct {
 	URLBase          types.String `tfsdk:"url_base"`
 	Username         types.String `tfsdk:"username"`
 	Password         types.String `tfsdk:"password"`
-	MusicCategory    types.String `tfsdk:"music_category"`
+	MusicCategory    types.String `tfsdk:"book_category"`
 	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
 	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
 	Priority         types.Int64  `tfsdk:"priority"`
@@ -187,8 +187,8 @@ func (r *DownloadClientNzbgetResource) Schema(ctx context.Context, req resource.
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -36,9 +36,9 @@ resource "readarr_download_client_sabnzbd" "example" {
 ### Optional
 
 - `api_key` (String, Sensitive) API key.
+- `book_category` (String) Book category.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
 - `older_book_priority` (Number) Older Music priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

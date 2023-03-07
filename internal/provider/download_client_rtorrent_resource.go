@@ -47,9 +47,9 @@ type DownloadClientRtorrent struct {
 	URLBase               types.String `tfsdk:"url_base"`
 	Username              types.String `tfsdk:"username"`
 	Password              types.String `tfsdk:"password"`
-	MusicCategory         types.String `tfsdk:"music_category"`
-	MusicDirectory        types.String `tfsdk:"music_directory"`
-	MusicImportedCategory types.String `tfsdk:"music_imported_category"`
+	MusicCategory         types.String `tfsdk:"book_category"`
+	MusicDirectory        types.String `tfsdk:"book_directory"`
+	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
 	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
 	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
 	Priority              types.Int64  `tfsdk:"priority"`
@@ -193,18 +193,18 @@ func (r *DownloadClientRtorrentResource) Schema(ctx context.Context, req resourc
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_imported_category": schema.StringAttribute{
-				MarkdownDescription: "Music imported category.",
+			"book_imported_category": schema.StringAttribute{
+				MarkdownDescription: "Book imported category.",
 				Optional:            true,
 				Computed:            true,
 			},

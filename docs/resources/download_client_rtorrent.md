@@ -35,11 +35,11 @@ resource "readarr_download_client_rtorrent" "example" {
 ### Optional
 
 - `add_stopped` (Boolean) Add stopped flag.
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
+- `book_imported_category` (String) Book imported category.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
-- `music_imported_category` (String) Music imported category.
 - `older_book_priority` (Number) Older Music priority. `0` VeryLow, `1` Low, `2` Normal, `3` High.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.

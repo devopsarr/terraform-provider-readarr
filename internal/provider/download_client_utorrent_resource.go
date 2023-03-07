@@ -42,13 +42,13 @@ type DownloadClientUtorrentResource struct {
 // DownloadClientUtorrent describes the download client data model.
 type DownloadClientUtorrent struct {
 	Tags                  types.Set    `tfsdk:"tags"`
-	MusicImportedCategory types.String `tfsdk:"music_imported_category"`
+	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
 	Name                  types.String `tfsdk:"name"`
 	Host                  types.String `tfsdk:"host"`
 	URLBase               types.String `tfsdk:"url_base"`
 	Username              types.String `tfsdk:"username"`
 	Password              types.String `tfsdk:"password"`
-	MusicCategory         types.String `tfsdk:"music_category"`
+	MusicCategory         types.String `tfsdk:"book_category"`
 	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
 	Priority              types.Int64  `tfsdk:"priority"`
 	Port                  types.Int64  `tfsdk:"port"`
@@ -193,13 +193,13 @@ func (r *DownloadClientUtorrentResource) Schema(ctx context.Context, req resourc
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_imported_category": schema.StringAttribute{
-				MarkdownDescription: "Music imported category.",
+			"book_imported_category": schema.StringAttribute{
+				MarkdownDescription: "Book imported category.",
 				Optional:            true,
 				Computed:            true,
 			},

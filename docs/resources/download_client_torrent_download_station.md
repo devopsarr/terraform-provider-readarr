@@ -33,10 +33,10 @@ resource "readarr_download_client_torrent_download_station" "example" {
 
 ### Optional
 
+- `book_category` (String) Book category.
+- `book_directory` (String) Book directory.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.

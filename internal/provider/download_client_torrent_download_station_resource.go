@@ -44,8 +44,8 @@ type DownloadClientTorrentDownloadStation struct {
 	Host          types.String `tfsdk:"host"`
 	Username      types.String `tfsdk:"username"`
 	Password      types.String `tfsdk:"password"`
-	MusicCategory types.String `tfsdk:"music_category"`
-	TVDirectory   types.String `tfsdk:"music_directory"`
+	MusicCategory types.String `tfsdk:"book_category"`
+	TVDirectory   types.String `tfsdk:"book_directory"`
 	Priority      types.Int64  `tfsdk:"priority"`
 	Port          types.Int64  `tfsdk:"port"`
 	ID            types.Int64  `tfsdk:"id"`
@@ -150,13 +150,13 @@ func (r *DownloadClientTorrentDownloadStationResource) Schema(ctx context.Contex
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -47,8 +47,8 @@ type DownloadClientVuze struct {
 	URLBase          types.String `tfsdk:"url_base"`
 	Username         types.String `tfsdk:"username"`
 	Password         types.String `tfsdk:"password"`
-	MusicCategory    types.String `tfsdk:"music_category"`
-	TVDirectory      types.String `tfsdk:"music_directory"`
+	MusicCategory    types.String `tfsdk:"book_category"`
+	TVDirectory      types.String `tfsdk:"book_directory"`
 	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
 	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
 	Priority         types.Int64  `tfsdk:"priority"`
@@ -190,13 +190,13 @@ func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.Sc
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
+			"book_category": schema.StringAttribute{
+				MarkdownDescription: "Book category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
+			"book_directory": schema.StringAttribute{
+				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},

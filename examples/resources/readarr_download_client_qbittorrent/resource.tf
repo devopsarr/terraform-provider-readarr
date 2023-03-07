@@ -5,6 +5,6 @@ resource "readarr_download_client_qbittorrent" "example" {
   host           = "qbittorrent"
   url_base       = "/qbittorrent/"
   port           = 9091
-  music_category = "tv-readarr"
+  book_category  = "tv-readarr"
   first_and_last = true
 }
