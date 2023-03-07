@@ -144,6 +144,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDownloadClientQbittorrentResource,
 		NewDownloadClientRtorrentResource,
 		NewDownloadClientSabnzbdResource,
+		NewDownloadClientTorrentBlackholeResource,
 		NewDownloadClientTransmissionResource,
 
 		// Indexers
