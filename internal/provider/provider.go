@@ -146,6 +146,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewIndexerRarbgResource,
 		NewIndexerTorrentRssResource,
 		NewIndexerTorrentleechResource,
+		NewIndexerTorznabResource,
 
 		// Import Lists
 
