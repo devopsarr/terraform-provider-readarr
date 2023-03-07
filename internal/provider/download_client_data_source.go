@@ -6,10 +6,8 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -103,24 +101,17 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Read only flag.",
 				Computed:            true,
 			},
-			"watch_folder": schema.BoolAttribute{
-				MarkdownDescription: "Watch folder flag.",
-				Computed:            true,
-			},
 			"port": schema.Int64Attribute{
 				MarkdownDescription: "Port.",
 				Computed:            true,
 			},
 			"recent_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Recent Book priority. `0` Last, `1` First.",
 				Computed:            true,
 			},
 			"older_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Older Book priority. `0` Last, `1` First.",
 				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1),
-				},
 			},
 			"initial_state": schema.Int64Attribute{
 				MarkdownDescription: "Initial state. `0` Start, `1` ForceStart, `2` Pause.",
@@ -166,12 +157,12 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Book imported category.",
 				Computed:            true,
 			},
-			"book_directory": schema.StringAttribute{
+			// needed to manage both musicDirectory and tvDirectory.
+			"bookdirectory": schema.StringAttribute{
 				MarkdownDescription: "Book directory.",
 				Computed:            true,
 			},
-			// needed to manage both tvDirectory and musicDirectory
-			"bookdirectory": schema.StringAttribute{
+			"book_directory": schema.StringAttribute{
 				MarkdownDescription: "Book directory.",
 				Computed:            true,
 			},
@@ -199,6 +190,10 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Magnet file extension.",
 				Computed:            true,
 			},
+			"watch_folder": schema.StringAttribute{
+				MarkdownDescription: "Watch folder flag.",
+				Computed:            true,
+			},
 			"additional_tags": schema.SetAttribute{
 				MarkdownDescription: "Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.",
 				Computed:            true,
@@ -209,7 +204,7 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
-			"post_im_tags": schema.SetAttribute{
+			"post_import_tags": schema.SetAttribute{
 				MarkdownDescription: "Post import tags.",
 				Computed:            true,
 				ElementType:         types.StringType,

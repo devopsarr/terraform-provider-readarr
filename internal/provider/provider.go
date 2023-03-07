@@ -134,7 +134,23 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
+		NewDownloadClientAria2Resource,
+		NewDownloadClientDelugeResource,
+		NewDownloadClientFloodResource,
+		NewDownloadClientHadoukenResource,
+		NewDownloadClientNzbgetResource,
+		NewDownloadClientNzbvortexResource,
+		NewDownloadClientPneumaticResource,
+		NewDownloadClientQbittorrentResource,
+		NewDownloadClientRtorrentResource,
+		NewDownloadClientSabnzbdResource,
+		NewDownloadClientTorrentBlackholeResource,
+		NewDownloadClientTorrentDownloadStationResource,
 		NewDownloadClientTransmissionResource,
+		NewDownloadClientUsenetBlackholeResource,
+		NewDownloadClientUsenetDownloadStationResource,
+		NewDownloadClientUtorrentResource,
+		NewDownloadClientVuzeResource,
 
 		// Indexers
 		NewIndexerConfigResource,

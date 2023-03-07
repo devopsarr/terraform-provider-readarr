@@ -18,29 +18,29 @@ import (
 )
 
 const (
-	downloadClientTransmissionResourceName   = "download_client_transmission"
-	downloadClientTransmissionImplementation = "Transmission"
-	downloadClientTransmissionConfigContract = "TransmissionSettings"
-	downloadClientTransmissionProtocol       = "torrent"
+	downloadClientVuzeResourceName   = "download_client_vuze"
+	downloadClientVuzeImplementation = "Vuze"
+	downloadClientVuzeConfigContract = "TransmissionSettings"
+	downloadClientVuzeProtocol       = "torrent"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &DownloadClientTransmissionResource{}
-	_ resource.ResourceWithImportState = &DownloadClientTransmissionResource{}
+	_ resource.Resource                = &DownloadClientVuzeResource{}
+	_ resource.ResourceWithImportState = &DownloadClientVuzeResource{}
 )
 
-func NewDownloadClientTransmissionResource() resource.Resource {
-	return &DownloadClientTransmissionResource{}
+func NewDownloadClientVuzeResource() resource.Resource {
+	return &DownloadClientVuzeResource{}
 }
 
-// DownloadClientTransmissionResource defines the download client implementation.
-type DownloadClientTransmissionResource struct {
+// DownloadClientVuzeResource defines the download client implementation.
+type DownloadClientVuzeResource struct {
 	client *readarr.APIClient
 }
 
-// DownloadClientTransmission describes the download client data model.
-type DownloadClientTransmission struct {
+// DownloadClientVuze describes the download client data model.
+type DownloadClientVuze struct {
 	Tags             types.Set    `tfsdk:"tags"`
 	Name             types.String `tfsdk:"name"`
 	Host             types.String `tfsdk:"host"`
@@ -59,7 +59,7 @@ type DownloadClientTransmission struct {
 	Enable           types.Bool   `tfsdk:"enable"`
 }
 
-func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
+func (d DownloadClientVuze) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
 		Tags:             d.Tags,
 		Name:             d.Name,
@@ -77,13 +77,13 @@ func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 		AddPaused:        d.AddPaused,
 		UseSsl:           d.UseSsl,
 		Enable:           d.Enable,
-		Implementation:   types.StringValue(downloadClientTransmissionImplementation),
-		ConfigContract:   types.StringValue(downloadClientTransmissionConfigContract),
-		Protocol:         types.StringValue(downloadClientTransmissionProtocol),
+		Implementation:   types.StringValue(downloadClientVuzeImplementation),
+		ConfigContract:   types.StringValue(downloadClientVuzeConfigContract),
+		Protocol:         types.StringValue(downloadClientVuzeProtocol),
 	}
 }
 
-func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) {
+func (d *DownloadClientVuze) fromDownloadClient(client *DownloadClient) {
 	d.Tags = client.Tags
 	d.Name = client.Name
 	d.Host = client.Host
@@ -102,20 +102,19 @@ func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) 
 	d.Enable = client.Enable
 }
 
-func (r *DownloadClientTransmissionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + downloadClientTransmissionResourceName
+func (r *DownloadClientVuzeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + downloadClientVuzeResourceName
 }
 
-func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client Transmission resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/readarr/settings#download-clients) and [Transmission](https://wiki.servarr.com/readarr/supported#transmission).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client Vuze resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/readarr/settings#download-clients) and [Vuze](https://wiki.servarr.com/readarr/supported#vuze).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
 				Optional:            true,
 				Computed:            true,
 			},
-
 			"priority": schema.Int64Attribute{
 				MarkdownDescription: "Priority.",
 				Optional:            true,
@@ -155,7 +154,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Computed:            true,
 			},
 			"recent_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Recent Music priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -163,7 +162,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				},
 			},
 			"older_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Older Music priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -189,6 +188,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				MarkdownDescription: "Password.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"book_category": schema.StringAttribute{
 				MarkdownDescription: "Book category.",
@@ -204,15 +204,15 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 	}
 }
 
-func (r *DownloadClientTransmissionResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *DownloadClientVuzeResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *DownloadClientTransmissionResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *DownloadClientVuzeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var client *DownloadClientTransmission
+	var client *DownloadClientVuze
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &client)...)
 
@@ -220,25 +220,25 @@ func (r *DownloadClientTransmissionResource) Create(ctx context.Context, req res
 		return
 	}
 
-	// Create new DownloadClientTransmission
+	// Create new DownloadClientVuze
 	request := client.read(ctx)
 
 	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, downloadClientTransmissionResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+downloadClientTransmissionResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
-func (r *DownloadClientTransmissionResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *DownloadClientVuzeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var client DownloadClientTransmission
+	var client DownloadClientVuze
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &client)...)
 
@@ -246,23 +246,23 @@ func (r *DownloadClientTransmissionResource) Read(ctx context.Context, req resou
 		return
 	}
 
-	// Get DownloadClientTransmission current value
+	// Get DownloadClientVuze current value
 	response, _, err := r.client.DownloadClientApi.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientTransmissionResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+downloadClientTransmissionResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
-func (r *DownloadClientTransmissionResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *DownloadClientVuzeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var client *DownloadClientTransmission
+	var client *DownloadClientVuze
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &client)...)
 
@@ -270,24 +270,24 @@ func (r *DownloadClientTransmissionResource) Update(ctx context.Context, req res
 		return
 	}
 
-	// Update DownloadClientTransmission
+	// Update DownloadClientVuze
 	request := client.read(ctx)
 
 	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, downloadClientTransmissionResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+downloadClientTransmissionResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
-func (r *DownloadClientTransmissionResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var client *DownloadClientTransmission
+func (r *DownloadClientVuzeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var client *DownloadClientVuze
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &client)...)
 
@@ -295,29 +295,29 @@ func (r *DownloadClientTransmissionResource) Delete(ctx context.Context, req res
 		return
 	}
 
-	// Delete DownloadClientTransmission current value
+	// Delete DownloadClientVuze current value
 	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientTransmissionResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+downloadClientTransmissionResourceName+": "+strconv.Itoa(int(client.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(client.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *DownloadClientTransmissionResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DownloadClientVuzeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+downloadClientTransmissionResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+downloadClientVuzeResourceName+": "+req.ID)
 }
 
-func (d *DownloadClientTransmission) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
+func (d *DownloadClientVuze) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
 	genericDownloadClient := d.toDownloadClient()
 	genericDownloadClient.write(ctx, downloadClient)
 	d.fromDownloadClient(genericDownloadClient)
 }
 
-func (d *DownloadClientTransmission) read(ctx context.Context) *readarr.DownloadClientResource {
+func (d *DownloadClientVuze) read(ctx context.Context) *readarr.DownloadClientResource {
 	return d.toDownloadClient().read(ctx)
 }

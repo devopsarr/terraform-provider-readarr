@@ -117,20 +117,16 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							MarkdownDescription: "Read only flag.",
 							Computed:            true,
 						},
-						"watch_folder": schema.BoolAttribute{
-							MarkdownDescription: "Watch folder flag.",
-							Computed:            true,
-						},
 						"port": schema.Int64Attribute{
 							MarkdownDescription: "Port.",
 							Computed:            true,
 						},
 						"recent_book_priority": schema.Int64Attribute{
-							MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
+							MarkdownDescription: "Recent Book priority. `0` Last, `1` First.",
 							Computed:            true,
 						},
 						"older_book_priority": schema.Int64Attribute{
-							MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
+							MarkdownDescription: "Older Book priority. `0` Last, `1` First.",
 							Computed:            true,
 						},
 						"initial_state": schema.Int64Attribute{
@@ -177,12 +173,12 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							MarkdownDescription: "Book imported category.",
 							Computed:            true,
 						},
-						"book_directory": schema.StringAttribute{
+						// needed to manage both musicDirectory and tvDirectory.
+						"bookdirectory": schema.StringAttribute{
 							MarkdownDescription: "Book directory.",
 							Computed:            true,
 						},
-						// needed to manage both tvDirectory and musicDirectory
-						"bookdirectory": schema.StringAttribute{
+						"book_directory": schema.StringAttribute{
 							MarkdownDescription: "Book directory.",
 							Computed:            true,
 						},
@@ -210,6 +206,10 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							MarkdownDescription: "Magnet file extension.",
 							Computed:            true,
 						},
+						"watch_folder": schema.StringAttribute{
+							MarkdownDescription: "Watch folder flag.",
+							Computed:            true,
+						},
 						"additional_tags": schema.SetAttribute{
 							MarkdownDescription: "Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.",
 							Computed:            true,
@@ -220,7 +220,7 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 							ElementType:         types.StringType,
 						},
-						"post_im_tags": schema.SetAttribute{
+						"post_import_tags": schema.SetAttribute{
 							MarkdownDescription: "Post import tags.",
 							Computed:            true,
 							ElementType:         types.StringType,

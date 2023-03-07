@@ -52,14 +52,14 @@ Read-Only:
 - `magnet_file_extension` (String) Magnet file extension.
 - `name` (String) Download Client name.
 - `nzb_folder` (String) NZB folder.
-- `older_book_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_book_priority` (Number) Older Book priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
-- `post_im_tags` (Set of String) Post import tags.
+- `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `read_only` (Boolean) Read only flag.
-- `recent_book_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_book_priority` (Number) Recent Book priority. `0` Last, `1` First.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `secret_token` (String) Secret token.
@@ -71,6 +71,6 @@ Read-Only:
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
 - `username` (String) Username.
-- `watch_folder` (Boolean) Watch folder flag.
+- `watch_folder` (String) Watch folder flag.
 
 

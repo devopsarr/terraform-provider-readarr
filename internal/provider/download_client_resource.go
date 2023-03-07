@@ -28,10 +28,10 @@ var (
 )
 
 var downloadClientFields = helpers.Fields{
-	Bools:                  []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly", "watchFolder"},
+	Bools:                  []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly"},
 	Ints:                   []string{"port", "recentTvPriority", "olderTvPriority", "initialState", "intialState"},
-	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "tvImportedCategory", "tvDirectory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension"},
-	StringSlices:           []string{"fieldTags", "postImTags"},
+	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "musicImportedCategory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension", "watchFolder", "tvDirectory"},
+	StringSlices:           []string{"fieldTags", "postImportTags"},
 	StringSlicesExceptions: []string{"tags"},
 	IntSlices:              []string{"additionalTags"},
 }
@@ -47,48 +47,48 @@ type DownloadClientResource struct {
 
 // DownloadClient describes the download client data model.
 type DownloadClient struct {
-	Tags                types.Set    `tfsdk:"tags"`
-	PostImTags          types.Set    `tfsdk:"post_im_tags"`
-	FieldTags           types.Set    `tfsdk:"field_tags"`
-	AdditionalTags      types.Set    `tfsdk:"additional_tags"`
-	NzbFolder           types.String `tfsdk:"nzb_folder"`
-	Category            types.String `tfsdk:"category"`
-	Implementation      types.String `tfsdk:"implementation"`
-	Name                types.String `tfsdk:"name"`
-	Protocol            types.String `tfsdk:"protocol"`
-	MagnetFileExtension types.String `tfsdk:"magnet_file_extension"`
-	TorrentFolder       types.String `tfsdk:"torrent_folder"`
-	StrmFolder          types.String `tfsdk:"strm_folder"`
-	Host                types.String `tfsdk:"host"`
-	ConfigContract      types.String `tfsdk:"config_contract"`
-	Destination         types.String `tfsdk:"destination"`
-	TvDirectory         types.String `tfsdk:"book_directory"`
-	MusicDirectory      types.String `tfsdk:"bookdirectory"`
-	Username            types.String `tfsdk:"username"`
-	TvImportedCategory  types.String `tfsdk:"book_imported_category"`
-	MusicCategory       types.String `tfsdk:"book_category"`
-	Password            types.String `tfsdk:"password"`
-	SecretToken         types.String `tfsdk:"secret_token"`
-	RPCPath             types.String `tfsdk:"rpc_path"`
-	URLBase             types.String `tfsdk:"url_base"`
-	APIKey              types.String `tfsdk:"api_key"`
-	RecentTvPriority    types.Int64  `tfsdk:"recent_book_priority"`
-	IntialState         types.Int64  `tfsdk:"intial_state"`
-	InitialState        types.Int64  `tfsdk:"initial_state"`
-	OlderTvPriority     types.Int64  `tfsdk:"older_book_priority"`
-	Priority            types.Int64  `tfsdk:"priority"`
-	Port                types.Int64  `tfsdk:"port"`
-	ID                  types.Int64  `tfsdk:"id"`
-	AddStopped          types.Bool   `tfsdk:"add_stopped"`
-	SaveMagnetFiles     types.Bool   `tfsdk:"save_magnet_files"`
-	ReadOnly            types.Bool   `tfsdk:"read_only"`
-	FirstAndLast        types.Bool   `tfsdk:"first_and_last"`
-	SequentialOrder     types.Bool   `tfsdk:"sequential_order"`
-	StartOnAdd          types.Bool   `tfsdk:"start_on_add"`
-	UseSsl              types.Bool   `tfsdk:"use_ssl"`
-	AddPaused           types.Bool   `tfsdk:"add_paused"`
-	WatchFolder         types.Bool   `tfsdk:"watch_folder"`
-	Enable              types.Bool   `tfsdk:"enable"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	PostImportTags        types.Set    `tfsdk:"post_import_tags"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
+	AdditionalTags        types.Set    `tfsdk:"additional_tags"`
+	NzbFolder             types.String `tfsdk:"nzb_folder"`
+	Category              types.String `tfsdk:"category"`
+	Implementation        types.String `tfsdk:"implementation"`
+	Name                  types.String `tfsdk:"name"`
+	Protocol              types.String `tfsdk:"protocol"`
+	MagnetFileExtension   types.String `tfsdk:"magnet_file_extension"`
+	TorrentFolder         types.String `tfsdk:"torrent_folder"`
+	StrmFolder            types.String `tfsdk:"strm_folder"`
+	Host                  types.String `tfsdk:"host"`
+	ConfigContract        types.String `tfsdk:"config_contract"`
+	Destination           types.String `tfsdk:"destination"`
+	MusicDirectory        types.String `tfsdk:"bookdirectory"`
+	TVDirectory           types.String `tfsdk:"book_directory"`
+	Username              types.String `tfsdk:"username"`
+	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
+	MusicCategory         types.String `tfsdk:"book_category"`
+	Password              types.String `tfsdk:"password"`
+	SecretToken           types.String `tfsdk:"secret_token"`
+	RPCPath               types.String `tfsdk:"rpc_path"`
+	URLBase               types.String `tfsdk:"url_base"`
+	APIKey                types.String `tfsdk:"api_key"`
+	WatchFolder           types.String `tfsdk:"watch_folder"`
+	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
+	IntialState           types.Int64  `tfsdk:"intial_state"`
+	InitialState          types.Int64  `tfsdk:"initial_state"`
+	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
+	Priority              types.Int64  `tfsdk:"priority"`
+	Port                  types.Int64  `tfsdk:"port"`
+	ID                    types.Int64  `tfsdk:"id"`
+	AddStopped            types.Bool   `tfsdk:"add_stopped"`
+	SaveMagnetFiles       types.Bool   `tfsdk:"save_magnet_files"`
+	ReadOnly              types.Bool   `tfsdk:"read_only"`
+	FirstAndLast          types.Bool   `tfsdk:"first_and_last"`
+	SequentialOrder       types.Bool   `tfsdk:"sequential_order"`
+	StartOnAdd            types.Bool   `tfsdk:"start_on_add"`
+	UseSsl                types.Bool   `tfsdk:"use_ssl"`
+	AddPaused             types.Bool   `tfsdk:"add_paused"`
+	Enable                types.Bool   `tfsdk:"enable"`
 }
 
 func (r *DownloadClientResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -97,7 +97,7 @@ func (r *DownloadClientResource) Metadata(ctx context.Context, req resource.Meta
 
 func (r *DownloadClientResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/readarr/settings#download-clients).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->Generic Download Client resource. When possible use a specific resource instead.\nFor more information refer to [Download Client](https://wiki.servarr.com/readarr/settings#download-clients).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
@@ -182,18 +182,13 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"watch_folder": schema.BoolAttribute{
-				MarkdownDescription: "Watch folder flag.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"port": schema.Int64Attribute{
 				MarkdownDescription: "Port.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"recent_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Recent Book priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -201,7 +196,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"older_book_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Older Book priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -266,13 +261,13 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"book_directory": schema.StringAttribute{
+			// needed to manage both musicDirectory and tvDirectory.
+			"bookdirectory": schema.StringAttribute{
 				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
 			},
-			// needed to manage both tvDirectory and musicDirectory
-			"bookdirectory": schema.StringAttribute{
+			"book_directory": schema.StringAttribute{
 				MarkdownDescription: "Book directory.",
 				Optional:            true,
 				Computed:            true,
@@ -307,6 +302,11 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
+			"watch_folder": schema.StringAttribute{
+				MarkdownDescription: "Watch folder flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"additional_tags": schema.SetAttribute{
 				MarkdownDescription: "Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.",
 				Optional:            true,
@@ -319,7 +319,7 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
-			"post_im_tags": schema.SetAttribute{
+			"post_import_tags": schema.SetAttribute{
 				MarkdownDescription: "Post import tags.",
 				Optional:            true,
 				Computed:            true,
@@ -457,7 +457,7 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.Down
 	d.Protocol = types.StringValue(string(downloadClient.GetProtocol()))
 	d.AdditionalTags = types.SetValueMust(types.Int64Type, nil)
 	d.FieldTags = types.SetValueMust(types.StringType, nil)
-	d.PostImTags = types.SetValueMust(types.StringType, nil)
+	d.PostImportTags = types.SetValueMust(types.StringType, nil)
 	helpers.WriteFields(ctx, d, downloadClient.GetFields(), downloadClientFields)
 }
 
