@@ -154,6 +154,11 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationWebhookResource,
 
 		// Profiles
+		NewDelayProfileResource,
+		NewMetadataProfileResource,
+		NewQualityProfileResource,
+		NewQualityDefinitionResource,
+		NewReleaseProfileResource,
 
 		// Tags
 		NewTagResource,
@@ -178,6 +183,19 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewRemotePathMappingsDataSource,
 		NewRootFolderDataSource,
 		NewRootFoldersDataSource,
+
+		// Profiles
+		NewDelayProfileDataSource,
+		NewDelayProfilesDataSource,
+		NewMetadataProfileDataSource,
+		NewMetadataProfilesDataSource,
+		NewQualityProfileDataSource,
+		NewQualityProfilesDataSource,
+		NewQualityDataSource,
+		NewQualityDefinitionDataSource,
+		NewQualityDefinitionsDataSource,
+		NewReleaseProfileDataSource,
+		NewReleaseProfilesDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,

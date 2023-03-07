@@ -288,8 +288,7 @@ func (r *RootFolder) write(ctx context.Context, rootFolder *readarr.RootFolderRe
 }
 
 func (r *RootFolder) read(ctx context.Context) *readarr.RootFolderResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(r.DefaultTags.Elements()))
 	tfsdk.ValueAs(ctx, r.DefaultTags, &tags)
 
 	folder := readarr.NewRootFolderResource()
