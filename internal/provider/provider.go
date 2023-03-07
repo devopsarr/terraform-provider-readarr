@@ -150,6 +150,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDownloadClientUsenetBlackholeResource,
 		NewDownloadClientUsenetDownloadStationResource,
 		NewDownloadClientUtorrentResource,
+		NewDownloadClientVuzeResource,
 
 		// Indexers
 		NewIndexerConfigResource,
