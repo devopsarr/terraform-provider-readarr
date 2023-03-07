@@ -180,6 +180,9 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewRootFolderDataSource,
 		NewRootFoldersDataSource,
 
+		// Profiles
+		NewMetadataProfilesDataSource,
+
 		// System Status
 		NewSystemStatusDataSource,
 
