@@ -140,6 +140,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewIndexerConfigResource,
 		NewIndexerFilelistResource,
 		NewIndexerGazelleResource,
+		NewIndexerIptorrentsResource,
 		NewIndexerNewznabResource,
 		NewIndexerNyaaResource,
 
