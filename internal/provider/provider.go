@@ -166,6 +166,14 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewIndexerTorznabResource,
 
 		// Import Lists
+		NewImportListExclusionResource,
+		NewImportListResource,
+		NewImportListGoodreadsBookshelfResource,
+		NewImportListGoodreadsListResource,
+		NewImportListGoodreadsOwnedBooksResource,
+		NewImportListGoodreadsSeriesResource,
+		NewImportListLazyLibrarianResource,
+		NewImportListReadarrResource,
 
 		// Media Management
 		NewNamingResource,
@@ -203,6 +211,12 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewIndexerConfigDataSource,
 		NewIndexerDataSource,
 		NewIndexersDataSource,
+
+		// Import Lists
+		NewImportListExclusionDataSource,
+		NewImportListExclusionsDataSource,
+		NewImportListDataSource,
+		NewImportListsDataSource,
 
 		// Notifications
 		NewNotificationDataSource,

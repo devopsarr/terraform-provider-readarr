@@ -38,7 +38,7 @@ resource "readarr_download_client_flood" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
-- `additional_tags` (Set of Number) Additional tags, `0` Artist, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.
+- `additional_tags` (Set of Number) Additional tags, `0` Author, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.
 - `destination` (String) Destination.
 - `enable` (Boolean) Enable flag.
 - `field_tags` (Set of String) Field tags.
