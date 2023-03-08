@@ -193,6 +193,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationGoodreadsBookshelvesResource,
 		NewNotificationGoodreadsOwnedBooksResource,
 		NewNotificationGotifyResource,
+		NewNotificationJoinResource,
 		NewNotificationWebhookResource,
 
 		// Profiles
