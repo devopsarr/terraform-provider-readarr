@@ -211,7 +211,7 @@ func (r *ImportListGoodreadsBookshelfResource) Schema(ctx context.Context, req r
 				Computed:            true,
 			},
 			"bookshelf_ids": schema.SetAttribute{
-				MarkdownDescription: "Tag IDs.",
+				MarkdownDescription: "Bookshelf IDs.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.StringType,

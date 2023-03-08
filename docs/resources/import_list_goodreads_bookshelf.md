@@ -44,7 +44,7 @@ resource "readarr_import_list_goodreads_bookshelf" "example" {
 
 ### Optional
 
-- `bookshelf_ids` (Set of String) Tag IDs.
+- `bookshelf_ids` (Set of String) Bookshelf IDs.
 - `enable_automatic_add` (Boolean) Enable automatic add flag.
 - `list_order` (Number) List order.
 - `metadata_profile_id` (Number) Metadata profile ID.

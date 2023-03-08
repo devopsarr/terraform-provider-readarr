@@ -190,6 +190,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationCustomScriptResource,
 		NewNotificationDiscordResource,
 		NewNotificationEmailResource,
+		NewNotificationGoodreadsBookshelvesResource,
 		NewNotificationWebhookResource,
 
 		// Profiles
