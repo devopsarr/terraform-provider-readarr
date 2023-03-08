@@ -175,8 +175,7 @@ func (r *NotificationGotifyResource) Schema(ctx context.Context, req resource.Sc
 			// Field values
 			"priority": schema.Int64Attribute{
 				MarkdownDescription: "Priority. `0` Min, `2` Low, `5` Normal, `8` High.",
-				Optional:            true,
-				Computed:            true,
+				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.OneOf(0, 2, 5, 8),
 				},

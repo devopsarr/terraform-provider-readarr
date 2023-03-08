@@ -51,10 +51,10 @@ resource "readarr_notification_join" "example" {
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
+- `priority` (Number) Priority. `-2` Silent, `-1` Quiet, `0` Normal, `1` High, `2` Emergency.
 
 ### Optional
 
-- `priority` (Number) Priority. `-2` Silent, `-1` Quiet, `0` Normal, `1` High, `2` Emergency.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

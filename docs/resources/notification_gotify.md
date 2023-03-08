@@ -54,11 +54,11 @@ resource "readarr_notification_gotify" "example" {
 - `on_import_failure` (Boolean) On import failure flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
+- `priority` (Number) Priority. `0` Min, `2` Low, `5` Normal, `8` High.
 - `server` (String) Server.
 
 ### Optional
 
-- `priority` (Number) Priority. `0` Min, `2` Low, `5` Normal, `8` High.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only
