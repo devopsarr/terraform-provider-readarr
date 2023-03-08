@@ -168,6 +168,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		// Import Lists
 		NewImportListExclusionResource,
 		NewImportListGoodreadsBookshelfResource,
+		NewImportListGoodreadsListResource,
 		NewImportListGoodreadsOwnedBooksResource,
 		NewImportListGoodreadsSeriesResource,
 		NewImportListReadarrResource,

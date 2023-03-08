@@ -18,29 +18,29 @@ import (
 )
 
 const (
-	importListGoodreadsSeriesResourceName   = "import_list_goodreads_series"
-	importListGoodreadsSeriesImplementation = "GoodreadsSeriesImportList"
-	importListGoodreadsSeriesConfigContract = "GoodreadsSeriesImportListSettings"
-	importListGoodreadsSeriesType           = "goodreads"
+	importListGoodreadsListResourceName   = "import_list_goodreads_list"
+	importListGoodreadsListImplementation = "GoodreadsListImportList"
+	importListGoodreadsListConfigContract = "GoodreadsListImportListSettings"
+	importListGoodreadsListType           = "goodreads"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &ImportListGoodreadsSeriesResource{}
-	_ resource.ResourceWithImportState = &ImportListGoodreadsSeriesResource{}
+	_ resource.Resource                = &ImportListGoodreadsListResource{}
+	_ resource.ResourceWithImportState = &ImportListGoodreadsListResource{}
 )
 
-func NewImportListGoodreadsSeriesResource() resource.Resource {
-	return &ImportListGoodreadsSeriesResource{}
+func NewImportListGoodreadsListResource() resource.Resource {
+	return &ImportListGoodreadsListResource{}
 }
 
-// ImportListGoodreadsSeriesResource defines the import list implementation.
-type ImportListGoodreadsSeriesResource struct {
+// ImportListGoodreadsListResource defines the import list implementation.
+type ImportListGoodreadsListResource struct {
 	client *readarr.APIClient
 }
 
-// ImportListGoodreadsSeries describes the import list data model.
-type ImportListGoodreadsSeries struct {
+// ImportListGoodreadsList describes the import list data model.
+type ImportListGoodreadsList struct {
 	Tags types.Set    `tfsdk:"tags"`
 	Name types.String `tfsdk:"name"`
 	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
@@ -48,7 +48,7 @@ type ImportListGoodreadsSeries struct {
 	RootFolderPath     types.String `tfsdk:"root_folder_path"`
 	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
 	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	SeriesID           types.Int64  `tfsdk:"series_id"`
+	ListID             types.Int64  `tfsdk:"list_id"`
 	ListOrder          types.Int64  `tfsdk:"list_order"`
 	ID                 types.Int64  `tfsdk:"id"`
 	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
@@ -56,14 +56,14 @@ type ImportListGoodreadsSeries struct {
 	ShouldSearch types.Bool `tfsdk:"should_search"`
 }
 
-func (i ImportListGoodreadsSeries) toImportList() *ImportList {
+func (i ImportListGoodreadsList) toImportList() *ImportList {
 	return &ImportList{
 		Tags: i.Tags,
 		Name: i.Name,
 		// MonitorNewItems:       i.MonitorNewItems,
 		ShouldMonitor:      i.ShouldMonitor,
 		RootFolderPath:     i.RootFolderPath,
-		SeriesID:           i.SeriesID,
+		ListID:             i.ListID,
 		QualityProfileID:   i.QualityProfileID,
 		MetadataProfileID:  i.MetadataProfileID,
 		ListOrder:          i.ListOrder,
@@ -71,19 +71,19 @@ func (i ImportListGoodreadsSeries) toImportList() *ImportList {
 		EnableAutomaticAdd: i.EnableAutomaticAdd,
 		// ShouldMonitorExisting: i.ShouldMonitorExisting,
 		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListGoodreadsSeriesImplementation),
-		ConfigContract: types.StringValue(importListGoodreadsSeriesConfigContract),
-		ListType:       types.StringValue(importListGoodreadsSeriesType),
+		Implementation: types.StringValue(importListGoodreadsListImplementation),
+		ConfigContract: types.StringValue(importListGoodreadsListConfigContract),
+		ListType:       types.StringValue(importListGoodreadsListType),
 	}
 }
 
-func (i *ImportListGoodreadsSeries) fromImportList(importList *ImportList) {
+func (i *ImportListGoodreadsList) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
 	i.Name = importList.Name
 	// i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
-	i.SeriesID = importList.SeriesID
+	i.ListID = importList.ListID
 	i.QualityProfileID = importList.QualityProfileID
 	i.MetadataProfileID = importList.MetadataProfileID
 	i.ListOrder = importList.ListOrder
@@ -93,13 +93,13 @@ func (i *ImportListGoodreadsSeries) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListGoodreadsSeriesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + importListGoodreadsSeriesResourceName
+func (r *ImportListGoodreadsListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + importListGoodreadsListResourceName
 }
 
-func (r *ImportListGoodreadsSeriesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListGoodreadsListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Goodreads Series resource.\nFor more information refer to [Import List](https://wiki.servarr.com/readarr/settings#import-lists) and [Goodreads Series](https://wiki.servarr.com/readarr/supported#goodreadsseries).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Goodreads List resource.\nFor more information refer to [Import List](https://wiki.servarr.com/readarr/settings#import-lists) and [Goodreads List](https://wiki.servarr.com/readarr/supported#goodreadslist).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",
@@ -170,23 +170,23 @@ func (r *ImportListGoodreadsSeriesResource) Schema(ctx context.Context, req reso
 				},
 			},
 			// Field values
-			"series_id": schema.Int64Attribute{
-				MarkdownDescription: "Series ID.",
+			"list_id": schema.Int64Attribute{
+				MarkdownDescription: "List ID.",
 				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *ImportListGoodreadsSeriesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ImportListGoodreadsListResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *ImportListGoodreadsSeriesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *ImportListGoodreadsListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var importList *ImportListGoodreadsSeries
+	var importList *ImportListGoodreadsList
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -194,25 +194,25 @@ func (r *ImportListGoodreadsSeriesResource) Create(ctx context.Context, req reso
 		return
 	}
 
-	// Create new ImportListGoodreadsSeries
+	// Create new ImportListGoodreadsList
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListGoodreadsSeriesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListGoodreadsListResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+importListGoodreadsSeriesResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+importListGoodreadsListResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListGoodreadsSeriesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *ImportListGoodreadsListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var importList *ImportListGoodreadsSeries
+	var importList *ImportListGoodreadsList
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -220,23 +220,23 @@ func (r *ImportListGoodreadsSeriesResource) Read(ctx context.Context, req resour
 		return
 	}
 
-	// Get ImportListGoodreadsSeries current value
+	// Get ImportListGoodreadsList current value
 	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListGoodreadsSeriesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListGoodreadsListResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+importListGoodreadsSeriesResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+importListGoodreadsListResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListGoodreadsSeriesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *ImportListGoodreadsListResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var importList *ImportListGoodreadsSeries
+	var importList *ImportListGoodreadsList
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -244,24 +244,24 @@ func (r *ImportListGoodreadsSeriesResource) Update(ctx context.Context, req reso
 		return
 	}
 
-	// Update ImportListGoodreadsSeries
+	// Update ImportListGoodreadsList
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListGoodreadsSeriesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListGoodreadsListResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+importListGoodreadsSeriesResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+importListGoodreadsListResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListGoodreadsSeriesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListGoodreadsSeries
+func (r *ImportListGoodreadsListResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var importList *ImportListGoodreadsList
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -269,29 +269,29 @@ func (r *ImportListGoodreadsSeriesResource) Delete(ctx context.Context, req reso
 		return
 	}
 
-	// Delete ImportListGoodreadsSeries current value
+	// Delete ImportListGoodreadsList current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListGoodreadsSeriesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListGoodreadsListResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListGoodreadsSeriesResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListGoodreadsListResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *ImportListGoodreadsSeriesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ImportListGoodreadsListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+importListGoodreadsSeriesResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+importListGoodreadsListResourceName+": "+req.ID)
 }
 
-func (i *ImportListGoodreadsSeries) write(ctx context.Context, importList *readarr.ImportListResource) {
+func (i *ImportListGoodreadsList) write(ctx context.Context, importList *readarr.ImportListResource) {
 	genericImportList := i.toImportList()
 	genericImportList.write(ctx, importList)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListGoodreadsSeries) read(ctx context.Context) *readarr.ImportListResource {
+func (i *ImportListGoodreadsList) read(ctx context.Context) *readarr.ImportListResource {
 	return i.toImportList().read(ctx)
 }

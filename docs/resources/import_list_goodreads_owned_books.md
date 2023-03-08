@@ -28,8 +28,6 @@ resource "readarr_import_list_goodreads_owned_books" "example" {
   user_id              = "163730408"
   username             = "Test User"
   tags                 = [1, 2, 3]
-  profile_ids          = [1, 2]
-  tag_ids              = [1, 2, 3]
 }
 ```
 
