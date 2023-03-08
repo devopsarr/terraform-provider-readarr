@@ -186,6 +186,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 
 		// Notifications
 		NewNotificationResource,
+		NewNotificationBoxcarResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
 

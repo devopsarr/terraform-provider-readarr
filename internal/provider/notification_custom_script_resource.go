@@ -165,7 +165,7 @@ func (r *NotificationCustomScriptResource) Schema(ctx context.Context, req resou
 				Required:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "NotificationCustomScript name.",
+				MarkdownDescription: "Notification name.",
 				Required:            true,
 			},
 			"tags": schema.SetAttribute{

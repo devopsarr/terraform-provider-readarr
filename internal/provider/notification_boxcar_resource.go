@@ -6,51 +6,45 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 const (
-	notificationWebhookResourceName   = "notification_webhook"
-	notificationWebhookImplementation = "Webhook"
-	notificationWebhookConfigContract = "WebhookSettings"
+	notificationBoxcarResourceName   = "notification_boxcar"
+	notificationBoxcarImplementation = "Boxcar"
+	notificationBoxcarConfigContract = "BoxcarSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &NotificationWebhookResource{}
-	_ resource.ResourceWithImportState = &NotificationWebhookResource{}
+	_ resource.Resource                = &NotificationBoxcarResource{}
+	_ resource.ResourceWithImportState = &NotificationBoxcarResource{}
 )
 
-func NewNotificationWebhookResource() resource.Resource {
-	return &NotificationWebhookResource{}
+func NewNotificationBoxcarResource() resource.Resource {
+	return &NotificationBoxcarResource{}
 }
 
-// NotificationWebhookResource defines the notification implementation.
-type NotificationWebhookResource struct {
+// NotificationBoxcarResource defines the notification implementation.
+type NotificationBoxcarResource struct {
 	client *readarr.APIClient
 }
 
-// NotificationWebhook describes the notification data model.
-type NotificationWebhook struct {
+// NotificationBoxcar describes the notification data model.
+type NotificationBoxcar struct {
 	Tags                       types.Set    `tfsdk:"tags"`
-	URL                        types.String `tfsdk:"url"`
+	Token                      types.String `tfsdk:"token"`
 	Name                       types.String `tfsdk:"name"`
-	Username                   types.String `tfsdk:"username"`
-	Password                   types.String `tfsdk:"password"`
 	ID                         types.Int64  `tfsdk:"id"`
-	Method                     types.Int64  `tfsdk:"method"`
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
-	OnRename                   types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
 	OnReleaseImport            types.Bool   `tfsdk:"on_release_import"`
 	OnAuthorDelete             types.Bool   `tfsdk:"on_author_delete"`
@@ -59,16 +53,12 @@ type NotificationWebhook struct {
 	OnBookFileDeleteForUpgrade types.Bool   `tfsdk:"on_book_file_delete_for_upgrade"`
 	OnDownloadFailure          types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure            types.Bool   `tfsdk:"on_import_failure"`
-	OnBookRetag                types.Bool   `tfsdk:"on_book_retag"`
 }
 
-func (n NotificationWebhook) toNotification() *Notification {
+func (n NotificationBoxcar) toNotification() *Notification {
 	return &Notification{
 		Tags:                       n.Tags,
-		URL:                        n.URL,
-		Method:                     n.Method,
-		Username:                   n.Username,
-		Password:                   n.Password,
+		Token:                      n.Token,
 		Name:                       n.Name,
 		ID:                         n.ID,
 		OnGrab:                     n.OnGrab,
@@ -78,23 +68,18 @@ func (n NotificationWebhook) toNotification() *Notification {
 		OnHealthIssue:              n.OnHealthIssue,
 		OnBookDelete:               n.OnBookDelete,
 		OnBookFileDelete:           n.OnBookFileDelete,
-		OnRename:                   n.OnRename,
 		OnUpgrade:                  n.OnUpgrade,
 		OnBookFileDeleteForUpgrade: n.OnBookFileDeleteForUpgrade,
 		OnDownloadFailure:          n.OnDownloadFailure,
 		OnImportFailure:            n.OnImportFailure,
-		OnBookRetag:                n.OnBookRetag,
-		Implementation:             types.StringValue(notificationWebhookImplementation),
-		ConfigContract:             types.StringValue(notificationWebhookConfigContract),
+		Implementation:             types.StringValue(notificationBoxcarImplementation),
+		ConfigContract:             types.StringValue(notificationBoxcarConfigContract),
 	}
 }
 
-func (n *NotificationWebhook) fromNotification(notification *Notification) {
+func (n *NotificationBoxcar) fromNotification(notification *Notification) {
 	n.Tags = notification.Tags
-	n.URL = notification.URL
-	n.Method = notification.Method
-	n.Username = notification.Username
-	n.Password = notification.Password
+	n.Token = notification.Token
 	n.Name = notification.Name
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
@@ -104,21 +89,19 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnAuthorDelete = notification.OnAuthorDelete
 	n.OnBookDelete = notification.OnBookDelete
-	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
 	n.OnDownloadFailure = notification.OnDownloadFailure
-	n.OnBookRetag = notification.OnBookRetag
 	n.OnImportFailure = notification.OnImportFailure
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationWebhookResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + notificationWebhookResourceName
+func (r *NotificationBoxcarResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + notificationBoxcarResourceName
 }
 
-func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationBoxcarResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Webhook resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Webhook](https://wiki.servarr.com/readarr/supported#webhook).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Boxcar resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Boxcar](https://wiki.servarr.com/readarr/supported#boxcar).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
@@ -130,10 +113,6 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
-			},
-			"on_rename": schema.BoolAttribute{
-				MarkdownDescription: "On rename flag.",
 				Required:            true,
 			},
 			"on_author_delete": schema.BoolAttribute{
@@ -158,10 +137,6 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
-				Required:            true,
-			},
-			"on_book_retag": schema.BoolAttribute{
-				MarkdownDescription: "On book retag flag.",
 				Required:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
@@ -190,41 +165,24 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			// Field values
-			"url": schema.StringAttribute{
-				MarkdownDescription: "URL.",
+			"token": schema.StringAttribute{
+				MarkdownDescription: "Token.",
 				Required:            true,
-			},
-			"username": schema.StringAttribute{
-				MarkdownDescription: "Username.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"password": schema.StringAttribute{
-				MarkdownDescription: "Password.",
-				Optional:            true,
-				Computed:            true,
 				Sensitive:           true,
-			},
-			"method": schema.Int64Attribute{
-				MarkdownDescription: "Method. `1` POST, `2` PUT.",
-				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(1, 2),
-				},
 			},
 		},
 	}
 }
 
-func (r *NotificationWebhookResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NotificationBoxcarResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *NotificationWebhookResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NotificationBoxcarResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var notification *NotificationWebhook
+	var notification *NotificationBoxcar
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -232,25 +190,25 @@ func (r *NotificationWebhookResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
-	// Create new NotificationWebhook
+	// Create new NotificationBoxcar
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationWebhookResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationBoxcarResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+notificationBoxcarResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationWebhookResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NotificationBoxcarResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var notification *NotificationWebhook
+	var notification *NotificationBoxcar
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -258,23 +216,23 @@ func (r *NotificationWebhookResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	// Get NotificationWebhook current value
-	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(notification.ID.ValueInt64())).Execute()
+	// Get NotificationBoxcar current value
+	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationWebhookResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationBoxcarResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+notificationBoxcarResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationWebhookResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NotificationBoxcarResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var notification *NotificationWebhook
+	var notification *NotificationBoxcar
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -282,24 +240,24 @@ func (r *NotificationWebhookResource) Update(ctx context.Context, req resource.U
 		return
 	}
 
-	// Update NotificationWebhook
+	// Update NotificationBoxcar
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationWebhookResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationBoxcarResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationWebhookResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+notificationBoxcarResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationWebhookResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *NotificationWebhook
+func (r *NotificationBoxcarResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var notification *NotificationBoxcar
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -307,29 +265,29 @@ func (r *NotificationWebhookResource) Delete(ctx context.Context, req resource.D
 		return
 	}
 
-	// Delete NotificationWebhook current value
+	// Delete NotificationBoxcar current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationWebhookResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationBoxcarResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationWebhookResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationBoxcarResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *NotificationWebhookResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NotificationBoxcarResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+notificationWebhookResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+notificationBoxcarResourceName+": "+req.ID)
 }
 
-func (n *NotificationWebhook) write(ctx context.Context, notification *readarr.NotificationResource) {
+func (n *NotificationBoxcar) write(ctx context.Context, notification *readarr.NotificationResource) {
 	genericNotification := n.toNotification()
 	genericNotification.write(ctx, notification)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationWebhook) read(ctx context.Context) *readarr.NotificationResource {
+func (n *NotificationBoxcar) read(ctx context.Context) *readarr.NotificationResource {
 	return n.toNotification().read(ctx)
 }

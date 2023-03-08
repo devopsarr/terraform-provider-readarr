@@ -121,7 +121,7 @@ resource "readarr_notification" "example" {
 - `sound` (String) Sound.
 - `tags` (Set of Number) List of associated tags.
 - `to` (String) To.
-- `token` (String) Token.
+- `token` (String, Sensitive) Token.
 - `topics` (Set of String) Devices.
 - `update_library` (Boolean) Update library flag.
 - `url` (String) URL.
