@@ -182,6 +182,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewRootFolderResource,
 
 		// Metadata
+		NewMetadataConfigResource,
 
 		// Notifications
 		NewNotificationResource,
