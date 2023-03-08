@@ -182,6 +182,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewRootFolderResource,
 
 		// Metadata
+		NewMetadataConfigResource,
 
 		// Notifications
 		NewNotificationResource,
@@ -229,6 +230,9 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewRemotePathMappingsDataSource,
 		NewRootFolderDataSource,
 		NewRootFoldersDataSource,
+
+		// Metadata
+		NewMetadataConfigDataSource,
 
 		// Profiles
 		NewDelayProfileDataSource,
