@@ -200,6 +200,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationProwlResource,
 		NewNotificationPushbulletResource,
 		NewNotificationPushoverResource,
+		NewNotificationSendgridResource,
 		NewNotificationWebhookResource,
 
 		// Profiles
