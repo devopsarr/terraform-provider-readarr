@@ -27,10 +27,11 @@ var (
 )
 
 var notificationFields = helpers.Fields{
-	Bools:        []string{"directMessage", "notify", "requireEncryption", "sendSilently", "useSsl", "updateLibrary", "useEuEndpoint", "attachFiles"},
-	Strings:      []string{"description", "location", "accessToken", "accessTokenSecret", "requestTokenSecret", "userId", "apiKey", "aPIKey", "appToken", "arguments", "author", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "from", "host", "icon", "instanceName", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl", "serverUrl", "userName", "clickUrl", "mapFrom", "mapTo", "key", "event", "urlBase"},
-	Ints:         []string{"port", "grabFields", "importFields", "priority", "retry", "method", "condition", "expire"},
-	StringSlices: []string{"recipients", "topics", "tags", "channelTags", "devices", "to", "cC", "bcc", "addIds", "removeIds", "deviceIds"},
+	Bools:                  []string{"directMessage", "notify", "requireEncryption", "sendSilently", "useSsl", "updateLibrary", "useEuEndpoint", "attachFiles"},
+	Strings:                []string{"description", "location", "accessToken", "accessTokenSecret", "requestTokenSecret", "userId", "apiKey", "aPIKey", "appToken", "arguments", "author", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "from", "host", "icon", "instanceName", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl", "serverUrl", "userName", "clickUrl", "mapFrom", "mapTo", "key", "event", "urlBase"},
+	Ints:                   []string{"port", "grabFields", "importFields", "priority", "retry", "method", "condition", "expire"},
+	StringSlices:           []string{"recipients", "topics", "tags", "channelTags", "fieldTags", "devices", "to", "cC", "bcc", "addIds", "removeIds", "deviceIds"},
+	StringSlicesExceptions: []string{"tags"},
 }
 
 func NewNotificationResource() resource.Resource {
