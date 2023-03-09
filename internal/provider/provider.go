@@ -131,6 +131,9 @@ func (p *ReadarrProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		// Author
+		NewAuthorResource,
+
 		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
