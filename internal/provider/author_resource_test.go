@@ -17,29 +17,29 @@ func TestAccAuthorResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized Create
 			{
-				Config:      testAccAuthorResourceConfig("Error", "test", "128382") + testUnauthorizedProvider,
+				Config:      testAccAuthorResourceConfig("Error", "test", "656983") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Create and Read testing
 			{
 				PreConfig: rootFolderDSInit,
-				Config:    testAccAuthorResourceConfig("Leo Tolstoy", "test", "128382"),
+				Config:    testAccAuthorResourceConfig("J.R.R. Tolkien", "test", "656983"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_author.test", "path", "/config/test"),
 					resource.TestCheckResourceAttrSet("readarr_author.test", "id"),
-					resource.TestCheckResourceAttr("readarr_author.test", "author_name", "Leo Tolstoy"),
+					resource.TestCheckResourceAttr("readarr_author.test", "author_name", "J.R.R. Tolkien"),
 					resource.TestCheckResourceAttr("readarr_author.test", "status", "continuing"),
 					resource.TestCheckResourceAttr("readarr_author.test", "monitored", "false"),
 				),
 			},
 			// Unauthorized Read
 			{
-				Config:      testAccAuthorResourceConfig("Error", "test", "128382") + testUnauthorizedProvider,
+				Config:      testAccAuthorResourceConfig("Error", "test", "656983") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{
-				Config: testAccAuthorResourceConfig("Leo Tolstoy", "test123", "128382"),
+				Config: testAccAuthorResourceConfig("J.R.R. Tolkien", "test123", "656983"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_author.test", "path", "/config/test123"),
 				),
