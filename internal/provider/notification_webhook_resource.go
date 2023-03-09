@@ -57,8 +57,6 @@ type NotificationWebhook struct {
 	OnBookDelete               types.Bool   `tfsdk:"on_book_delete"`
 	OnBookFileDelete           types.Bool   `tfsdk:"on_book_file_delete"`
 	OnBookFileDeleteForUpgrade types.Bool   `tfsdk:"on_book_file_delete_for_upgrade"`
-	OnDownloadFailure          types.Bool   `tfsdk:"on_download_failure"`
-	OnImportFailure            types.Bool   `tfsdk:"on_import_failure"`
 	OnBookRetag                types.Bool   `tfsdk:"on_book_retag"`
 }
 
@@ -81,8 +79,6 @@ func (n NotificationWebhook) toNotification() *Notification {
 		OnRename:                   n.OnRename,
 		OnUpgrade:                  n.OnUpgrade,
 		OnBookFileDeleteForUpgrade: n.OnBookFileDeleteForUpgrade,
-		OnDownloadFailure:          n.OnDownloadFailure,
-		OnImportFailure:            n.OnImportFailure,
 		OnBookRetag:                n.OnBookRetag,
 		Implementation:             types.StringValue(notificationWebhookImplementation),
 		ConfigContract:             types.StringValue(notificationWebhookConfigContract),
@@ -106,9 +102,7 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.OnBookDelete = notification.OnBookDelete
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
-	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnBookRetag = notification.OnBookRetag
-	n.OnImportFailure = notification.OnImportFailure
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
@@ -122,10 +116,6 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
-			},
-			"on_download_failure": schema.BoolAttribute{
-				MarkdownDescription: "On download failure flag.",
 				Required:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
@@ -154,10 +144,6 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
-			},
-			"on_import_failure": schema.BoolAttribute{
-				MarkdownDescription: "On import failure flag.",
 				Required:            true,
 			},
 			"on_book_retag": schema.BoolAttribute{

@@ -17,15 +17,13 @@ For more information refer to [Notification](https://wiki.servarr.com/readarr/se
 ```terraform
 resource "readarr_notification_webhook" "example" {
   on_grab                         = false
-  on_download_failure             = true
   on_upgrade                      = false
   on_rename                       = false
-  on_import_failure               = false
   on_book_delete                  = false
   on_book_file_delete             = false
   on_book_file_delete_for_upgrade = true
   on_health_issue                 = false
-  on_book_retag                   = false
+  on_book_retag                   = true
   on_author_delete                = false
   on_release_import               = false
 
@@ -52,10 +50,8 @@ resource "readarr_notification_webhook" "example" {
 - `on_book_file_delete` (Boolean) On book file delete flag.
 - `on_book_file_delete_for_upgrade` (Boolean) On book file delete for upgrade flag.
 - `on_book_retag` (Boolean) On book retag flag.
-- `on_download_failure` (Boolean) On download failure flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
-- `on_import_failure` (Boolean) On import failure flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.

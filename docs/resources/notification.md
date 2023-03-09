@@ -65,32 +65,31 @@ resource "readarr_notification" "example" {
 
 - `access_token` (String) Access token.
 - `access_token_secret` (String) Access token secret.
-- `always_update` (Boolean) Always update flag.
+- `add_ids` (Set of String) Add IDs.
 - `api_key` (String) API key.
 - `app_token` (String) App token.
 - `arguments` (String) Arguments.
-- `auth_token` (String) Auth token.
+- `attach_files` (Boolean) Attach files flag.
 - `auth_user` (String) Auth user.
 - `author` (String) Author.
 - `avatar` (String) Avatar.
-- `bcc` (String) Bcc.
+- `bcc` (Set of String) Bcc.
 - `bot_token` (String) Bot token.
-- `cc` (String) Cc.
+- `cc` (Set of String) Cc.
 - `channel` (String) Channel.
 - `channel_tags` (Set of String) Channel tags.
 - `chat_id` (String) Chat ID.
-- `clean_library` (Boolean) Clean library flag.
 - `click_url` (String) Click URL.
+- `condition` (Number) Condition. `10` BrandNew, `20` LikeNew, `30` VeryGood, `40` Good, `50` Acceptable, `60` Poor.
 - `consumer_key` (String) Consumer key.
 - `consumer_secret` (String) Consumer secret.
-- `device_ids` (Set of Number) Device IDs.
+- `description` (String) Condition description.
+- `device_ids` (Set of String) Device IDs.
 - `device_names` (String) Device names.
 - `devices` (Set of String) Devices.
 - `direct_message` (Boolean) Direct message flag.
-- `display_time` (String) Display time.
 - `event` (String) Event.
 - `expire` (Number) Expire.
-- `expires` (String) Expires.
 - `field_tags` (Set of String) Devices.
 - `from` (String) From.
 - `grab_fields` (Number) Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart, `10` CustomFormats, `11` CustomFormatScore.
@@ -99,6 +98,7 @@ resource "readarr_notification" "example" {
 - `import_fields` (Number) Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.
 - `instance_name` (String) Instance name.
 - `key` (String) Key.
+- `location` (String) Purchase location.
 - `map_from` (String) Map From.
 - `map_to` (String) Map To.
 - `mention` (String) Mention.
@@ -110,6 +110,8 @@ resource "readarr_notification" "example" {
 - `priority` (Number) Priority.
 - `recipients` (Set of String) Recipients.
 - `refresh_token` (String) Refresh token.
+- `remove_ids` (Set of String) Remove IDs.
+- `request_token_secret` (String, Sensitive) Request token secret.
 - `require_encryption` (Boolean) Require encryption flag.
 - `retry` (Number) Retry.
 - `send_silently` (Boolean) Add silently flag.
@@ -120,13 +122,15 @@ resource "readarr_notification" "example" {
 - `sign_in` (String) Sign in.
 - `sound` (String) Sound.
 - `tags` (Set of Number) List of associated tags.
-- `to` (String) To.
+- `to` (Set of String) To.
 - `token` (String, Sensitive) Token.
 - `topics` (Set of String) Devices.
 - `update_library` (Boolean) Update library flag.
 - `url` (String) URL.
+- `url_base` (String) URL base.
 - `use_eu_endpoint` (Boolean) Use EU endpoint flag.
 - `use_ssl` (Boolean) Use SSL flag.
+- `user_id` (String) User ID.
 - `user_key` (String) User key.
 - `username` (String) Username.
 - `web_hook_url` (String) Web hook url.
