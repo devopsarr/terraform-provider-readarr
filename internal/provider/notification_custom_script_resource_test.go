@@ -55,10 +55,8 @@ func testAccNotificationCustomScriptResourceConfig(name, upgrade string) string 
 	return fmt.Sprintf(`
 	resource "readarr_notification_custom_script" "test" {
 		on_grab                            = false
-		on_download_failure                = true
 		on_upgrade                         = %s
 		on_rename                          = false
-		on_import_failure                  = false
 		on_book_delete                    = false
 		on_book_file_delete               = false
 		on_book_file_delete_for_upgrade   = true
