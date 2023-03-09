@@ -203,6 +203,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewNotificationSendgridResource,
 		NewNotificationSlackResource,
 		NewNotificationSubsonicResource,
+		NewNotificationSynologyResource,
 		NewNotificationWebhookResource,
 
 		// Profiles
