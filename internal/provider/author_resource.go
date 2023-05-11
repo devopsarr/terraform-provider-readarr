@@ -228,33 +228,32 @@ func (r *AuthorResource) ImportState(ctx context.Context, req resource.ImportSta
 	tflog.Trace(ctx, "imported "+authorResourceName+": "+req.ID)
 }
 
-func (m *Author) write(ctx context.Context, author *readarr.AuthorResource) {
-	m.Monitored = types.BoolValue(author.GetMonitored())
-	m.ID = types.Int64Value(int64(author.GetId()))
-	m.AuthorName = types.StringValue(author.GetAuthorName())
-	m.Path = types.StringValue(author.GetPath())
-	m.QualityProfileID = types.Int64Value(int64(author.GetQualityProfileId()))
-	m.ForeignAuthorID = types.StringValue(author.GetForeignAuthorId())
-	m.Tags = types.SetValueMust(types.Int64Type, nil)
-	tfsdk.ValueFrom(ctx, author.Tags, m.Tags.Type(ctx), &m.Tags)
+func (a *Author) write(ctx context.Context, author *readarr.AuthorResource) {
+	a.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, author.GetTags())
+	a.Genres, _ = types.SetValueFrom(ctx, types.StringType, author.GetGenres())
+	a.Monitored = types.BoolValue(author.GetMonitored())
+	a.ID = types.Int64Value(int64(author.GetId()))
+	a.AuthorName = types.StringValue(author.GetAuthorName())
+	a.Path = types.StringValue(author.GetPath())
+	a.QualityProfileID = types.Int64Value(int64(author.GetQualityProfileId()))
+	a.ForeignAuthorID = types.StringValue(author.GetForeignAuthorId())
 	// Read only values
-	m.Status = types.StringValue(string(author.GetStatus()))
-	m.Overview = types.StringValue(author.GetOverview())
-	m.Genres = types.SetValueMust(types.StringType, nil)
-	tfsdk.ValueFrom(ctx, author.Genres, m.Genres.Type(ctx), &m.Genres)
+	a.Status = types.StringValue(string(author.GetStatus()))
+	a.Overview = types.StringValue(author.GetOverview())
+	a.Genres = types.SetValueMust(types.StringType, nil)
 }
 
-func (m *Author) read(ctx context.Context) *readarr.AuthorResource {
-	tags := make([]*int32, len(m.Tags.Elements()))
-	tfsdk.ValueAs(ctx, m.Tags, &tags)
+func (a *Author) read(ctx context.Context) *readarr.AuthorResource {
+	tags := make([]*int32, len(a.Tags.Elements()))
+	tfsdk.ValueAs(ctx, a.Tags, &tags)
 
 	author := readarr.NewAuthorResource()
-	author.SetMonitored(m.Monitored.ValueBool())
-	author.SetAuthorName(m.AuthorName.ValueString())
-	author.SetPath(m.Path.ValueString())
-	author.SetQualityProfileId(int32(m.QualityProfileID.ValueInt64()))
-	author.SetForeignAuthorId(m.ForeignAuthorID.ValueString())
-	author.SetId(int32(m.ID.ValueInt64()))
+	author.SetMonitored(a.Monitored.ValueBool())
+	author.SetAuthorName(a.AuthorName.ValueString())
+	author.SetPath(a.Path.ValueString())
+	author.SetQualityProfileId(int32(a.QualityProfileID.ValueInt64()))
+	author.SetForeignAuthorId(a.ForeignAuthorID.ValueString())
+	author.SetId(int32(a.ID.ValueInt64()))
 	author.SetTags(tags)
 	// Fix unused but required profile
 	author.SetMetadataProfileId(1)
