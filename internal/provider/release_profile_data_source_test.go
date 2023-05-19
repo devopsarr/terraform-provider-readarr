@@ -22,10 +22,10 @@ func TestAccReleaseProfileDataSource(t *testing.T) {
 			},
 			// Read testing
 			{
-				Config: testAccReleaseProfileResourceConfig("notreally") + testAccReleaseProfileDataSourceConfig("readarr_release_profile.test.id"),
+				Config: testAccReleaseProfileResourceConfig("[\"notreally\"]") + testAccReleaseProfileDataSourceConfig("readarr_release_profile.test.id"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.readarr_release_profile.test", "id"),
-					resource.TestCheckResourceAttr("data.readarr_release_profile.test", "required", "notreally")),
+					resource.TestCheckResourceAttr("data.readarr_release_profile.test", "required.0", "notreally")),
 			},
 		},
 	})
