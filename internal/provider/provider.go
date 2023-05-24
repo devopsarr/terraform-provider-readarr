@@ -278,6 +278,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewCustomFormatConditionDataSource,
 		NewCustomFormatConditionReleaseGroupDataSource,
 		NewCustomFormatConditionReleaseTitleDataSource,
+		NewCustomFormatConditionSizeDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
