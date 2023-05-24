@@ -217,6 +217,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewQualityProfileResource,
 		NewQualityDefinitionResource,
 		NewReleaseProfileResource,
+		NewCustomFormatResource,
 
 		// Tags
 		NewTagResource,
@@ -261,6 +262,8 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewMetadataConfigDataSource,
 
 		// Profiles
+		NewCustomFormatDataSource,
+		NewCustomFormatsDataSource,
 		NewDelayProfileDataSource,
 		NewDelayProfilesDataSource,
 		NewMetadataProfileDataSource,
@@ -272,6 +275,10 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewQualityDefinitionsDataSource,
 		NewReleaseProfileDataSource,
 		NewReleaseProfilesDataSource,
+		NewCustomFormatConditionDataSource,
+		NewCustomFormatConditionReleaseGroupDataSource,
+		NewCustomFormatConditionReleaseTitleDataSource,
+		NewCustomFormatConditionSizeDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
