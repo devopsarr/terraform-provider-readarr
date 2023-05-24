@@ -111,31 +111,38 @@ func (r *NotificationGoodreadsBookshelvesResource) Schema(ctx context.Context, r
 		Attributes: map[string]schema.Attribute{
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_author_delete": schema.BoolAttribute{
 				MarkdownDescription: "On author deleted flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete_for_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Notification name.",

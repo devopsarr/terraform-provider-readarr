@@ -39,8 +39,11 @@ resource "readarr_notification_prowl" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API Key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+
+### Optional
+
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -50,9 +53,6 @@ resource "readarr_notification_prowl" "example" {
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
 - `priority` (Number) Priority.`-2` Very Low, `-1` Low, `0` Normal, `1` High, `2` Emergency.
 - `tags` (Set of Number) List of associated tags.
 

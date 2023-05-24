@@ -44,8 +44,13 @@ resource "readarr_notification_subsonic" "example" {
 ### Required
 
 - `host` (String) Host.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `port` (Number) Port.
+
+### Optional
+
+- `include_health_warnings` (Boolean) Include health warnings.
+- `notify` (Boolean) Notification flag.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -57,11 +62,6 @@ resource "readarr_notification_subsonic" "example" {
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `port` (Number) Port.
-
-### Optional
-
-- `notify` (Boolean) Notification flag.
 - `password` (String, Sensitive) Password.
 - `tags` (Set of Number) List of associated tags.
 - `update_library` (Boolean) Update library flag.

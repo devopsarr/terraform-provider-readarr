@@ -41,8 +41,16 @@ resource "readarr_notification_email" "example" {
 ### Required
 
 - `from` (String) From.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `server` (String) Server.
+- `to` (Set of String) To.
+
+### Optional
+
+- `attach_files` (Boolean) Attach files flag.
+- `bcc` (Set of String) Bcc.
+- `cc` (Set of String) Cc.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -54,14 +62,6 @@ resource "readarr_notification_email" "example" {
 - `on_import_failure` (Boolean) On import failure flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `server` (String) Server.
-- `to` (Set of String) To.
-
-### Optional
-
-- `attach_files` (Boolean) Attach files flag.
-- `bcc` (Set of String) Bcc.
-- `cc` (Set of String) Cc.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `require_encryption` (Boolean) Require encryption flag.

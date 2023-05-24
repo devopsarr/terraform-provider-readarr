@@ -43,8 +43,15 @@ resource "readarr_notification_slack" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `username` (String) Username.
+- `web_hook_url` (String) URL.
+
+### Optional
+
+- `channel` (String) Channel.
+- `icon` (String) Icon.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -58,13 +65,6 @@ resource "readarr_notification_slack" "example" {
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `username` (String) Username.
-- `web_hook_url` (String) URL.
-
-### Optional
-
-- `channel` (String) Channel.
-- `icon` (String) Icon.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

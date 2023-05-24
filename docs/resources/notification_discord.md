@@ -45,8 +45,13 @@ resource "readarr_notification_discord" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `web_hook_url` (String) Web hook URL.
+
+### Optional
+
+- `avatar` (String) Avatar.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -60,11 +65,6 @@ resource "readarr_notification_discord" "example" {
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `web_hook_url` (String) Web hook URL.
-
-### Optional
-
-- `avatar` (String) Avatar.
 - `tags` (Set of Number) List of associated tags.
 - `username` (String) Username.
 

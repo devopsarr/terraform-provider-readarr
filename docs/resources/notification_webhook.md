@@ -42,9 +42,13 @@ resource "readarr_notification_webhook" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `method` (Number) Method. `1` POST, `2` PUT.
 - `name` (String) Notification name.
+- `url` (String) URL.
+
+### Optional
+
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
@@ -56,10 +60,6 @@ resource "readarr_notification_webhook" "example" {
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `url` (String) URL.
-
-### Optional
-
 - `password` (String, Sensitive) Password.
 - `tags` (Set of Number) List of associated tags.
 - `username` (String) Username.
