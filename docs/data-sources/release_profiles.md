@@ -28,23 +28,16 @@ data "readarr_release_profiles" "example" {
 <a id="nestedatt--release_profiles"></a>
 ### Nested Schema for `release_profiles`
 
+Required:
+
+- `id` (Number) Release Profile ID.
+
 Read-Only:
 
 - `enabled` (Boolean) Enabled.
-- `id` (Number) Release Profile ID.
-- `ignored` (String) Ignored terms. Comma separated list. At least one of `required` and `ignored` must be set.
-- `include_preferred_when_renaming` (Boolean) Include preferred when renaming flag.
+- `ignored` (Set of String) Ignored terms. At least one of `required` and `ignored` must be set.
 - `indexer_id` (Number) Indexer ID. Set `0` for all.
-- `preferred` (Attributes Set) Preferred terms. (see [below for nested schema](#nestedatt--release_profiles--preferred))
-- `required` (String) Required terms. Comma separated list. At least one of `required` and `ignored` must be set.
+- `required` (Set of String) Required terms. At least one of `required` and `ignored` must be set.
 - `tags` (Set of Number) List of associated tags.
-
-<a id="nestedatt--release_profiles--preferred"></a>
-### Nested Schema for `release_profiles.preferred`
-
-Read-Only:
-
-- `score` (Number) Score.
-- `term` (String) Term.
 
 

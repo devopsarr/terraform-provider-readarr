@@ -57,7 +57,7 @@ func (d *QualityProfilesDataSource) Schema(ctx context.Context, req datasource.S
 						},
 						"name": schema.StringAttribute{
 							MarkdownDescription: "Quality Profile Name.",
-							Computed:            true,
+							Required:            true,
 						},
 						"upgrade_allowed": schema.BoolAttribute{
 							MarkdownDescription: "Upgrade allowed flag.",
@@ -65,6 +65,14 @@ func (d *QualityProfilesDataSource) Schema(ctx context.Context, req datasource.S
 						},
 						"cutoff": schema.Int64Attribute{
 							MarkdownDescription: "Quality ID to which cutoff.",
+							Computed:            true,
+						},
+						"cutoff_format_score": schema.Int64Attribute{
+							MarkdownDescription: "Cutoff format score.",
+							Computed:            true,
+						},
+						"min_format_score": schema.Int64Attribute{
+							MarkdownDescription: "Min format score.",
 							Computed:            true,
 						},
 						"quality_groups": schema.SetNestedAttribute{
@@ -95,6 +103,26 @@ func (d *QualityProfilesDataSource) Schema(ctx context.Context, req datasource.S
 												},
 											},
 										},
+									},
+								},
+							},
+						},
+						"format_items": schema.SetNestedAttribute{
+							MarkdownDescription: "Format items.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"format": schema.Int64Attribute{
+										MarkdownDescription: "Format.",
+										Computed:            true,
+									},
+									"score": schema.Int64Attribute{
+										MarkdownDescription: "Score.",
+										Computed:            true,
+									},
+									"name": schema.StringAttribute{
+										MarkdownDescription: "Name.",
+										Computed:            true,
 									},
 								},
 							},

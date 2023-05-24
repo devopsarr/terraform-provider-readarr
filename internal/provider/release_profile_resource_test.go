@@ -17,27 +17,27 @@ func TestAccReleaseProfileResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized Create
 			{
-				Config:      testAccReleaseProfileResourceConfig("test1") + testUnauthorizedProvider,
+				Config:      testAccReleaseProfileResourceConfig("[\"test1\"]") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Create and Read testing
 			{
-				Config: testAccReleaseProfileResourceConfig("test1"),
+				Config: testAccReleaseProfileResourceConfig("[\"test1\"]"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("readarr_release_profile.test", "required", "test1"),
+					resource.TestCheckResourceAttr("readarr_release_profile.test", "required.0", "test1"),
 					resource.TestCheckResourceAttrSet("readarr_release_profile.test", "id"),
 				),
 			},
 			// Unauthorized Read
 			{
-				Config:      testAccReleaseProfileResourceConfig("test1") + testUnauthorizedProvider,
+				Config:      testAccReleaseProfileResourceConfig("[\"test1\"]") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{
-				Config: testAccReleaseProfileResourceConfig("test2,test3"),
+				Config: testAccReleaseProfileResourceConfig("[\"test2\",\"test3\"]"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("readarr_release_profile.test", "required", "test2,test3"),
+					resource.TestCheckResourceAttr("readarr_release_profile.test", "required.0", "test2"),
 				),
 			},
 			// ImportState testing
@@ -56,13 +56,6 @@ func testAccReleaseProfileResourceConfig(required string) string {
 	resource "readarr_release_profile" "test" {
 		enabled = true
 		indexer_id = 0
-		required = "%s"
-
-		preferred = [
-			{
-				term = "test"
-				score = 100
-			}
-		] 
+		required = %s
 	}`, required)
 }
