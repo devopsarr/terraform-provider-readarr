@@ -275,6 +275,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewQualityDefinitionsDataSource,
 		NewReleaseProfileDataSource,
 		NewReleaseProfilesDataSource,
+		NewCustomFormatConditionDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
