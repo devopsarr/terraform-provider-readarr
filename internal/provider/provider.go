@@ -262,6 +262,7 @@ func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewMetadataConfigDataSource,
 
 		// Profiles
+		NewCustomFormatDataSource,
 		NewDelayProfileDataSource,
 		NewDelayProfilesDataSource,
 		NewMetadataProfileDataSource,
