@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.5.0...v2.0.0) (2023-05-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove deprecated indexer rarbg
+
+### Features
+
+* add custom format condition data source ([4d5e9dd](https://github.com/devopsarr/terraform-provider-readarr/commit/4d5e9dda84681f0b123147704e77b1cc29b28821))
+* add custom format condition release group data source ([c58e211](https://github.com/devopsarr/terraform-provider-readarr/commit/c58e2113d26c45030375a3d1d219ad9d2ba09e44))
+* add custom format condition release title data source ([bf71eb8](https://github.com/devopsarr/terraform-provider-readarr/commit/bf71eb8445d322107f2e6db56ea14a7fdaa76d35))
+* add custom format condition size data source ([23e5365](https://github.com/devopsarr/terraform-provider-readarr/commit/23e5365ce3df66ea24e599bc2b0f18823d52591b))
+* add custom format data source ([a6ee007](https://github.com/devopsarr/terraform-provider-readarr/commit/a6ee0070df71f88b421b71cc91eef51dea911afc))
+* add custom format resource ([11911e7](https://github.com/devopsarr/terraform-provider-readarr/commit/11911e71e3c8ac35acc3c7d7a2a269e3881bf558))
+* add custom formats data source ([eda00b1](https://github.com/devopsarr/terraform-provider-readarr/commit/eda00b108871f367a8ce16f7472abfd29db3f94a))
+* add format field in quality profile ([f6d56c8](https://github.com/devopsarr/terraform-provider-readarr/commit/f6d56c8a3850ac9cffd936ca4015ce85d3ff4e03))
+* add notification on app update flag ([faad53f](https://github.com/devopsarr/terraform-provider-readarr/commit/faad53fb98b35fa6fa5646845241605cc34d190b))
+* move notification flags to optional ([8f34637](https://github.com/devopsarr/terraform-provider-readarr/commit/8f346377daff4af24aefa70ef320b0a39e10ac77))
+* remove deprecated indexer rarbg ([560dbba](https://github.com/devopsarr/terraform-provider-readarr/commit/560dbba1d3bbdc015aec1595db86695f0c44faac))
+* update release profile fields ([2a9dc59](https://github.com/devopsarr/terraform-provider-readarr/commit/2a9dc597d803f4204b3c647d27189fb750505311))
+
 ## [1.5.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.4.0...v1.5.0) (2023-03-09)
 
 
