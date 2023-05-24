@@ -116,6 +116,7 @@ type Notification struct {
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	SendSilently               types.Bool   `tfsdk:"send_silently"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
+	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	DirectMessage              types.Bool   `tfsdk:"direct_message"`
 	RequireEncryption          types.Bool   `tfsdk:"require_encryption"`
 	UseSSL                     types.Bool   `tfsdk:"use_ssl"`
@@ -145,55 +146,73 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_download_failure": schema.BoolAttribute{
 				MarkdownDescription: "On download failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_author_delete": schema.BoolAttribute{
 				MarkdownDescription: "On author deleted flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete_for_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_application_update": schema.BoolAttribute{
+				MarkdownDescription: "On application update flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_retag": schema.BoolAttribute{
 				MarkdownDescription: "On book retag flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"config_contract": schema.StringAttribute{
 				MarkdownDescription: "Notification configuration template.",
@@ -731,6 +750,7 @@ func (n *Notification) write(ctx context.Context, notification *readarr.Notifica
 	n.OnBookFileDelete = types.BoolValue(notification.GetOnBookFileDelete())
 	n.OnBookFileDeleteForUpgrade = types.BoolValue(notification.GetOnBookFileDeleteForUpgrade())
 	n.OnHealthIssue = types.BoolValue(notification.GetOnHealthIssue())
+	n.OnApplicationUpdate = types.BoolValue(notification.GetOnApplicationUpdate())
 	n.OnDownloadFailure = types.BoolValue(notification.GetOnDownloadFailure())
 	n.OnReleaseImport = types.BoolValue(notification.GetOnReleaseImport())
 	n.OnImportFailure = types.BoolValue(notification.GetOnImportFailure())
@@ -767,6 +787,7 @@ func (n *Notification) read(ctx context.Context) *readarr.NotificationResource {
 	notification.SetOnBookFileDelete(n.OnBookFileDelete.ValueBool())
 	notification.SetOnBookFileDeleteForUpgrade(n.OnBookFileDeleteForUpgrade.ValueBool())
 	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
 	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
 	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
 	notification.SetOnBookRetag(n.OnBookRetag.ValueBool())

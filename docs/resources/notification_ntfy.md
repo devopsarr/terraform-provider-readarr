@@ -42,8 +42,15 @@ resource "readarr_notification_ntfy" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `topics` (Set of String) Topics.
+
+### Optional
+
+- `click_url` (String) Click URL.
+- `field_tags` (Set of String) Tags and emojis.
+- `include_health_warnings` (Boolean) Include health warnings.
+- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.
@@ -52,12 +59,6 @@ resource "readarr_notification_ntfy" "example" {
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `topics` (Set of String) Topics.
-
-### Optional
-
-- `click_url` (String) Click URL.
-- `field_tags` (Set of String) Tags and emojis.
 - `password` (String, Sensitive) Password.
 - `priority` (Number) Priority. `1` Min, `2` Low, `3` Default, `4` High, `5` Max.
 - `server_url` (String) Server URL.

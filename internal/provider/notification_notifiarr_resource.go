@@ -45,6 +45,7 @@ type NotificationNotifiarr struct {
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
+	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
 	OnReleaseImport            types.Bool   `tfsdk:"on_release_import"`
 	OnAuthorDelete             types.Bool   `tfsdk:"on_author_delete"`
@@ -64,6 +65,7 @@ func (n NotificationNotifiarr) toNotification() *Notification {
 		OnAuthorDelete:             n.OnAuthorDelete,
 		IncludeHealthWarnings:      n.IncludeHealthWarnings,
 		OnHealthIssue:              n.OnHealthIssue,
+		OnApplicationUpdate:        n.OnApplicationUpdate,
 		OnBookDelete:               n.OnBookDelete,
 		OnBookFileDelete:           n.OnBookFileDelete,
 		OnUpgrade:                  n.OnUpgrade,
@@ -83,6 +85,7 @@ func (n *NotificationNotifiarr) fromNotification(notification *Notification) {
 	n.OnBookFileDelete = notification.OnBookFileDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnAuthorDelete = notification.OnAuthorDelete
 	n.OnBookDelete = notification.OnBookDelete
 	n.OnUpgrade = notification.OnUpgrade
@@ -99,39 +102,53 @@ func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_author_delete": schema.BoolAttribute{
 				MarkdownDescription: "On author deleted flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_book_file_delete_for_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On book file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_application_update": schema.BoolAttribute{
+				MarkdownDescription: "On application update flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Notification name.",

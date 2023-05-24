@@ -41,16 +41,16 @@ resource "readarr_notification_kavita" "example" {
 - `host` (String) Host.
 - `name` (String) Notification name.
 - `notify` (Boolean) Update library.
+- `port` (Number) Port.
+
+### Optional
+
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.
 - `on_book_file_delete_for_upgrade` (Boolean) On book file delete for upgrade flag.
 - `on_book_retag` (Boolean) On book retag flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `port` (Number) Port.
-
-### Optional
-
 - `tags` (Set of Number) List of associated tags.
 - `use_ssl` (Boolean) Use SSL flag.
 

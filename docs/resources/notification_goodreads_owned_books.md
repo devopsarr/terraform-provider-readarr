@@ -40,14 +40,14 @@ resource "readarr_notification_gooodreads_owned_books" "example" {
 - `access_token_secret` (String, Sensitive) Access token secret.
 - `condition` (Number) Condition. `10` BrandNew, `20` LikeNew, `30` VeryGood, `40` Good, `50` Acceptable, `60` Poor.
 - `name` (String) Notification name.
-- `on_release_import` (Boolean) On release import flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 - `username` (String) Username.
 
 ### Optional
 
 - `description` (String) Condition description.
 - `location` (String) Purchase location.
+- `on_release_import` (Boolean) On release import flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `request_token_secret` (String, Sensitive) Request token secret.
 - `tags` (Set of Number) List of associated tags.
 - `user_id` (String) User ID.

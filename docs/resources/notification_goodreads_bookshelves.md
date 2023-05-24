@@ -42,19 +42,19 @@ resource "readarr_notification_gooodreads_bookshelves" "example" {
 
 - `access_token` (String, Sensitive) Access token.
 - `access_token_secret` (String, Sensitive) Access token secret.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `username` (String) Username.
+
+### Optional
+
+- `add_ids` (Set of String) Add IDs.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.
 - `on_book_file_delete_for_upgrade` (Boolean) On book file delete for upgrade flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `username` (String) Username.
-
-### Optional
-
-- `add_ids` (Set of String) Add IDs.
 - `remove_ids` (Set of String) Remove IDs.
 - `request_token_secret` (String, Sensitive) Request token secret.
 - `tags` (Set of Number) List of associated tags.

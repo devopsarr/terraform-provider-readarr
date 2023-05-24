@@ -42,8 +42,14 @@ resource "readarr_notification_join" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+
+### Optional
+
+- `devices` (Set of String) List of devices.
+- `expire` (Number) Expire.
+- `include_health_warnings` (Boolean) Include health warnings.
+- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.
@@ -54,11 +60,6 @@ resource "readarr_notification_join" "example" {
 - `on_import_failure` (Boolean) On import failure flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
-- `devices` (Set of String) List of devices.
-- `expire` (Number) Expire.
 - `priority` (Number) Priority. `-2` Silent, `-1` Quiet, `0` Normal, `1` High, `2` Emergency, `8` High.
 - `retry` (Number) Retry.
 - `sound` (String) Sound.
