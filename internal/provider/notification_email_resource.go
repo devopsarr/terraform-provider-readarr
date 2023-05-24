@@ -54,6 +54,7 @@ type NotificationEmail struct {
 	AttachFiles                types.Bool   `tfsdk:"attach_files"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
+	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
 	OnReleaseImport            types.Bool   `tfsdk:"on_release_import"`
 	OnAuthorDelete             types.Bool   `tfsdk:"on_author_delete"`
@@ -84,6 +85,7 @@ func (n NotificationEmail) toNotification() *Notification {
 		OnAuthorDelete:             n.OnAuthorDelete,
 		IncludeHealthWarnings:      n.IncludeHealthWarnings,
 		OnHealthIssue:              n.OnHealthIssue,
+		OnApplicationUpdate:        n.OnApplicationUpdate,
 		OnBookDelete:               n.OnBookDelete,
 		OnBookFileDelete:           n.OnBookFileDelete,
 		OnUpgrade:                  n.OnUpgrade,
@@ -114,6 +116,7 @@ func (n *NotificationEmail) fromNotification(notification *Notification) {
 	n.OnBookFileDelete = notification.OnBookFileDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnAuthorDelete = notification.OnAuthorDelete
 	n.OnBookDelete = notification.OnBookDelete
 	n.OnUpgrade = notification.OnUpgrade
@@ -160,6 +163,10 @@ func (r *NotificationEmailResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_application_update": schema.BoolAttribute{
+				MarkdownDescription: "On application update flag.",
 				Required:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{

@@ -43,6 +43,7 @@ resource "readarr_notification_join" "example" {
 - `device_names` (String) Device names. Comma separated list.
 - `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
+- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.

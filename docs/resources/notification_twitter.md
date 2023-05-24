@@ -50,6 +50,7 @@ resource "readarr_notification_twitter" "example" {
 - `include_health_warnings` (Boolean) Include health warnings.
 - `mention` (String) Mention.
 - `name` (String) Notification name.
+- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.

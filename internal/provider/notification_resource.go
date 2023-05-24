@@ -116,6 +116,7 @@ type Notification struct {
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	SendSilently               types.Bool   `tfsdk:"send_silently"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
+	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	DirectMessage              types.Bool   `tfsdk:"direct_message"`
 	RequireEncryption          types.Bool   `tfsdk:"require_encryption"`
 	UseSSL                     types.Bool   `tfsdk:"use_ssl"`
@@ -177,6 +178,10 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_application_update": schema.BoolAttribute{
+				MarkdownDescription: "On application update flag.",
 				Required:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{
@@ -731,6 +736,7 @@ func (n *Notification) write(ctx context.Context, notification *readarr.Notifica
 	n.OnBookFileDelete = types.BoolValue(notification.GetOnBookFileDelete())
 	n.OnBookFileDeleteForUpgrade = types.BoolValue(notification.GetOnBookFileDeleteForUpgrade())
 	n.OnHealthIssue = types.BoolValue(notification.GetOnHealthIssue())
+	n.OnApplicationUpdate = types.BoolValue(notification.GetOnApplicationUpdate())
 	n.OnDownloadFailure = types.BoolValue(notification.GetOnDownloadFailure())
 	n.OnReleaseImport = types.BoolValue(notification.GetOnReleaseImport())
 	n.OnImportFailure = types.BoolValue(notification.GetOnImportFailure())
@@ -767,6 +773,7 @@ func (n *Notification) read(ctx context.Context) *readarr.NotificationResource {
 	notification.SetOnBookFileDelete(n.OnBookFileDelete.ValueBool())
 	notification.SetOnBookFileDeleteForUpgrade(n.OnBookFileDeleteForUpgrade.ValueBool())
 	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
 	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
 	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
 	notification.SetOnBookRetag(n.OnBookRetag.ValueBool())

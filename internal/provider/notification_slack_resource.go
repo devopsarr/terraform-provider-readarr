@@ -48,6 +48,7 @@ type NotificationSlack struct {
 	OnGrab                     types.Bool   `tfsdk:"on_grab"`
 	IncludeHealthWarnings      types.Bool   `tfsdk:"include_health_warnings"`
 	OnHealthIssue              types.Bool   `tfsdk:"on_health_issue"`
+	OnApplicationUpdate        types.Bool   `tfsdk:"on_application_update"`
 	OnRename                   types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade                  types.Bool   `tfsdk:"on_upgrade"`
 	OnReleaseImport            types.Bool   `tfsdk:"on_release_import"`
@@ -74,6 +75,7 @@ func (n NotificationSlack) toNotification() *Notification {
 		OnAuthorDelete:             n.OnAuthorDelete,
 		IncludeHealthWarnings:      n.IncludeHealthWarnings,
 		OnHealthIssue:              n.OnHealthIssue,
+		OnApplicationUpdate:        n.OnApplicationUpdate,
 		OnBookDelete:               n.OnBookDelete,
 		OnBookFileDelete:           n.OnBookFileDelete,
 		OnRename:                   n.OnRename,
@@ -100,6 +102,7 @@ func (n *NotificationSlack) fromNotification(notification *Notification) {
 	n.OnBookFileDelete = notification.OnBookFileDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnAuthorDelete = notification.OnAuthorDelete
 	n.OnBookDelete = notification.OnBookDelete
 	n.OnRename = notification.OnRename
@@ -152,6 +155,10 @@ func (r *NotificationSlackResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_application_update": schema.BoolAttribute{
+				MarkdownDescription: "On application update flag.",
 				Required:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{

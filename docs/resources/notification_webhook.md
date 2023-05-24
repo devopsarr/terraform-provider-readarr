@@ -45,6 +45,7 @@ resource "readarr_notification_webhook" "example" {
 - `include_health_warnings` (Boolean) Include health warnings.
 - `method` (Number) Method. `1` POST, `2` PUT.
 - `name` (String) Notification name.
+- `on_application_update` (Boolean) On application update flag.
 - `on_author_delete` (Boolean) On author deleted flag.
 - `on_book_delete` (Boolean) On book delete flag.
 - `on_book_file_delete` (Boolean) On book file delete flag.
