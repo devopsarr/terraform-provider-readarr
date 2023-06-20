@@ -314,7 +314,7 @@ func (r *ImportListGoodreadsBookshelfResource) Delete(ctx context.Context, req r
 	// Delete ImportListGoodreadsBookshelf current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListGoodreadsBookshelfResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListGoodreadsBookshelfResourceName, err))
 
 		return
 	}

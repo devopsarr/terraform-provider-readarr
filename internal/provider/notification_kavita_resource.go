@@ -268,7 +268,7 @@ func (r *NotificationKavitaResource) Delete(ctx context.Context, req resource.De
 	// Delete NotificationKavita current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationKavitaResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, notificationKavitaResourceName, err))
 
 		return
 	}
