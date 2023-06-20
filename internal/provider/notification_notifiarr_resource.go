@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -194,7 +195,7 @@ func (r *NotificationNotifiarrResource) Create(ctx context.Context, req resource
 	}
 
 	// Create new NotificationNotifiarr
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
@@ -205,7 +206,7 @@ func (r *NotificationNotifiarrResource) Create(ctx context.Context, req resource
 
 	tflog.Trace(ctx, "created "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -229,7 +230,7 @@ func (r *NotificationNotifiarrResource) Read(ctx context.Context, req resource.R
 
 	tflog.Trace(ctx, "read "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -244,7 +245,7 @@ func (r *NotificationNotifiarrResource) Update(ctx context.Context, req resource
 	}
 
 	// Update NotificationNotifiarr
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
@@ -255,7 +256,7 @@ func (r *NotificationNotifiarrResource) Update(ctx context.Context, req resource
 
 	tflog.Trace(ctx, "updated "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -285,12 +286,12 @@ func (r *NotificationNotifiarrResource) ImportState(ctx context.Context, req res
 	tflog.Trace(ctx, "imported "+notificationNotifiarrResourceName+": "+req.ID)
 }
 
-func (n *NotificationNotifiarr) write(ctx context.Context, notification *readarr.NotificationResource) {
+func (n *NotificationNotifiarr) write(ctx context.Context, notification *readarr.NotificationResource, diags *diag.Diagnostics) {
 	genericNotification := n.toNotification()
-	genericNotification.write(ctx, notification)
+	genericNotification.write(ctx, notification, diags)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationNotifiarr) read(ctx context.Context) *readarr.NotificationResource {
-	return n.toNotification().read(ctx)
+func (n *NotificationNotifiarr) read(ctx context.Context, diags *diag.Diagnostics) *readarr.NotificationResource {
+	return n.toNotification().read(ctx, diags)
 }

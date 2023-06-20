@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -203,7 +204,7 @@ func (r *ImportListLazyLibrarianResource) Create(ctx context.Context, req resour
 	}
 
 	// Create new ImportListLazyLibrarian
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -214,7 +215,7 @@ func (r *ImportListLazyLibrarianResource) Create(ctx context.Context, req resour
 
 	tflog.Trace(ctx, "created "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -238,7 +239,7 @@ func (r *ImportListLazyLibrarianResource) Read(ctx context.Context, req resource
 
 	tflog.Trace(ctx, "read "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -253,7 +254,7 @@ func (r *ImportListLazyLibrarianResource) Update(ctx context.Context, req resour
 	}
 
 	// Update ImportListLazyLibrarian
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -264,7 +265,7 @@ func (r *ImportListLazyLibrarianResource) Update(ctx context.Context, req resour
 
 	tflog.Trace(ctx, "updated "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -294,12 +295,12 @@ func (r *ImportListLazyLibrarianResource) ImportState(ctx context.Context, req r
 	tflog.Trace(ctx, "imported "+importListLazyLibrarianResourceName+": "+req.ID)
 }
 
-func (i *ImportListLazyLibrarian) write(ctx context.Context, importList *readarr.ImportListResource) {
+func (i *ImportListLazyLibrarian) write(ctx context.Context, importList *readarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListLazyLibrarian) read(ctx context.Context) *readarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListLazyLibrarian) read(ctx context.Context, diags *diag.Diagnostics) *readarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

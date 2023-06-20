@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -138,7 +139,7 @@ func (r *DownloadClientUsenetBlackholeResource) Create(ctx context.Context, req 
 	}
 
 	// Create new DownloadClientUsenetBlackhole
-	request := client.read(ctx)
+	request := client.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
@@ -149,7 +150,7 @@ func (r *DownloadClientUsenetBlackholeResource) Create(ctx context.Context, req 
 
 	tflog.Trace(ctx, "created "+downloadClientUsenetBlackholeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
@@ -173,7 +174,7 @@ func (r *DownloadClientUsenetBlackholeResource) Read(ctx context.Context, req re
 
 	tflog.Trace(ctx, "read "+downloadClientUsenetBlackholeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
@@ -188,7 +189,7 @@ func (r *DownloadClientUsenetBlackholeResource) Update(ctx context.Context, req 
 	}
 
 	// Update DownloadClientUsenetBlackhole
-	request := client.read(ctx)
+	request := client.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
@@ -199,7 +200,7 @@ func (r *DownloadClientUsenetBlackholeResource) Update(ctx context.Context, req 
 
 	tflog.Trace(ctx, "updated "+downloadClientUsenetBlackholeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
@@ -229,12 +230,12 @@ func (r *DownloadClientUsenetBlackholeResource) ImportState(ctx context.Context,
 	tflog.Trace(ctx, "imported "+downloadClientUsenetBlackholeResourceName+": "+req.ID)
 }
 
-func (d *DownloadClientUsenetBlackhole) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
+func (d *DownloadClientUsenetBlackhole) write(ctx context.Context, downloadClient *readarr.DownloadClientResource, diags *diag.Diagnostics) {
 	genericDownloadClient := d.toDownloadClient()
-	genericDownloadClient.write(ctx, downloadClient)
+	genericDownloadClient.write(ctx, downloadClient, diags)
 	d.fromDownloadClient(genericDownloadClient)
 }
 
-func (d *DownloadClientUsenetBlackhole) read(ctx context.Context) *readarr.DownloadClientResource {
-	return d.toDownloadClient().read(ctx)
+func (d *DownloadClientUsenetBlackhole) read(ctx context.Context, diags *diag.Diagnostics) *readarr.DownloadClientResource {
+	return d.toDownloadClient().read(ctx, diags)
 }

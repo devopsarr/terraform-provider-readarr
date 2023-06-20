@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -191,7 +192,7 @@ func (r *NotificationKavitaResource) Create(ctx context.Context, req resource.Cr
 	}
 
 	// Create new NotificationKavita
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
@@ -202,7 +203,7 @@ func (r *NotificationKavitaResource) Create(ctx context.Context, req resource.Cr
 
 	tflog.Trace(ctx, "created "+notificationKavitaResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -226,7 +227,7 @@ func (r *NotificationKavitaResource) Read(ctx context.Context, req resource.Read
 
 	tflog.Trace(ctx, "read "+notificationKavitaResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -241,7 +242,7 @@ func (r *NotificationKavitaResource) Update(ctx context.Context, req resource.Up
 	}
 
 	// Update NotificationKavita
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
@@ -252,7 +253,7 @@ func (r *NotificationKavitaResource) Update(ctx context.Context, req resource.Up
 
 	tflog.Trace(ctx, "updated "+notificationKavitaResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -282,12 +283,12 @@ func (r *NotificationKavitaResource) ImportState(ctx context.Context, req resour
 	tflog.Trace(ctx, "imported "+notificationKavitaResourceName+": "+req.ID)
 }
 
-func (n *NotificationKavita) write(ctx context.Context, notification *readarr.NotificationResource) {
+func (n *NotificationKavita) write(ctx context.Context, notification *readarr.NotificationResource, diags *diag.Diagnostics) {
 	genericNotification := n.toNotification()
-	genericNotification.write(ctx, notification)
+	genericNotification.write(ctx, notification, diags)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationKavita) read(ctx context.Context) *readarr.NotificationResource {
-	return n.toNotification().read(ctx)
+func (n *NotificationKavita) read(ctx context.Context, diags *diag.Diagnostics) *readarr.NotificationResource {
+	return n.toNotification().read(ctx, diags)
 }

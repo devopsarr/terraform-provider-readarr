@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -220,7 +221,7 @@ func (r *NotificationGoodreadsBookshelvesResource) Create(ctx context.Context, r
 	}
 
 	// Create new NotificationGoodreadsBookshelves
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
@@ -231,7 +232,7 @@ func (r *NotificationGoodreadsBookshelvesResource) Create(ctx context.Context, r
 
 	tflog.Trace(ctx, "created "+notificationGoodreadsBookshelvesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -255,7 +256,7 @@ func (r *NotificationGoodreadsBookshelvesResource) Read(ctx context.Context, req
 
 	tflog.Trace(ctx, "read "+notificationGoodreadsBookshelvesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -270,7 +271,7 @@ func (r *NotificationGoodreadsBookshelvesResource) Update(ctx context.Context, r
 	}
 
 	// Update NotificationGoodreadsBookshelves
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
@@ -281,7 +282,7 @@ func (r *NotificationGoodreadsBookshelvesResource) Update(ctx context.Context, r
 
 	tflog.Trace(ctx, "updated "+notificationGoodreadsBookshelvesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -311,12 +312,12 @@ func (r *NotificationGoodreadsBookshelvesResource) ImportState(ctx context.Conte
 	tflog.Trace(ctx, "imported "+notificationGoodreadsBookshelvesResourceName+": "+req.ID)
 }
 
-func (n *NotificationGoodreadsBookshelves) write(ctx context.Context, notification *readarr.NotificationResource) {
+func (n *NotificationGoodreadsBookshelves) write(ctx context.Context, notification *readarr.NotificationResource, diags *diag.Diagnostics) {
 	genericNotification := n.toNotification()
-	genericNotification.write(ctx, notification)
+	genericNotification.write(ctx, notification, diags)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationGoodreadsBookshelves) read(ctx context.Context) *readarr.NotificationResource {
-	return n.toNotification().read(ctx)
+func (n *NotificationGoodreadsBookshelves) read(ctx context.Context, diags *diag.Diagnostics) *readarr.NotificationResource {
+	return n.toNotification().read(ctx, diags)
 }
