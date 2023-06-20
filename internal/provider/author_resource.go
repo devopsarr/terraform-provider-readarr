@@ -203,23 +203,23 @@ func (r *AuthorResource) Update(ctx context.Context, req resource.UpdateRequest,
 }
 
 func (r *AuthorResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var author *Author
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &author)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete author current value
-	_, err := r.client.AuthorApi.DeleteAuthor(ctx, int32(author.ID.ValueInt64())).Execute()
+	_, err := r.client.AuthorApi.DeleteAuthor(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, authorResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+authorResourceName+": "+strconv.Itoa(int(author.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+authorResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
