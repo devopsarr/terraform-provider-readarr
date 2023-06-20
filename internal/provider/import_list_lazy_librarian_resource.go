@@ -280,7 +280,7 @@ func (r *ImportListLazyLibrarianResource) Delete(ctx context.Context, req resour
 	// Delete ImportListLazyLibrarian current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLazyLibrarianResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListLazyLibrarianResourceName, err))
 
 		return
 	}

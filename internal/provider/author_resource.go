@@ -214,7 +214,7 @@ func (r *AuthorResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	// Delete author current value
 	_, err := r.client.AuthorApi.DeleteAuthor(ctx, int32(author.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, authorResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, authorResourceName, err))
 
 		return
 	}

@@ -281,7 +281,7 @@ func (r *IndexerGazelleResource) Delete(ctx context.Context, req resource.Delete
 	// Delete IndexerGazelle current value
 	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerGazelleResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerGazelleResourceName, err))
 
 		return
 	}

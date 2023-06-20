@@ -57,7 +57,7 @@ func (d *QualityProfilesDataSource) Schema(ctx context.Context, req datasource.S
 						},
 						"name": schema.StringAttribute{
 							MarkdownDescription: "Quality Profile Name.",
-							Required:            true,
+							Computed:            true,
 						},
 						"upgrade_allowed": schema.BoolAttribute{
 							MarkdownDescription: "Upgrade allowed flag.",
