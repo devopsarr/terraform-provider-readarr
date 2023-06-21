@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -30,6 +31,14 @@ type QualityDataSource struct {
 type Quality struct {
 	Name types.String `tfsdk:"name"`
 	ID   types.Int64  `tfsdk:"id"`
+}
+
+func (q Quality) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"name": types.StringType,
+			"id":   types.Int64Type,
+		})
 }
 
 func (d *QualityDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
