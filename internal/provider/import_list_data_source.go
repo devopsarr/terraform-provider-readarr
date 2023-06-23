@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -39,10 +39,10 @@ func (d *ImportListDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Enable automatic add flag.",
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Computed:            true,
@@ -67,10 +67,10 @@ func (d *ImportListDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Should monitor.",
 				Computed:            true,
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Computed:            true,
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Computed:            true,
+			},
 			"implementation": schema.StringAttribute{
 				MarkdownDescription: "ImportList implementation name.",
 				Computed:            true,
@@ -178,24 +178,20 @@ func (d *ImportListDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	importList, err := findImportList(data.Name.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", importListDataSourceName, err))
-
-		return
-	}
-
+	data.find(ctx, data.Name.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+importListDataSourceName)
-	data.write(ctx, importList, &resp.Diagnostics)
+	// Map response body to resource schema attribute
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findImportList(name string, importLists []*readarr.ImportListResource) (*readarr.ImportListResource, error) {
-	for _, i := range importLists {
-		if i.GetName() == name {
-			return i, nil
+func (i *ImportList) find(ctx context.Context, name string, importLists []*readarr.ImportListResource, diags *diag.Diagnostics) {
+	for _, list := range importLists {
+		if list.GetName() == name {
+			i.write(ctx, list, diags)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(importListDataSourceName, "name", name)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(importListDataSourceName, "name", name))
 }

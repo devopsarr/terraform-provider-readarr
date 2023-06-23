@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -45,6 +46,20 @@ type DelayProfile struct {
 	Order             types.Int64  `tfsdk:"order"`
 	EnableUsenet      types.Bool   `tfsdk:"enable_usenet"`
 	EnableTorrent     types.Bool   `tfsdk:"enable_torrent"`
+}
+
+func (p DelayProfile) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":               types.SetType{}.WithElementType(types.Int64Type),
+			"preferred_protocol": types.StringType,
+			"usenet_delay":       types.Int64Type,
+			"torrent_delay":      types.Int64Type,
+			"id":                 types.Int64Type,
+			"order":              types.Int64Type,
+			"enable_usenet":      types.BoolType,
+			"enable_torrent":     types.BoolType,
+		})
 }
 
 func (r *DelayProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

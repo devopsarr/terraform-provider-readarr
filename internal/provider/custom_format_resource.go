@@ -6,13 +6,13 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -40,6 +40,16 @@ type CustomFormat struct {
 	Name                            types.String `tfsdk:"name"`
 	ID                              types.Int64  `tfsdk:"id"`
 	IncludeCustomFormatWhenRenaming types.Bool   `tfsdk:"include_custom_format_when_renaming"`
+}
+
+func (c CustomFormat) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"include_custom_format_when_renaming": types.BoolType,
+			"id":                                  types.Int64Type,
+			"name":                                types.StringType,
+			"specifications":                      types.SetType{}.WithElementType(CustomFormatCondition{}.getType()),
+		})
 }
 
 func (r *CustomFormatResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -128,16 +138,16 @@ func (r *CustomFormatResource) Configure(ctx context.Context, req resource.Confi
 
 func (r *CustomFormatResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var client *CustomFormat
+	var format *CustomFormat
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &client)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &format)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Create new CustomFormat
-	request := client.read(ctx, &resp.Diagnostics)
+	request := format.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.CustomFormatApi.CreateCustomFormat(ctx).CustomFormatResource(*request).Execute()
 	if err != nil {
@@ -157,16 +167,16 @@ func (r *CustomFormatResource) Create(ctx context.Context, req resource.CreateRe
 
 func (r *CustomFormatResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var client CustomFormat
+	var format CustomFormat
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &client)...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &format)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Get CustomFormat current value
-	response, _, err := r.client.CustomFormatApi.GetCustomFormatById(ctx, int32(client.ID.ValueInt64())).Execute()
+	response, _, err := r.client.CustomFormatApi.GetCustomFormatById(ctx, int32(format.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, customFormatResourceName, err))
 
@@ -184,16 +194,16 @@ func (r *CustomFormatResource) Read(ctx context.Context, req resource.ReadReques
 
 func (r *CustomFormatResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var client *CustomFormat
+	var format *CustomFormat
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &client)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &format)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Update CustomFormat
-	request := client.read(ctx, &resp.Diagnostics)
+	request := format.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.CustomFormatApi.UpdateCustomFormat(ctx, strconv.Itoa(int(request.GetId()))).CustomFormatResource(*request).Execute()
 	if err != nil {
@@ -238,17 +248,18 @@ func (r *CustomFormatResource) ImportState(ctx context.Context, req resource.Imp
 }
 
 func (c *CustomFormat) write(ctx context.Context, customFormat *readarr.CustomFormatResource, diags *diag.Diagnostics) {
-	c.ID = types.Int64Value(int64(customFormat.GetId()))
-	c.Name = types.StringValue(customFormat.GetName())
-	c.IncludeCustomFormatWhenRenaming = types.BoolValue(customFormat.GetIncludeCustomFormatWhenRenaming())
-	c.Specifications = types.SetValueMust(CustomFormatResource{}.getSpecificationSchema().Type(), nil)
+	var tempDiag diag.Diagnostics
 
 	specs := make([]CustomFormatCondition, len(customFormat.Specifications))
 	for n, s := range customFormat.Specifications {
 		specs[n].write(ctx, s)
 	}
 
-	diags.Append(tfsdk.ValueFrom(ctx, specs, c.Specifications.Type(ctx), &c.Specifications)...)
+	c.ID = types.Int64Value(int64(customFormat.GetId()))
+	c.Name = types.StringValue(customFormat.GetName())
+	c.IncludeCustomFormatWhenRenaming = types.BoolValue(customFormat.GetIncludeCustomFormatWhenRenaming())
+	c.Specifications, tempDiag = types.SetValueFrom(ctx, CustomFormatCondition{}.getType(), specs)
+	diags.Append(tempDiag...)
 }
 
 func (c *CustomFormat) read(ctx context.Context, diags *diag.Diagnostics) *readarr.CustomFormatResource {

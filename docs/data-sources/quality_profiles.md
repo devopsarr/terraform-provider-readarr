@@ -28,10 +28,6 @@ data "readarr_quality_profiles" "example" {
 <a id="nestedatt--quality_profiles"></a>
 ### Nested Schema for `quality_profiles`
 
-Required:
-
-- `name` (String) Quality Profile Name.
-
 Read-Only:
 
 - `cutoff` (Number) Quality ID to which cutoff.
@@ -39,6 +35,7 @@ Read-Only:
 - `format_items` (Attributes Set) Format items. (see [below for nested schema](#nestedatt--quality_profiles--format_items))
 - `id` (Number) Quality Profile ID.
 - `min_format_score` (Number) Min format score.
+- `name` (String) Quality Profile Name.
 - `quality_groups` (Attributes Set) Quality groups. (see [below for nested schema](#nestedatt--quality_profiles--quality_groups))
 - `upgrade_allowed` (Boolean) Upgrade allowed flag.
 

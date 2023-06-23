@@ -105,7 +105,7 @@ resource "readarr_notification" "example" {
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `password` (String) password.
+- `password` (String, Sensitive) password.
 - `path` (String) Path.
 - `port` (Number) Port.
 - `priority` (Number) Priority.

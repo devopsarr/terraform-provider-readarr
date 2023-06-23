@@ -59,6 +59,7 @@ func testAccRootFolderResourceConfig(path, name string) string {
 			default_metadata_profile_id = 1
 			default_quality_profile_id = 1
 			default_monitor_option = "all"
+			default_monitor_new_item_option = "all"
 			default_tags = []
 
 			output_profile = "default"

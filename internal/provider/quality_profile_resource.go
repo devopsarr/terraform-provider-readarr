@@ -397,8 +397,8 @@ func (f *FormatItem) write(format *readarr.ProfileFormatItemResource) {
 func (p *QualityProfile) read(ctx context.Context, diags *diag.Diagnostics) *readarr.QualityProfileResource {
 	groups := make([]QualityGroup, len(p.QualityGroups.Elements()))
 	diags.Append(p.QualityGroups.ElementsAs(ctx, &groups, false)...)
-
 	qualities := make([]*readarr.QualityProfileQualityItemResource, len(groups))
+
 	for n, g := range groups {
 		q := make([]Quality, len(g.Qualities.Elements()))
 		diags.Append(g.Qualities.ElementsAs(ctx, &q, false)...)

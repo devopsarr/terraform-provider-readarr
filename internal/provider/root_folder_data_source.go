@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -47,10 +47,10 @@ func (d *RootFolderDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Default monitor option.",
 				Computed:            true,
 			},
-			// "default_monitor_new_item_option": schema.StringAttribute{
-			// 	MarkdownDescription: "Default monitor new item option.",
-			// 	Computed:            true,
-			// },
+			"default_monitor_new_item_option": schema.StringAttribute{
+				MarkdownDescription: "Default monitor new item option.",
+				Computed:            true,
+			},
 			"host": schema.StringAttribute{
 				MarkdownDescription: "Calibre host.",
 				Computed:            true,
@@ -131,25 +131,21 @@ func (d *RootFolderDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	// Map response body to resource schema attribute
-	rootFolder, err := findRootFolder(folder.Path.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", rootFolderDataSourceName, err))
-
-		return
-	}
+	folder.find(ctx, folder.Path.ValueString(), response, &resp.Diagnostics)
 
 	tflog.Trace(ctx, "read "+rootFolderDataSourceName)
-	folder.write(ctx, rootFolder)
+	// Map response body to resource schema attribute
 	resp.Diagnostics.Append(resp.State.Set(ctx, &folder)...)
 }
 
-func findRootFolder(path string, folders []*readarr.RootFolderResource) (*readarr.RootFolderResource, error) {
-	for _, f := range folders {
-		if f.GetPath() == path {
-			return f, nil
+func (r *RootFolder) find(ctx context.Context, path string, folders []*readarr.RootFolderResource, diags *diag.Diagnostics) {
+	for _, folder := range folders {
+		if folder.GetPath() == path {
+			r.write(ctx, folder, diags)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(rootFolderDataSourceName, "path", path)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(rootFolderDataSourceName, "path", path))
 }

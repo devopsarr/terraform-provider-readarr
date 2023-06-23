@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -107,13 +106,6 @@ func (d *AuthorsDataSource) Configure(ctx context.Context, req datasource.Config
 }
 
 func (d *AuthorsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *Authors
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 	// Get authors current value
 	response, _, err := d.client.AuthorApi.ListAuthor(ctx).Execute()
 	if err != nil {
@@ -126,11 +118,10 @@ func (d *AuthorsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	// Map response body to resource schema attribute
 	authors := make([]Author, len(response))
 	for i, m := range response {
-		authors[i].write(ctx, m)
+		authors[i].write(ctx, m, &resp.Diagnostics)
 	}
 
-	tfsdk.ValueFrom(ctx, authors, data.Authors.Type(ctx), &data.Authors)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(response)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	authorList, diags := types.SetValueFrom(ctx, Author{}.getType(), authors)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, Authors{Authors: authorList, ID: types.StringValue(strconv.Itoa(len(response)))})...)
 }

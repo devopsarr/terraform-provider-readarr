@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -37,6 +38,15 @@ type ImportListExclusion struct {
 	AuthorName types.String `tfsdk:"author_name"`
 	ForeignID  types.String `tfsdk:"foreign_id"`
 	ID         types.Int64  `tfsdk:"id"`
+}
+
+func (i ImportListExclusion) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":         types.Int64Type,
+			"foreign_id": types.StringType,
+			"label":      types.StringType,
+		})
 }
 
 func (r *ImportListExclusionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

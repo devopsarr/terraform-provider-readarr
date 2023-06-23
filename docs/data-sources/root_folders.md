@@ -32,6 +32,7 @@ Read-Only:
 
 - `accessible` (Boolean) Access flag.
 - `default_metadata_profile_id` (Number) Default metadata profile ID.
+- `default_monitor_new_item_option` (String) Default monitor new item option.
 - `default_monitor_option` (String) Default monitor option.
 - `default_quality_profile_id` (Number) Default metadata profile ID.
 - `default_tags` (Set of Number) List of associated tags.

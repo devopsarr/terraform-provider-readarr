@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -105,13 +104,6 @@ func (d *MetadataProfilesDataSource) Configure(ctx context.Context, req datasour
 }
 
 func (d *MetadataProfilesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *MetadataProfiles
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 	// Get metadataprofiles current value
 	response, _, err := d.client.MetadataProfileApi.ListMetadataProfile(ctx).Execute()
 	if err != nil {
@@ -127,8 +119,7 @@ func (d *MetadataProfilesDataSource) Read(ctx context.Context, req datasource.Re
 		profiles[i].write(p)
 	}
 
-	tfsdk.ValueFrom(ctx, profiles, data.MetadataProfiles.Type(ctx), &data.MetadataProfiles)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(response)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	profileList, diags := types.SetValueFrom(ctx, MetadataProfile{}.getType(), profiles)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, MetadataProfiles{MetadataProfiles: profileList, ID: types.StringValue(strconv.Itoa(len(response)))})...)
 }

@@ -187,9 +187,10 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Computed:            true,
 			},
 			"password": schema.StringAttribute{
-				MarkdownDescription: "Password.",
+				MarkdownDescription: "password.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"book_category": schema.StringAttribute{
 				MarkdownDescription: "Book category.",

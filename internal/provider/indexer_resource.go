@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -76,6 +77,41 @@ type Indexer struct {
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
 	AllowZeroSize           types.Bool    `tfsdk:"allow_zero_size"`
 	RankedOnly              types.Bool    `tfsdk:"ranked_only"`
+}
+
+func (i Indexer) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":                      types.SetType{}.WithElementType(types.Int64Type),
+			"categories":                types.SetType{}.WithElementType(types.Int64Type),
+			"api_user":                  types.StringType,
+			"additional_parameters":     types.StringType,
+			"name":                      types.StringType,
+			"implementation":            types.StringType,
+			"captcha_token":             types.StringType,
+			"protocol":                  types.StringType,
+			"config_contract":           types.StringType,
+			"api_key":                   types.StringType,
+			"api_path":                  types.StringType,
+			"cookie":                    types.StringType,
+			"base_url":                  types.StringType,
+			"username":                  types.StringType,
+			"password":                  types.StringType,
+			"passkey":                   types.StringType,
+			"early_release_limit":       types.Int64Type,
+			"seed_time":                 types.Int64Type,
+			"delay":                     types.Int64Type,
+			"minimum_seeders":           types.Int64Type,
+			"id":                        types.Int64Type,
+			"seed_ratio":                types.Float64Type,
+			"priority":                  types.Int64Type,
+			"author_seed_time":          types.Int64Type,
+			"enable_interactive_search": types.BoolType,
+			"enable_rss":                types.BoolType,
+			"enable_automatic_search":   types.BoolType,
+			"allow_zero_size":           types.BoolType,
+			"ranked_only":               types.BoolType,
+		})
 }
 
 func (r *IndexerResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

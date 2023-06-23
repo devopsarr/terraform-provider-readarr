@@ -8,6 +8,7 @@ import (
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -89,6 +90,54 @@ type DownloadClient struct {
 	UseSsl                types.Bool   `tfsdk:"use_ssl"`
 	AddPaused             types.Bool   `tfsdk:"add_paused"`
 	Enable                types.Bool   `tfsdk:"enable"`
+}
+
+func (d DownloadClient) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":                   types.SetType{}.WithElementType(types.Int64Type),
+			"additional_tags":        types.SetType{}.WithElementType(types.Int64Type),
+			"post_import_tags":       types.SetType{}.WithElementType(types.StringType),
+			"field_tags":             types.SetType{}.WithElementType(types.StringType),
+			"nzb_folder":             types.StringType,
+			"category":               types.StringType,
+			"implementation":         types.StringType,
+			"name":                   types.StringType,
+			"protocol":               types.StringType,
+			"magnet_file_extension":  types.StringType,
+			"torrent_folder":         types.StringType,
+			"strm_folder":            types.StringType,
+			"host":                   types.StringType,
+			"config_contract":        types.StringType,
+			"destination":            types.StringType,
+			"bookdirectory":          types.StringType,
+			"book_directory":         types.StringType,
+			"username":               types.StringType,
+			"book_imported_category": types.StringType,
+			"book_category":          types.StringType,
+			"password":               types.StringType,
+			"secret_token":           types.StringType,
+			"rpc_path":               types.StringType,
+			"url_base":               types.StringType,
+			"api_key":                types.StringType,
+			"watch_folder":           types.StringType,
+			"recent_book_priority":   types.Int64Type,
+			"intial_state":           types.Int64Type,
+			"initial_state":          types.Int64Type,
+			"older_book_priority":    types.Int64Type,
+			"priority":               types.Int64Type,
+			"port":                   types.Int64Type,
+			"id":                     types.Int64Type,
+			"add_stopped":            types.BoolType,
+			"save_magnet_files":      types.BoolType,
+			"read_only":              types.BoolType,
+			"first_and_last":         types.BoolType,
+			"sequential_order":       types.BoolType,
+			"start_on_add":           types.BoolType,
+			"use_ssl":                types.BoolType,
+			"add_paused":             types.BoolType,
+			"enable":                 types.BoolType,
+		})
 }
 
 func (r *DownloadClientResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -247,9 +296,10 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Computed:            true,
 			},
 			"password": schema.StringAttribute{
-				MarkdownDescription: "Password.",
+				MarkdownDescription: "password.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"book_category": schema.StringAttribute{
 				MarkdownDescription: "Book category.",

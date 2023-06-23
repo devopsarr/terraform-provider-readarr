@@ -52,6 +52,7 @@ resource "readarr_root_folder" "calibre_example" {
 ### Required
 
 - `default_metadata_profile_id` (Number) Default metadata profile ID.
+- `default_monitor_new_item_option` (String) Default monitor new item option.
 - `default_monitor_option` (String) Default monitor option.
 - `default_quality_profile_id` (Number) Default metadata profile ID.
 - `is_calibre_library` (Boolean) Is calibre library flag.

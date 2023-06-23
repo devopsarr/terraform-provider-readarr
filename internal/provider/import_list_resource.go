@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -44,33 +45,66 @@ type ImportListResource struct {
 
 // ImportList describes the download client data model.
 type ImportList struct {
-	ProfileIds     types.Set    `tfsdk:"profile_ids"`
-	TagIds         types.Set    `tfsdk:"tag_ids"`
-	BookshelfIds   types.Set    `tfsdk:"bookshelf_ids"`
-	Tags           types.Set    `tfsdk:"tags"`
-	Name           types.String `tfsdk:"name"`
-	ConfigContract types.String `tfsdk:"config_contract"`
-	Implementation types.String `tfsdk:"implementation"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	AccessToken        types.String `tfsdk:"access_token"`
-	AccessTokenSecret  types.String `tfsdk:"access_token_secret"`
-	RequestTokenSecret types.String `tfsdk:"request_token_secret"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	ListType           types.String `tfsdk:"list_type"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	BaseURL            types.String `tfsdk:"base_url"`
-	APIKey             types.String `tfsdk:"api_key"`
-	UserID             types.String `tfsdk:"user_id"`
-	Username           types.String `tfsdk:"username"`
-	ListID             types.Int64  `tfsdk:"list_id"`
-	SeriesID           types.Int64  `tfsdk:"series_id"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	ProfileIds            types.Set    `tfsdk:"profile_ids"`
+	TagIds                types.Set    `tfsdk:"tag_ids"`
+	BookshelfIds          types.Set    `tfsdk:"bookshelf_ids"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	ConfigContract        types.String `tfsdk:"config_contract"`
+	Implementation        types.String `tfsdk:"implementation"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	AccessToken           types.String `tfsdk:"access_token"`
+	AccessTokenSecret     types.String `tfsdk:"access_token_secret"`
+	RequestTokenSecret    types.String `tfsdk:"request_token_secret"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	ListType              types.String `tfsdk:"list_type"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	BaseURL               types.String `tfsdk:"base_url"`
+	APIKey                types.String `tfsdk:"api_key"`
+	UserID                types.String `tfsdk:"user_id"`
+	Username              types.String `tfsdk:"username"`
+	ListID                types.Int64  `tfsdk:"list_id"`
+	SeriesID              types.Int64  `tfsdk:"series_id"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
+}
+
+func (i ImportList) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"bookshelf_ids":           types.SetType{}.WithElementType(types.StringType),
+			"tag_ids":                 types.SetType{}.WithElementType(types.Int64Type),
+			"tags":                    types.SetType{}.WithElementType(types.Int64Type),
+			"profile_ids":             types.SetType{}.WithElementType(types.Int64Type),
+			"name":                    types.StringType,
+			"config_contract":         types.StringType,
+			"implementation":          types.StringType,
+			"monitor_new_items":       types.StringType,
+			"access_token":            types.StringType,
+			"access_token_secret":     types.StringType,
+			"request_token_secret":    types.StringType,
+			"should_monitor":          types.StringType,
+			"list_type":               types.StringType,
+			"root_folder_path":        types.StringType,
+			"base_url":                types.StringType,
+			"api_key":                 types.StringType,
+			"user_id":                 types.StringType,
+			"username":                types.StringType,
+			"list_id":                 types.Int64Type,
+			"series_id":               types.Int64Type,
+			"quality_profile_id":      types.Int64Type,
+			"metadata_profile_id":     types.Int64Type,
+			"list_order":              types.Int64Type,
+			"id":                      types.Int64Type,
+			"enable_automatic_add":    types.BoolType,
+			"should_monitor_existing": types.BoolType,
+			"should_search":           types.BoolType,
+		})
 }
 
 func (r *ImportListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -86,11 +120,11 @@ func (r *ImportListResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -124,14 +158,14 @@ func (r *ImportListResource) Schema(ctx context.Context, req resource.SchemaRequ
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"implementation": schema.StringAttribute{
 				MarkdownDescription: "ImportList implementation name.",
 				Optional:            true,
@@ -361,7 +395,7 @@ func (i *ImportList) write(ctx context.Context, importList *readarr.ImportListRe
 	diags.Append(localDiag...)
 
 	i.EnableAutomaticAdd = types.BoolValue(importList.GetEnableAutomaticAdd())
-	// i.ShouldMonitorExisting = types.BoolValue(importList.GetShouldMonitorExisting())
+	i.ShouldMonitorExisting = types.BoolValue(importList.GetShouldMonitorExisting())
 	i.ShouldSearch = types.BoolValue(importList.GetShouldSearch())
 	i.QualityProfileID = types.Int64Value(int64(importList.GetQualityProfileId()))
 	i.MetadataProfileID = types.Int64Value(int64(importList.GetMetadataProfileId()))
@@ -370,7 +404,7 @@ func (i *ImportList) write(ctx context.Context, importList *readarr.ImportListRe
 	i.ConfigContract = types.StringValue(importList.GetConfigContract())
 	i.Implementation = types.StringValue(importList.GetImplementation())
 	i.ShouldMonitor = types.StringValue(string(importList.GetShouldMonitor()))
-	// i.MonitorNewItems = types.StringValue(string(importList.GetMonitorNewItems()))
+	i.MonitorNewItems = types.StringValue(string(importList.GetMonitorNewItems()))
 	i.RootFolderPath = types.StringValue(importList.GetRootFolderPath())
 	i.ListType = types.StringValue(string(importList.GetListType()))
 	i.Name = types.StringValue(importList.GetName())
@@ -383,7 +417,7 @@ func (i *ImportList) write(ctx context.Context, importList *readarr.ImportListRe
 func (i *ImportList) read(ctx context.Context, diags *diag.Diagnostics) *readarr.ImportListResource {
 	list := readarr.NewImportListResource()
 	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
-	// list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
+	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
 	list.SetShouldSearch(i.ShouldSearch.ValueBool())
 	list.SetQualityProfileId(int32(i.QualityProfileID.ValueInt64()))
 	list.SetMetadataProfileId(int32(i.MetadataProfileID.ValueInt64()))
@@ -391,7 +425,7 @@ func (i *ImportList) read(ctx context.Context, diags *diag.Diagnostics) *readarr
 	list.SetListOrder(int32(i.ListOrder.ValueInt64()))
 	list.SetShouldMonitor(readarr.ImportListMonitorType(i.ShouldMonitor.ValueString()))
 	list.SetRootFolderPath(i.RootFolderPath.ValueString())
-	// list.SetMonitorNewItems(readarr.NewItemMonitorTypes(i.MonitorNewItems.ValueString()))
+	list.SetMonitorNewItems(readarr.NewItemMonitorTypes(i.MonitorNewItems.ValueString()))
 	list.SetListType(readarr.ImportListType(i.ListType.ValueString()))
 	list.SetConfigContract(i.ConfigContract.ValueString())
 	list.SetImplementation(i.Implementation.ValueString())
