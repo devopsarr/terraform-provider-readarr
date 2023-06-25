@@ -43,9 +43,9 @@ type ImportListExclusion struct {
 func (i ImportListExclusion) getType() attr.Type {
 	return types.ObjectType{}.WithAttributeTypes(
 		map[string]attr.Type{
-			"id":         types.Int64Type,
-			"foreign_id": types.StringType,
-			"label":      types.StringType,
+			"id":          types.Int64Type,
+			"foreign_id":  types.StringType,
+			"author_name": types.StringType,
 		})
 }
 

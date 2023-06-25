@@ -42,48 +42,48 @@ type ImportListLazyLibrarianResource struct {
 
 // ImportListLazyLibrarian describes the import list data model.
 type ImportListLazyLibrarian struct {
-	Tags types.Set    `tfsdk:"tags"`
-	Name types.String `tfsdk:"name"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	BaseURL            types.String `tfsdk:"base_url"`
-	APIKey             types.String `tfsdk:"api_key"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	BaseURL               types.String `tfsdk:"base_url"`
+	APIKey                types.String `tfsdk:"api_key"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
 func (i ImportListLazyLibrarian) toImportList() *ImportList {
 	return &ImportList{
-		Tags: i.Tags,
-		Name: i.Name,
-		// MonitorNewItems:       i.MonitorNewItems,
-		ShouldMonitor:      i.ShouldMonitor,
-		RootFolderPath:     i.RootFolderPath,
-		BaseURL:            i.BaseURL,
-		APIKey:             i.APIKey,
-		QualityProfileID:   i.QualityProfileID,
-		MetadataProfileID:  i.MetadataProfileID,
-		ListOrder:          i.ListOrder,
-		ID:                 i.ID,
-		EnableAutomaticAdd: i.EnableAutomaticAdd,
-		// ShouldMonitorExisting: i.ShouldMonitorExisting,
-		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListLazyLibrarianImplementation),
-		ConfigContract: types.StringValue(importListLazyLibrarianConfigContract),
-		ListType:       types.StringValue(importListLazyLibrarianType),
+		Tags:                  i.Tags,
+		Name:                  i.Name,
+		MonitorNewItems:       i.MonitorNewItems,
+		ShouldMonitor:         i.ShouldMonitor,
+		RootFolderPath:        i.RootFolderPath,
+		BaseURL:               i.BaseURL,
+		APIKey:                i.APIKey,
+		QualityProfileID:      i.QualityProfileID,
+		MetadataProfileID:     i.MetadataProfileID,
+		ListOrder:             i.ListOrder,
+		ID:                    i.ID,
+		EnableAutomaticAdd:    i.EnableAutomaticAdd,
+		ShouldMonitorExisting: i.ShouldMonitorExisting,
+		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListLazyLibrarianImplementation),
+		ConfigContract:        types.StringValue(importListLazyLibrarianConfigContract),
+		ListType:              types.StringValue(importListLazyLibrarianType),
 	}
 }
 
 func (i *ImportListLazyLibrarian) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
 	i.Name = importList.Name
-	// i.MonitorNewItems = importList.MonitorNewItems
+	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
 	i.BaseURL = importList.BaseURL
@@ -93,7 +93,7 @@ func (i *ImportListLazyLibrarian) fromImportList(importList *ImportList) {
 	i.ListOrder = importList.ListOrder
 	i.ID = importList.ID
 	i.EnableAutomaticAdd = importList.EnableAutomaticAdd
-	// i.ShouldMonitorExisting = importList.ShouldMonitorExisting
+	i.ShouldMonitorExisting = importList.ShouldMonitorExisting
 	i.ShouldSearch = importList.ShouldSearch
 }
 
@@ -110,11 +110,11 @@ func (r *ImportListLazyLibrarianResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -148,14 +148,14 @@ func (r *ImportListLazyLibrarianResource) Schema(ctx context.Context, req resour
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Import List name.",
 				Required:            true,

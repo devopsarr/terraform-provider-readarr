@@ -42,49 +42,49 @@ type ImportListGoodreadsBookshelfResource struct {
 
 // ImportListGoodreadsBookshelf describes the import list data model.
 type ImportListGoodreadsBookshelf struct {
-	BookshelfIds types.Set    `tfsdk:"bookshelf_ids"`
-	Tags         types.Set    `tfsdk:"tags"`
-	Name         types.String `tfsdk:"name"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	Username           types.String `tfsdk:"username"`
-	UserID             types.String `tfsdk:"user_id"`
-	AccessToken        types.String `tfsdk:"access_token"`
-	AccessTokenSecret  types.String `tfsdk:"access_token_secret"`
-	RequestTokenSecret types.String `tfsdk:"request_token_secret"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	BookshelfIds          types.Set    `tfsdk:"bookshelf_ids"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	Username              types.String `tfsdk:"username"`
+	UserID                types.String `tfsdk:"user_id"`
+	AccessToken           types.String `tfsdk:"access_token"`
+	AccessTokenSecret     types.String `tfsdk:"access_token_secret"`
+	RequestTokenSecret    types.String `tfsdk:"request_token_secret"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
 func (i ImportListGoodreadsBookshelf) toImportList() *ImportList {
 	return &ImportList{
-		BookshelfIds: i.BookshelfIds,
-		Tags:         i.Tags,
-		Name:         i.Name,
-		// MonitorNewItems:       i.MonitorNewItems,
-		ShouldMonitor:      i.ShouldMonitor,
-		RootFolderPath:     i.RootFolderPath,
-		Username:           i.Username,
-		UserID:             i.UserID,
-		AccessToken:        i.AccessToken,
-		AccessTokenSecret:  i.AccessTokenSecret,
-		RequestTokenSecret: i.RequestTokenSecret,
-		QualityProfileID:   i.QualityProfileID,
-		MetadataProfileID:  i.MetadataProfileID,
-		ListOrder:          i.ListOrder,
-		ID:                 i.ID,
-		EnableAutomaticAdd: i.EnableAutomaticAdd,
-		// ShouldMonitorExisting: i.ShouldMonitorExisting,
-		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListGoodreadsBookshelfImplementation),
-		ConfigContract: types.StringValue(importListGoodreadsBookshelfConfigContract),
-		ListType:       types.StringValue(importListGoodreadsBookshelfType),
+		BookshelfIds:          i.BookshelfIds,
+		Tags:                  i.Tags,
+		Name:                  i.Name,
+		MonitorNewItems:       i.MonitorNewItems,
+		ShouldMonitor:         i.ShouldMonitor,
+		RootFolderPath:        i.RootFolderPath,
+		Username:              i.Username,
+		UserID:                i.UserID,
+		AccessToken:           i.AccessToken,
+		AccessTokenSecret:     i.AccessTokenSecret,
+		RequestTokenSecret:    i.RequestTokenSecret,
+		QualityProfileID:      i.QualityProfileID,
+		MetadataProfileID:     i.MetadataProfileID,
+		ListOrder:             i.ListOrder,
+		ID:                    i.ID,
+		EnableAutomaticAdd:    i.EnableAutomaticAdd,
+		ShouldMonitorExisting: i.ShouldMonitorExisting,
+		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListGoodreadsBookshelfImplementation),
+		ConfigContract:        types.StringValue(importListGoodreadsBookshelfConfigContract),
+		ListType:              types.StringValue(importListGoodreadsBookshelfType),
 	}
 }
 
@@ -92,7 +92,7 @@ func (i *ImportListGoodreadsBookshelf) fromImportList(importList *ImportList) {
 	i.BookshelfIds = importList.BookshelfIds
 	i.Tags = importList.Tags
 	i.Name = importList.Name
-	// i.MonitorNewItems = importList.MonitorNewItems
+	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
 	i.Username = importList.Username
@@ -105,7 +105,7 @@ func (i *ImportListGoodreadsBookshelf) fromImportList(importList *ImportList) {
 	i.ListOrder = importList.ListOrder
 	i.ID = importList.ID
 	i.EnableAutomaticAdd = importList.EnableAutomaticAdd
-	// i.ShouldMonitorExisting = importList.ShouldMonitorExisting
+	i.ShouldMonitorExisting = importList.ShouldMonitorExisting
 	i.ShouldSearch = importList.ShouldSearch
 }
 
@@ -122,11 +122,11 @@ func (r *ImportListGoodreadsBookshelfResource) Schema(ctx context.Context, req r
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -160,14 +160,14 @@ func (r *ImportListGoodreadsBookshelfResource) Schema(ctx context.Context, req r
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Import List name.",
 				Required:            true,

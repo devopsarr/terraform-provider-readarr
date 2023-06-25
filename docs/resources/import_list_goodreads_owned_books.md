@@ -46,10 +46,12 @@ resource "readarr_import_list_goodreads_owned_books" "example" {
 - `enable_automatic_add` (Boolean) Enable automatic add flag.
 - `list_order` (Number) List order.
 - `metadata_profile_id` (Number) Metadata profile ID.
+- `monitor_new_items` (String) Monitor new items.
 - `quality_profile_id` (Number) Quality profile ID.
 - `request_token_secret` (String, Sensitive) Request token secret.
 - `root_folder_path` (String) Root folder path.
 - `should_monitor` (String) Should monitor.
+- `should_monitor_existing` (Boolean) Should monitor existing flag.
 - `should_search` (Boolean) Should search flag.
 - `tags` (Set of Number) List of associated tags.
 - `user_id` (String) User ID.

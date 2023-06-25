@@ -57,6 +57,7 @@ func testAccImportListResourceConfig(name, monitor string) string {
 	resource "readarr_import_list" "test" {
 		enable_automatic_add = false
 		should_monitor = "%s"
+		monitor_new_items = "none"
 		should_search = false
 		list_type = "program"
 		root_folder_path = "/config"

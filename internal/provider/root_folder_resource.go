@@ -61,7 +61,7 @@ type RootFolder struct {
 func (r RootFolder) getType() attr.Type {
 	return types.ObjectType{}.WithAttributeTypes(
 		map[string]attr.Type{
-			"tags":                            types.SetType{}.WithElementType(types.Int64Type),
+			"default_tags":                    types.SetType{}.WithElementType(types.Int64Type),
 			"path":                            types.StringType,
 			"name":                            types.StringType,
 			"default_monitor_option":          types.StringType,

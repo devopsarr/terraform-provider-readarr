@@ -45,10 +45,12 @@ resource "readarr_import_list_readarr" "example" {
 - `enable_automatic_add` (Boolean) Enable automatic add flag.
 - `list_order` (Number) List order.
 - `metadata_profile_id` (Number) Metadata profile ID.
+- `monitor_new_items` (String) Monitor new items.
 - `profile_ids` (Set of Number) Profile IDs.
 - `quality_profile_id` (Number) Quality profile ID.
 - `root_folder_path` (String) Root folder path.
 - `should_monitor` (String) Should monitor.
+- `should_monitor_existing` (Boolean) Should monitor existing flag.
 - `should_search` (Boolean) Should search flag.
 - `tag_ids` (Set of Number) Tag IDs.
 - `tags` (Set of Number) List of associated tags.
