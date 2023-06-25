@@ -59,7 +59,7 @@ resource "readarr_download_client" "example" {
 - `magnet_file_extension` (String) Magnet file extension.
 - `nzb_folder` (String) NZB folder.
 - `older_book_priority` (Number) Older Book priority. `0` Last, `1` First.
-- `password` (String) Password.
+- `password` (String, Sensitive) password.
 - `port` (Number) Port.
 - `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.

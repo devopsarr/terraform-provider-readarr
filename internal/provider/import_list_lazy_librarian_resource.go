@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -41,48 +42,48 @@ type ImportListLazyLibrarianResource struct {
 
 // ImportListLazyLibrarian describes the import list data model.
 type ImportListLazyLibrarian struct {
-	Tags types.Set    `tfsdk:"tags"`
-	Name types.String `tfsdk:"name"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	BaseURL            types.String `tfsdk:"base_url"`
-	APIKey             types.String `tfsdk:"api_key"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	BaseURL               types.String `tfsdk:"base_url"`
+	APIKey                types.String `tfsdk:"api_key"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
 func (i ImportListLazyLibrarian) toImportList() *ImportList {
 	return &ImportList{
-		Tags: i.Tags,
-		Name: i.Name,
-		// MonitorNewItems:       i.MonitorNewItems,
-		ShouldMonitor:      i.ShouldMonitor,
-		RootFolderPath:     i.RootFolderPath,
-		BaseURL:            i.BaseURL,
-		APIKey:             i.APIKey,
-		QualityProfileID:   i.QualityProfileID,
-		MetadataProfileID:  i.MetadataProfileID,
-		ListOrder:          i.ListOrder,
-		ID:                 i.ID,
-		EnableAutomaticAdd: i.EnableAutomaticAdd,
-		// ShouldMonitorExisting: i.ShouldMonitorExisting,
-		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListLazyLibrarianImplementation),
-		ConfigContract: types.StringValue(importListLazyLibrarianConfigContract),
-		ListType:       types.StringValue(importListLazyLibrarianType),
+		Tags:                  i.Tags,
+		Name:                  i.Name,
+		MonitorNewItems:       i.MonitorNewItems,
+		ShouldMonitor:         i.ShouldMonitor,
+		RootFolderPath:        i.RootFolderPath,
+		BaseURL:               i.BaseURL,
+		APIKey:                i.APIKey,
+		QualityProfileID:      i.QualityProfileID,
+		MetadataProfileID:     i.MetadataProfileID,
+		ListOrder:             i.ListOrder,
+		ID:                    i.ID,
+		EnableAutomaticAdd:    i.EnableAutomaticAdd,
+		ShouldMonitorExisting: i.ShouldMonitorExisting,
+		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListLazyLibrarianImplementation),
+		ConfigContract:        types.StringValue(importListLazyLibrarianConfigContract),
+		ListType:              types.StringValue(importListLazyLibrarianType),
 	}
 }
 
 func (i *ImportListLazyLibrarian) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
 	i.Name = importList.Name
-	// i.MonitorNewItems = importList.MonitorNewItems
+	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
 	i.BaseURL = importList.BaseURL
@@ -92,7 +93,7 @@ func (i *ImportListLazyLibrarian) fromImportList(importList *ImportList) {
 	i.ListOrder = importList.ListOrder
 	i.ID = importList.ID
 	i.EnableAutomaticAdd = importList.EnableAutomaticAdd
-	// i.ShouldMonitorExisting = importList.ShouldMonitorExisting
+	i.ShouldMonitorExisting = importList.ShouldMonitorExisting
 	i.ShouldSearch = importList.ShouldSearch
 }
 
@@ -109,11 +110,11 @@ func (r *ImportListLazyLibrarianResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -147,14 +148,14 @@ func (r *ImportListLazyLibrarianResource) Schema(ctx context.Context, req resour
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Import List name.",
 				Required:            true,
@@ -203,7 +204,7 @@ func (r *ImportListLazyLibrarianResource) Create(ctx context.Context, req resour
 	}
 
 	// Create new ImportListLazyLibrarian
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -214,7 +215,7 @@ func (r *ImportListLazyLibrarianResource) Create(ctx context.Context, req resour
 
 	tflog.Trace(ctx, "created "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -238,7 +239,7 @@ func (r *ImportListLazyLibrarianResource) Read(ctx context.Context, req resource
 
 	tflog.Trace(ctx, "read "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -253,7 +254,7 @@ func (r *ImportListLazyLibrarianResource) Update(ctx context.Context, req resour
 	}
 
 	// Update ImportListLazyLibrarian
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -264,28 +265,28 @@ func (r *ImportListLazyLibrarianResource) Update(ctx context.Context, req resour
 
 	tflog.Trace(ctx, "updated "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
 func (r *ImportListLazyLibrarianResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListLazyLibrarian
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete ImportListLazyLibrarian current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
+	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListLazyLibrarianResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListLazyLibrarianResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -294,12 +295,12 @@ func (r *ImportListLazyLibrarianResource) ImportState(ctx context.Context, req r
 	tflog.Trace(ctx, "imported "+importListLazyLibrarianResourceName+": "+req.ID)
 }
 
-func (i *ImportListLazyLibrarian) write(ctx context.Context, importList *readarr.ImportListResource) {
+func (i *ImportListLazyLibrarian) write(ctx context.Context, importList *readarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListLazyLibrarian) read(ctx context.Context) *readarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListLazyLibrarian) read(ctx context.Context, diags *diag.Diagnostics) *readarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

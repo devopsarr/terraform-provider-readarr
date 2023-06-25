@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -55,10 +54,10 @@ func (d *ImportListsDataSource) Schema(ctx context.Context, req datasource.Schem
 							MarkdownDescription: "Enable automatic add flag.",
 							Computed:            true,
 						},
-						// "should_monitor_existing": schema.BoolAttribute{
-						// 	MarkdownDescription: "Should monitor existing flag.",
-						// 	Computed:            true,
-						// },
+						"should_monitor_existing": schema.BoolAttribute{
+							MarkdownDescription: "Should monitor existing flag.",
+							Computed:            true,
+						},
 						"should_search": schema.BoolAttribute{
 							MarkdownDescription: "Should search flag.",
 							Computed:            true,
@@ -83,10 +82,10 @@ func (d *ImportListsDataSource) Schema(ctx context.Context, req datasource.Schem
 							MarkdownDescription: "Should monitor.",
 							Computed:            true,
 						},
-						// "monitor_new_items": schema.StringAttribute{
-						// 	MarkdownDescription: "Monitor new items.",
-						// 	Computed:            true,
-						// },
+						"monitor_new_items": schema.StringAttribute{
+							MarkdownDescription: "Monitor new items.",
+							Computed:            true,
+						},
 						"implementation": schema.StringAttribute{
 							MarkdownDescription: "ImportList implementation name.",
 							Computed:            true,
@@ -182,13 +181,6 @@ func (d *ImportListsDataSource) Configure(ctx context.Context, req datasource.Co
 }
 
 func (d *ImportListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *ImportLists
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 	// Get import lists current value
 	response, _, err := d.client.ImportListApi.ListImportList(ctx).Execute()
 	if err != nil {
@@ -201,12 +193,10 @@ func (d *ImportListsDataSource) Read(ctx context.Context, req datasource.ReadReq
 	// Map response body to resource schema attribute
 	importLists := make([]ImportList, len(response))
 	for i, d := range response {
-		importLists[i].Tags = types.SetNull(types.Int64Type)
-		importLists[i].write(ctx, d)
+		importLists[i].write(ctx, d, &resp.Diagnostics)
 	}
 
-	tfsdk.ValueFrom(ctx, importLists, data.ImportLists.Type(ctx), &data.ImportLists)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(response)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	listList, diags := types.SetValueFrom(ctx, ImportList{}.getType(), importLists)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, ImportLists{ImportLists: listList, ID: types.StringValue(strconv.Itoa(len(response)))})...)
 }

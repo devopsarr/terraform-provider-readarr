@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -229,7 +230,7 @@ func (r *DownloadClientRtorrentResource) Create(ctx context.Context, req resourc
 	}
 
 	// Create new DownloadClientRtorrent
-	request := client.read(ctx)
+	request := client.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
@@ -240,7 +241,7 @@ func (r *DownloadClientRtorrentResource) Create(ctx context.Context, req resourc
 
 	tflog.Trace(ctx, "created "+downloadClientRtorrentResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
@@ -264,7 +265,7 @@ func (r *DownloadClientRtorrentResource) Read(ctx context.Context, req resource.
 
 	tflog.Trace(ctx, "read "+downloadClientRtorrentResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
@@ -279,7 +280,7 @@ func (r *DownloadClientRtorrentResource) Update(ctx context.Context, req resourc
 	}
 
 	// Update DownloadClientRtorrent
-	request := client.read(ctx)
+	request := client.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
@@ -290,28 +291,28 @@ func (r *DownloadClientRtorrentResource) Update(ctx context.Context, req resourc
 
 	tflog.Trace(ctx, "updated "+downloadClientRtorrentResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	client.write(ctx, response)
+	client.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
 }
 
 func (r *DownloadClientRtorrentResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var client *DownloadClientRtorrent
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &client)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete DownloadClientRtorrent current value
-	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(client.ID.ValueInt64())).Execute()
+	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, downloadClientRtorrentResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+downloadClientRtorrentResourceName+": "+strconv.Itoa(int(client.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+downloadClientRtorrentResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -320,12 +321,12 @@ func (r *DownloadClientRtorrentResource) ImportState(ctx context.Context, req re
 	tflog.Trace(ctx, "imported "+downloadClientRtorrentResourceName+": "+req.ID)
 }
 
-func (d *DownloadClientRtorrent) write(ctx context.Context, downloadClient *readarr.DownloadClientResource) {
+func (d *DownloadClientRtorrent) write(ctx context.Context, downloadClient *readarr.DownloadClientResource, diags *diag.Diagnostics) {
 	genericDownloadClient := d.toDownloadClient()
-	genericDownloadClient.write(ctx, downloadClient)
+	genericDownloadClient.write(ctx, downloadClient, diags)
 	d.fromDownloadClient(genericDownloadClient)
 }
 
-func (d *DownloadClientRtorrent) read(ctx context.Context) *readarr.DownloadClientResource {
-	return d.toDownloadClient().read(ctx)
+func (d *DownloadClientRtorrent) read(ctx context.Context, diags *diag.Diagnostics) *readarr.DownloadClientResource {
+	return d.toDownloadClient().read(ctx, diags)
 }

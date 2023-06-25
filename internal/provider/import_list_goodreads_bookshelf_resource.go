@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -41,49 +42,49 @@ type ImportListGoodreadsBookshelfResource struct {
 
 // ImportListGoodreadsBookshelf describes the import list data model.
 type ImportListGoodreadsBookshelf struct {
-	BookshelfIds types.Set    `tfsdk:"bookshelf_ids"`
-	Tags         types.Set    `tfsdk:"tags"`
-	Name         types.String `tfsdk:"name"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	Username           types.String `tfsdk:"username"`
-	UserID             types.String `tfsdk:"user_id"`
-	AccessToken        types.String `tfsdk:"access_token"`
-	AccessTokenSecret  types.String `tfsdk:"access_token_secret"`
-	RequestTokenSecret types.String `tfsdk:"request_token_secret"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	BookshelfIds          types.Set    `tfsdk:"bookshelf_ids"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	Username              types.String `tfsdk:"username"`
+	UserID                types.String `tfsdk:"user_id"`
+	AccessToken           types.String `tfsdk:"access_token"`
+	AccessTokenSecret     types.String `tfsdk:"access_token_secret"`
+	RequestTokenSecret    types.String `tfsdk:"request_token_secret"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
 func (i ImportListGoodreadsBookshelf) toImportList() *ImportList {
 	return &ImportList{
-		BookshelfIds: i.BookshelfIds,
-		Tags:         i.Tags,
-		Name:         i.Name,
-		// MonitorNewItems:       i.MonitorNewItems,
-		ShouldMonitor:      i.ShouldMonitor,
-		RootFolderPath:     i.RootFolderPath,
-		Username:           i.Username,
-		UserID:             i.UserID,
-		AccessToken:        i.AccessToken,
-		AccessTokenSecret:  i.AccessTokenSecret,
-		RequestTokenSecret: i.RequestTokenSecret,
-		QualityProfileID:   i.QualityProfileID,
-		MetadataProfileID:  i.MetadataProfileID,
-		ListOrder:          i.ListOrder,
-		ID:                 i.ID,
-		EnableAutomaticAdd: i.EnableAutomaticAdd,
-		// ShouldMonitorExisting: i.ShouldMonitorExisting,
-		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListGoodreadsBookshelfImplementation),
-		ConfigContract: types.StringValue(importListGoodreadsBookshelfConfigContract),
-		ListType:       types.StringValue(importListGoodreadsBookshelfType),
+		BookshelfIds:          i.BookshelfIds,
+		Tags:                  i.Tags,
+		Name:                  i.Name,
+		MonitorNewItems:       i.MonitorNewItems,
+		ShouldMonitor:         i.ShouldMonitor,
+		RootFolderPath:        i.RootFolderPath,
+		Username:              i.Username,
+		UserID:                i.UserID,
+		AccessToken:           i.AccessToken,
+		AccessTokenSecret:     i.AccessTokenSecret,
+		RequestTokenSecret:    i.RequestTokenSecret,
+		QualityProfileID:      i.QualityProfileID,
+		MetadataProfileID:     i.MetadataProfileID,
+		ListOrder:             i.ListOrder,
+		ID:                    i.ID,
+		EnableAutomaticAdd:    i.EnableAutomaticAdd,
+		ShouldMonitorExisting: i.ShouldMonitorExisting,
+		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListGoodreadsBookshelfImplementation),
+		ConfigContract:        types.StringValue(importListGoodreadsBookshelfConfigContract),
+		ListType:              types.StringValue(importListGoodreadsBookshelfType),
 	}
 }
 
@@ -91,7 +92,7 @@ func (i *ImportListGoodreadsBookshelf) fromImportList(importList *ImportList) {
 	i.BookshelfIds = importList.BookshelfIds
 	i.Tags = importList.Tags
 	i.Name = importList.Name
-	// i.MonitorNewItems = importList.MonitorNewItems
+	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
 	i.Username = importList.Username
@@ -104,7 +105,7 @@ func (i *ImportListGoodreadsBookshelf) fromImportList(importList *ImportList) {
 	i.ListOrder = importList.ListOrder
 	i.ID = importList.ID
 	i.EnableAutomaticAdd = importList.EnableAutomaticAdd
-	// i.ShouldMonitorExisting = importList.ShouldMonitorExisting
+	i.ShouldMonitorExisting = importList.ShouldMonitorExisting
 	i.ShouldSearch = importList.ShouldSearch
 }
 
@@ -121,11 +122,11 @@ func (r *ImportListGoodreadsBookshelfResource) Schema(ctx context.Context, req r
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -159,14 +160,14 @@ func (r *ImportListGoodreadsBookshelfResource) Schema(ctx context.Context, req r
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Import List name.",
 				Required:            true,
@@ -237,7 +238,7 @@ func (r *ImportListGoodreadsBookshelfResource) Create(ctx context.Context, req r
 	}
 
 	// Create new ImportListGoodreadsBookshelf
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -248,7 +249,7 @@ func (r *ImportListGoodreadsBookshelfResource) Create(ctx context.Context, req r
 
 	tflog.Trace(ctx, "created "+importListGoodreadsBookshelfResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -272,7 +273,7 @@ func (r *ImportListGoodreadsBookshelfResource) Read(ctx context.Context, req res
 
 	tflog.Trace(ctx, "read "+importListGoodreadsBookshelfResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -287,7 +288,7 @@ func (r *ImportListGoodreadsBookshelfResource) Update(ctx context.Context, req r
 	}
 
 	// Update ImportListGoodreadsBookshelf
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -298,28 +299,28 @@ func (r *ImportListGoodreadsBookshelfResource) Update(ctx context.Context, req r
 
 	tflog.Trace(ctx, "updated "+importListGoodreadsBookshelfResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
 func (r *ImportListGoodreadsBookshelfResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListGoodreadsBookshelf
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete ImportListGoodreadsBookshelf current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
+	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListGoodreadsBookshelfResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListGoodreadsBookshelfResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListGoodreadsBookshelfResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -328,12 +329,12 @@ func (r *ImportListGoodreadsBookshelfResource) ImportState(ctx context.Context, 
 	tflog.Trace(ctx, "imported "+importListGoodreadsBookshelfResourceName+": "+req.ID)
 }
 
-func (i *ImportListGoodreadsBookshelf) write(ctx context.Context, importList *readarr.ImportListResource) {
+func (i *ImportListGoodreadsBookshelf) write(ctx context.Context, importList *readarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListGoodreadsBookshelf) read(ctx context.Context) *readarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListGoodreadsBookshelf) read(ctx context.Context, diags *diag.Diagnostics) *readarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

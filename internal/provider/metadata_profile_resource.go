@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -44,6 +45,22 @@ type MetadataProfile struct {
 	SkipMissingIsbn     types.Bool    `tfsdk:"skip_missing_isbn"`
 	SkipPartsAndSets    types.Bool    `tfsdk:"skip_parts_and_sets"`
 	SkipSeriesSecondary types.Bool    `tfsdk:"skip_series_secondary"`
+}
+
+func (p MetadataProfile) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"name":                  types.StringType,
+			"allowed_languages":     types.StringType,
+			"ignored":               types.StringType,
+			"id":                    types.Int64Type,
+			"min_pages":             types.Int64Type,
+			"min_popularity":        types.Float64Type,
+			"skip_missing_date":     types.BoolType,
+			"skip_missing_isbn":     types.BoolType,
+			"skip_parts_and_sets":   types.BoolType,
+			"skip_series_secondary": types.BoolType,
+		})
 }
 
 func (r *MetadataProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -192,24 +209,23 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 }
 
 func (r *MetadataProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var profile *MetadataProfile
+	var ID int64
 
-	diags := req.State.Get(ctx, &profile)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete metadataProfile current value
-	_, err := r.client.MetadataProfileApi.DeleteMetadataProfile(ctx, int32(profile.ID.ValueInt64())).Execute()
+	_, err := r.client.MetadataProfileApi.DeleteMetadataProfile(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, metadataProfileResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+metadataProfileResourceName+": "+strconv.Itoa(int(profile.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+metadataProfileResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 

@@ -7,12 +7,13 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -56,6 +57,22 @@ type Author struct {
 	// CleanName      types.String `tfsdk:"cleanName"`
 	// Added          types.String `tfsdk:"added"`
 	// Ratings        types.Object `tfsdk:"ratings"`
+}
+
+func (a Author) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"genres":             types.SetType{}.WithElementType(types.StringType),
+			"tags":               types.SetType{}.WithElementType(types.Int64Type),
+			"author_name":        types.StringType,
+			"foreign_author_id":  types.StringType,
+			"status":             types.StringType,
+			"path":               types.StringType,
+			"overview":           types.StringType,
+			"id":                 types.Int64Type,
+			"quality_profile_id": types.Int64Type,
+			"monitored":          types.BoolType,
+		})
 }
 
 func (r *AuthorResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -133,7 +150,7 @@ func (r *AuthorResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	// Create new Author
-	request := author.read(ctx)
+	request := author.read(ctx, &resp.Diagnostics)
 	// TODO: can parametrize AddAuthorOptions
 	options := readarr.NewAddAuthorOptions()
 	options.SetMonitor(readarr.MONITORTYPES_ALL)
@@ -148,7 +165,7 @@ func (r *AuthorResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	tflog.Trace(ctx, "created author: "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	author.write(ctx, response)
+	author.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &author)...)
 }
 
@@ -172,7 +189,7 @@ func (r *AuthorResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	tflog.Trace(ctx, "read "+authorResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	author.write(ctx, response)
+	author.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &author)...)
 }
 
@@ -187,7 +204,7 @@ func (r *AuthorResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	// Update Author
-	request := author.read(ctx)
+	request := author.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.AuthorApi.UpdateAuthor(ctx, fmt.Sprint(request.GetId())).AuthorResource(*request).Execute()
 	if err != nil {
@@ -198,28 +215,28 @@ func (r *AuthorResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Trace(ctx, "updated "+authorResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	author.write(ctx, response)
+	author.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &author)...)
 }
 
 func (r *AuthorResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var author *Author
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &author)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete author current value
-	_, err := r.client.AuthorApi.DeleteAuthor(ctx, int32(author.ID.ValueInt64())).Execute()
+	_, err := r.client.AuthorApi.DeleteAuthor(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, authorResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+authorResourceName+": "+strconv.Itoa(int(author.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+authorResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -228,25 +245,25 @@ func (r *AuthorResource) ImportState(ctx context.Context, req resource.ImportSta
 	tflog.Trace(ctx, "imported "+authorResourceName+": "+req.ID)
 }
 
-func (a *Author) write(ctx context.Context, author *readarr.AuthorResource) {
-	a.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, author.GetTags())
-	a.Genres, _ = types.SetValueFrom(ctx, types.StringType, author.GetGenres())
+func (a *Author) write(ctx context.Context, author *readarr.AuthorResource, diags *diag.Diagnostics) {
+	var tempDiag diag.Diagnostics
+
 	a.Monitored = types.BoolValue(author.GetMonitored())
 	a.ID = types.Int64Value(int64(author.GetId()))
 	a.AuthorName = types.StringValue(author.GetAuthorName())
 	a.Path = types.StringValue(author.GetPath())
 	a.QualityProfileID = types.Int64Value(int64(author.GetQualityProfileId()))
 	a.ForeignAuthorID = types.StringValue(author.GetForeignAuthorId())
-	// Read only values
 	a.Status = types.StringValue(string(author.GetStatus()))
 	a.Overview = types.StringValue(author.GetOverview())
 	a.Genres = types.SetValueMust(types.StringType, nil)
+	a.Tags, tempDiag = types.SetValueFrom(ctx, types.Int64Type, author.GetTags())
+	diags.Append(tempDiag...)
+	a.Genres, tempDiag = types.SetValueFrom(ctx, types.StringType, author.GetGenres())
+	diags.Append(tempDiag...)
 }
 
-func (a *Author) read(ctx context.Context) *readarr.AuthorResource {
-	tags := make([]*int32, len(a.Tags.Elements()))
-	tfsdk.ValueAs(ctx, a.Tags, &tags)
-
+func (a *Author) read(ctx context.Context, diags *diag.Diagnostics) *readarr.AuthorResource {
 	author := readarr.NewAuthorResource()
 	author.SetMonitored(a.Monitored.ValueBool())
 	author.SetAuthorName(a.AuthorName.ValueString())
@@ -254,7 +271,7 @@ func (a *Author) read(ctx context.Context) *readarr.AuthorResource {
 	author.SetQualityProfileId(int32(a.QualityProfileID.ValueInt64()))
 	author.SetForeignAuthorId(a.ForeignAuthorID.ValueString())
 	author.SetId(int32(a.ID.ValueInt64()))
-	author.SetTags(tags)
+	diags.Append(a.Tags.ElementsAs(ctx, &author.Tags, true)...)
 	// Fix unused but required profile
 	author.SetMetadataProfileId(1)
 

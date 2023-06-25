@@ -7,13 +7,14 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -134,6 +135,101 @@ type Notification struct {
 	OnDownloadFailure          types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure            types.Bool   `tfsdk:"on_import_failure"`
 	OnBookRetag                types.Bool   `tfsdk:"on_book_retag"`
+}
+
+func (n Notification) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":                            types.SetType{}.WithElementType(types.Int64Type),
+			"field_tags":                      types.SetType{}.WithElementType(types.StringType),
+			"recipients":                      types.SetType{}.WithElementType(types.StringType),
+			"devices":                         types.SetType{}.WithElementType(types.StringType),
+			"device_ids":                      types.SetType{}.WithElementType(types.StringType),
+			"to":                              types.SetType{}.WithElementType(types.StringType),
+			"cc":                              types.SetType{}.WithElementType(types.StringType),
+			"bcc":                             types.SetType{}.WithElementType(types.StringType),
+			"channel_tags":                    types.SetType{}.WithElementType(types.StringType),
+			"topics":                          types.SetType{}.WithElementType(types.StringType),
+			"add_ids":                         types.SetType{}.WithElementType(types.StringType),
+			"remove_ids":                      types.SetType{}.WithElementType(types.StringType),
+			"device_names":                    types.StringType,
+			"access_token":                    types.StringType,
+			"host":                            types.StringType,
+			"instance_name":                   types.StringType,
+			"name":                            types.StringType,
+			"implementation":                  types.StringType,
+			"config_contract":                 types.StringType,
+			"click_url":                       types.StringType,
+			"consumer_secret":                 types.StringType,
+			"path":                            types.StringType,
+			"arguments":                       types.StringType,
+			"consumer_key":                    types.StringType,
+			"chat_id":                         types.StringType,
+			"from":                            types.StringType,
+			"icon":                            types.StringType,
+			"password":                        types.StringType,
+			"event":                           types.StringType,
+			"key":                             types.StringType,
+			"refresh_token":                   types.StringType,
+			"web_hook_url":                    types.StringType,
+			"username":                        types.StringType,
+			"user_id":                         types.StringType,
+			"user_key":                        types.StringType,
+			"mention":                         types.StringType,
+			"avatar":                          types.StringType,
+			"url":                             types.StringType,
+			"url_base":                        types.StringType,
+			"token":                           types.StringType,
+			"sound":                           types.StringType,
+			"sign_in":                         types.StringType,
+			"server":                          types.StringType,
+			"sender_id":                       types.StringType,
+			"bot_token":                       types.StringType,
+			"sender_domain":                   types.StringType,
+			"map_to":                          types.StringType,
+			"map_from":                        types.StringType,
+			"channel":                         types.StringType,
+			"server_url":                      types.StringType,
+			"access_token_secret":             types.StringType,
+			"request_token_secret":            types.StringType,
+			"description":                     types.StringType,
+			"location":                        types.StringType,
+			"api_key":                         types.StringType,
+			"app_token":                       types.StringType,
+			"author":                          types.StringType,
+			"auth_user":                       types.StringType,
+			"priority":                        types.Int64Type,
+			"port":                            types.Int64Type,
+			"method":                          types.Int64Type,
+			"retry":                           types.Int64Type,
+			"condition":                       types.Int64Type,
+			"expire":                          types.Int64Type,
+			"id":                              types.Int64Type,
+			"import_fields":                   types.Int64Type,
+			"grab_fields":                     types.Int64Type,
+			"attach_files":                    types.BoolType,
+			"on_grab":                         types.BoolType,
+			"send_silently":                   types.BoolType,
+			"on_health_issue":                 types.BoolType,
+			"on_application_update":           types.BoolType,
+			"direct_message":                  types.BoolType,
+			"require_encryption":              types.BoolType,
+			"use_ssl":                         types.BoolType,
+			"notify":                          types.BoolType,
+			"use_eu_endpoint":                 types.BoolType,
+			"update_library":                  types.BoolType,
+			"include_health_warnings":         types.BoolType,
+			"on_rename":                       types.BoolType,
+			"on_upgrade":                      types.BoolType,
+			"on_release_import":               types.BoolType,
+			"on_author_delete":                types.BoolType,
+			"on_book_delete":                  types.BoolType,
+			"on_book_file_delete":             types.BoolType,
+			"on_book_file_delete_for_upgrade": types.BoolType,
+			"on_download_failure":             types.BoolType,
+			"on_import_failure":               types.BoolType,
+			"on_book_retag":                   types.BoolType,
+		})
 }
 
 func (r *NotificationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -450,6 +546,7 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				MarkdownDescription: "password.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"path": schema.StringAttribute{
 				MarkdownDescription: "Path.",
@@ -639,7 +736,7 @@ func (r *NotificationResource) Create(ctx context.Context, req resource.CreateRe
 	}
 
 	// Create new Notification
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
@@ -653,7 +750,7 @@ func (r *NotificationResource) Create(ctx context.Context, req resource.CreateRe
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Notification
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -680,7 +777,7 @@ func (r *NotificationResource) Read(ctx context.Context, req resource.ReadReques
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Notification
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -695,7 +792,7 @@ func (r *NotificationResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 
 	// Update Notification
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
@@ -709,28 +806,28 @@ func (r *NotificationResource) Update(ctx context.Context, req resource.UpdateRe
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Notification
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
 func (r *NotificationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *Notification
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete Notification current value
-	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
+	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, notificationResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -739,8 +836,12 @@ func (r *NotificationResource) ImportState(ctx context.Context, req resource.Imp
 	tflog.Trace(ctx, "imported "+notificationResourceName+": "+req.ID)
 }
 
-func (n *Notification) write(ctx context.Context, notification *readarr.NotificationResource) {
-	n.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
+func (n *Notification) write(ctx context.Context, notification *readarr.NotificationResource, diags *diag.Diagnostics) {
+	var localDiag diag.Diagnostics
+
+	n.Tags, localDiag = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
+	diags.Append(localDiag...)
+
 	n.OnGrab = types.BoolValue(notification.GetOnGrab())
 	n.OnBookRetag = types.BoolValue(notification.GetOnBookRetag())
 	n.OnUpgrade = types.BoolValue(notification.GetOnUpgrade())
@@ -773,10 +874,7 @@ func (n *Notification) write(ctx context.Context, notification *readarr.Notifica
 	helpers.WriteFields(ctx, n, notification.GetFields(), notificationFields)
 }
 
-func (n *Notification) read(ctx context.Context) *readarr.NotificationResource {
-	tags := make([]*int32, len(n.Tags.Elements()))
-	tfsdk.ValueAs(ctx, n.Tags, &tags)
-
+func (n *Notification) read(ctx context.Context, diags *diag.Diagnostics) *readarr.NotificationResource {
 	notification := readarr.NewNotificationResource()
 	notification.SetOnGrab(n.OnGrab.ValueBool())
 	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
@@ -796,7 +894,7 @@ func (n *Notification) read(ctx context.Context) *readarr.NotificationResource {
 	notification.SetName(n.Name.ValueString())
 	notification.SetImplementation(n.Implementation.ValueString())
 	notification.SetConfigContract(n.ConfigContract.ValueString())
-	notification.SetTags(tags)
+	diags.Append(n.Tags.ElementsAs(ctx, &notification.Tags, true)...)
 	notification.SetFields(helpers.ReadFields(ctx, n, notificationFields))
 
 	return notification

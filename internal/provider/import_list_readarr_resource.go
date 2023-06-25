@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -41,45 +42,45 @@ type ImportListReadarrResource struct {
 
 // ImportListReadarr describes the import list data model.
 type ImportListReadarr struct {
-	ProfileIds types.Set    `tfsdk:"profile_ids"`
-	TagIds     types.Set    `tfsdk:"tag_ids"`
-	Tags       types.Set    `tfsdk:"tags"`
-	Name       types.String `tfsdk:"name"`
-	// MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
-	ShouldMonitor      types.String `tfsdk:"should_monitor"`
-	RootFolderPath     types.String `tfsdk:"root_folder_path"`
-	BaseURL            types.String `tfsdk:"base_url"`
-	APIKey             types.String `tfsdk:"api_key"`
-	QualityProfileID   types.Int64  `tfsdk:"quality_profile_id"`
-	MetadataProfileID  types.Int64  `tfsdk:"metadata_profile_id"`
-	ListOrder          types.Int64  `tfsdk:"list_order"`
-	ID                 types.Int64  `tfsdk:"id"`
-	EnableAutomaticAdd types.Bool   `tfsdk:"enable_automatic_add"`
-	// ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
-	ShouldSearch types.Bool `tfsdk:"should_search"`
+	ProfileIds            types.Set    `tfsdk:"profile_ids"`
+	TagIds                types.Set    `tfsdk:"tag_ids"`
+	Tags                  types.Set    `tfsdk:"tags"`
+	Name                  types.String `tfsdk:"name"`
+	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
+	ShouldMonitor         types.String `tfsdk:"should_monitor"`
+	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	BaseURL               types.String `tfsdk:"base_url"`
+	APIKey                types.String `tfsdk:"api_key"`
+	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
+	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
+	ListOrder             types.Int64  `tfsdk:"list_order"`
+	ID                    types.Int64  `tfsdk:"id"`
+	EnableAutomaticAdd    types.Bool   `tfsdk:"enable_automatic_add"`
+	ShouldMonitorExisting types.Bool   `tfsdk:"should_monitor_existing"`
+	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
 func (i ImportListReadarr) toImportList() *ImportList {
 	return &ImportList{
-		ProfileIds: i.ProfileIds,
-		TagIds:     i.TagIds,
-		Tags:       i.Tags,
-		Name:       i.Name,
-		// MonitorNewItems:       i.MonitorNewItems,
-		ShouldMonitor:      i.ShouldMonitor,
-		RootFolderPath:     i.RootFolderPath,
-		BaseURL:            i.BaseURL,
-		APIKey:             i.APIKey,
-		QualityProfileID:   i.QualityProfileID,
-		MetadataProfileID:  i.MetadataProfileID,
-		ListOrder:          i.ListOrder,
-		ID:                 i.ID,
-		EnableAutomaticAdd: i.EnableAutomaticAdd,
-		// ShouldMonitorExisting: i.ShouldMonitorExisting,
-		ShouldSearch:   i.ShouldSearch,
-		Implementation: types.StringValue(importListReadarrImplementation),
-		ConfigContract: types.StringValue(importListReadarrConfigContract),
-		ListType:       types.StringValue(importListReadarrType),
+		ProfileIds:            i.ProfileIds,
+		TagIds:                i.TagIds,
+		Tags:                  i.Tags,
+		Name:                  i.Name,
+		MonitorNewItems:       i.MonitorNewItems,
+		ShouldMonitor:         i.ShouldMonitor,
+		RootFolderPath:        i.RootFolderPath,
+		BaseURL:               i.BaseURL,
+		APIKey:                i.APIKey,
+		QualityProfileID:      i.QualityProfileID,
+		MetadataProfileID:     i.MetadataProfileID,
+		ListOrder:             i.ListOrder,
+		ID:                    i.ID,
+		EnableAutomaticAdd:    i.EnableAutomaticAdd,
+		ShouldMonitorExisting: i.ShouldMonitorExisting,
+		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListReadarrImplementation),
+		ConfigContract:        types.StringValue(importListReadarrConfigContract),
+		ListType:              types.StringValue(importListReadarrType),
 	}
 }
 
@@ -88,7 +89,7 @@ func (i *ImportListReadarr) fromImportList(importList *ImportList) {
 	i.TagIds = importList.TagIds
 	i.Tags = importList.Tags
 	i.Name = importList.Name
-	// i.MonitorNewItems = importList.MonitorNewItems
+	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
 	i.BaseURL = importList.BaseURL
@@ -98,7 +99,7 @@ func (i *ImportListReadarr) fromImportList(importList *ImportList) {
 	i.ListOrder = importList.ListOrder
 	i.ID = importList.ID
 	i.EnableAutomaticAdd = importList.EnableAutomaticAdd
-	// i.ShouldMonitorExisting = importList.ShouldMonitorExisting
+	i.ShouldMonitorExisting = importList.ShouldMonitorExisting
 	i.ShouldSearch = importList.ShouldSearch
 }
 
@@ -115,11 +116,11 @@ func (r *ImportListReadarrResource) Schema(ctx context.Context, req resource.Sch
 				Optional:            true,
 				Computed:            true,
 			},
-			// "should_monitor_existing": schema.BoolAttribute{
-			// 	MarkdownDescription: "Should monitor existing flag.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// },
+			"should_monitor_existing": schema.BoolAttribute{
+				MarkdownDescription: "Should monitor existing flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"should_search": schema.BoolAttribute{
 				MarkdownDescription: "Should search flag.",
 				Optional:            true,
@@ -153,14 +154,14 @@ func (r *ImportListReadarrResource) Schema(ctx context.Context, req resource.Sch
 					stringvalidator.OneOf("none", "specificBook", "entireAuthor"),
 				},
 			},
-			// "monitor_new_items": schema.StringAttribute{
-			// 	MarkdownDescription: "Monitor new items.",
-			// 	Optional:            true,
-			// 	Computed:            true,
-			// 	Validators: []validator.String{
-			// 		stringvalidator.OneOf("none", "all", "new"),
-			// 	},
-			// },
+			"monitor_new_items": schema.StringAttribute{
+				MarkdownDescription: "Monitor new items.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("none", "all", "new"),
+				},
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Import List name.",
 				Required:            true,
@@ -221,7 +222,7 @@ func (r *ImportListReadarrResource) Create(ctx context.Context, req resource.Cre
 	}
 
 	// Create new ImportListReadarr
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -232,7 +233,7 @@ func (r *ImportListReadarrResource) Create(ctx context.Context, req resource.Cre
 
 	tflog.Trace(ctx, "created "+importListReadarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -256,7 +257,7 @@ func (r *ImportListReadarrResource) Read(ctx context.Context, req resource.ReadR
 
 	tflog.Trace(ctx, "read "+importListReadarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -271,7 +272,7 @@ func (r *ImportListReadarrResource) Update(ctx context.Context, req resource.Upd
 	}
 
 	// Update ImportListReadarr
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -282,28 +283,28 @@ func (r *ImportListReadarrResource) Update(ctx context.Context, req resource.Upd
 
 	tflog.Trace(ctx, "updated "+importListReadarrResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
 func (r *ImportListReadarrResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListReadarr
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete ImportListReadarr current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
+	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListReadarrResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListReadarrResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListReadarrResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -312,12 +313,12 @@ func (r *ImportListReadarrResource) ImportState(ctx context.Context, req resourc
 	tflog.Trace(ctx, "imported "+importListReadarrResourceName+": "+req.ID)
 }
 
-func (i *ImportListReadarr) write(ctx context.Context, importList *readarr.ImportListResource) {
+func (i *ImportListReadarr) write(ctx context.Context, importList *readarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListReadarr) read(ctx context.Context) *readarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListReadarr) read(ctx context.Context, diags *diag.Diagnostics) *readarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -63,10 +62,10 @@ func (d *RootFoldersDataSource) Schema(ctx context.Context, req datasource.Schem
 							MarkdownDescription: "Default monitor option.",
 							Computed:            true,
 						},
-						// "default_monitor_new_item_option": schema.StringAttribute{
-						// 	MarkdownDescription: "Default monitor new item option.",
-						// 	Computed:            true,
-						// },
+						"default_monitor_new_item_option": schema.StringAttribute{
+							MarkdownDescription: "Default monitor new item option.",
+							Computed:            true,
+						},
 						"host": schema.StringAttribute{
 							MarkdownDescription: "Calibre host.",
 							Computed:            true,
@@ -152,18 +151,12 @@ func (d *RootFoldersDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	tflog.Trace(ctx, "read "+rootFoldersDataSourceName)
 	// Map response body to resource schema attribute
-	rootFolders := *writes(ctx, response)
-	tfsdk.ValueFrom(ctx, rootFolders, data.RootFolders.Type(ctx), &data.RootFolders)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(response)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
-}
-
-func writes(ctx context.Context, folders []*readarr.RootFolderResource) *[]RootFolder {
-	output := make([]RootFolder, len(folders))
-	for i, f := range folders {
-		output[i].write(ctx, f)
+	rootFolders := make([]RootFolder, len(response))
+	for i, f := range response {
+		rootFolders[i].write(ctx, f, &resp.Diagnostics)
 	}
 
-	return &output
+	folderList, diags := types.SetValueFrom(ctx, RootFolder{}.getType(), rootFolders)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, RootFolders{RootFolders: folderList, ID: types.StringValue(strconv.Itoa(len(response)))})...)
 }

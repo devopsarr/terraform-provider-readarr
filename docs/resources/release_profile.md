@@ -41,7 +41,7 @@ resource "readarr_release_profile" "example" {
 
 - `enabled` (Boolean) Enabled.
 - `ignored` (Set of String) Ignored terms. At least one of `required` and `ignored` must be set.
-- `indexer_id` (Number) Indexer ID. Set `0` for all.
+- `indexer_id` (Number) Indexer ID. Default to all.
 - `required` (Set of String) Required terms. At least one of `required` and `ignored` must be set.
 - `tags` (Set of Number) List of associated tags.
 

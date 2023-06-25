@@ -57,6 +57,7 @@ func testAccImportListLazyLibrarianResourceConfig(name, folder string) string {
 	resource "readarr_import_list_lazy_librarian" "test" {
 		enable_automatic_add = false
 		should_monitor = "%s"
+		monitor_new_items = "none"
 		should_search = false
 		root_folder_path = "/config"
 		quality_profile_id = 1

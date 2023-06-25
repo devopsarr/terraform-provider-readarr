@@ -7,6 +7,7 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -222,7 +223,7 @@ func (r *IndexerTorznabResource) Create(ctx context.Context, req resource.Create
 	}
 
 	// Create new IndexerTorznab
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
@@ -233,7 +234,7 @@ func (r *IndexerTorznabResource) Create(ctx context.Context, req resource.Create
 
 	tflog.Trace(ctx, "created "+indexerTorznabResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
@@ -257,7 +258,7 @@ func (r *IndexerTorznabResource) Read(ctx context.Context, req resource.ReadRequ
 
 	tflog.Trace(ctx, "read "+indexerTorznabResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
@@ -272,7 +273,7 @@ func (r *IndexerTorznabResource) Update(ctx context.Context, req resource.Update
 	}
 
 	// Update IndexerTorznab
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
@@ -283,28 +284,28 @@ func (r *IndexerTorznabResource) Update(ctx context.Context, req resource.Update
 
 	tflog.Trace(ctx, "updated "+indexerTorznabResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
 func (r *IndexerTorznabResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var indexer *IndexerTorznab
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &indexer)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete IndexerTorznab current value
-	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerTorznabResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+indexerTorznabResourceName+": "+strconv.Itoa(int(indexer.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+indexerTorznabResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -313,12 +314,12 @@ func (r *IndexerTorznabResource) ImportState(ctx context.Context, req resource.I
 	tflog.Trace(ctx, "imported "+indexerTorznabResourceName+": "+req.ID)
 }
 
-func (i *IndexerTorznab) write(ctx context.Context, indexer *readarr.IndexerResource) {
+func (i *IndexerTorznab) write(ctx context.Context, indexer *readarr.IndexerResource, diags *diag.Diagnostics) {
 	genericIndexer := i.toIndexer()
-	genericIndexer.write(ctx, indexer)
+	genericIndexer.write(ctx, indexer, diags)
 	i.fromIndexer(genericIndexer)
 }
 
-func (i *IndexerTorznab) read(ctx context.Context) *readarr.IndexerResource {
-	return i.toIndexer().read(ctx)
+func (i *IndexerTorznab) read(ctx context.Context, diags *diag.Diagnostics) *readarr.IndexerResource {
+	return i.toIndexer().read(ctx, diags)
 }

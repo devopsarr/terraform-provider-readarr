@@ -57,12 +57,14 @@ resource "readarr_import_list" "example" {
 - `list_id` (Number) List ID.
 - `list_order` (Number) List order.
 - `metadata_profile_id` (Number) Metadata profile ID.
+- `monitor_new_items` (String) Monitor new items.
 - `profile_ids` (Set of Number) Profile IDs.
 - `quality_profile_id` (Number) Quality profile ID.
 - `request_token_secret` (String, Sensitive) Request token secret.
 - `root_folder_path` (String) Root folder path.
 - `series_id` (Number) Series ID.
 - `should_monitor` (String) Should monitor.
+- `should_monitor_existing` (Boolean) Should monitor existing flag.
 - `should_search` (Boolean) Should search flag.
 - `tag_ids` (Set of Number) Tag IDs.
 - `tags` (Set of Number) List of associated tags.

@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -88,9 +88,9 @@ func (d *AuthorDataSource) Configure(ctx context.Context, req datasource.Configu
 }
 
 func (d *AuthorDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var author *Author
+	var data *Author
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &author)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -104,25 +104,20 @@ func (d *AuthorDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	value, err := findAuthor(author.ForeignAuthorID.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", authorDataSourceName, err))
-
-		return
-	}
-
+	data.find(ctx, data.ForeignAuthorID.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+authorDataSourceName)
-	author.write(ctx, value)
 	// Map response body to resource schema attribute
-	resp.Diagnostics.Append(resp.State.Set(ctx, &author)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findAuthor(ID string, authors []*readarr.AuthorResource) (*readarr.AuthorResource, error) {
-	for _, t := range authors {
-		if t.GetForeignAuthorId() == ID {
-			return t, nil
+func (a *Author) find(ctx context.Context, ID string, authors []*readarr.AuthorResource, diags *diag.Diagnostics) {
+	for _, author := range authors {
+		if author.GetForeignAuthorId() == ID {
+			a.write(ctx, author, diags)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(authorDataSourceName, "TMDB ID", ID)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(authorDataSourceName, "Foreign author ID", ID))
 }
