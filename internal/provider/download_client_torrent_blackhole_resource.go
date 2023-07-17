@@ -40,33 +40,37 @@ type DownloadClientTorrentBlackholeResource struct {
 
 // DownloadClientTorrentBlackhole describes the download client data model.
 type DownloadClientTorrentBlackhole struct {
-	Tags                types.Set    `tfsdk:"tags"`
-	Name                types.String `tfsdk:"name"`
-	TorrentFolder       types.String `tfsdk:"torrent_folder"`
-	WatchFolder         types.String `tfsdk:"watch_folder"`
-	MagnetFileExtension types.String `tfsdk:"magnet_file_extension"`
-	Priority            types.Int64  `tfsdk:"priority"`
-	ID                  types.Int64  `tfsdk:"id"`
-	Enable              types.Bool   `tfsdk:"enable"`
-	SaveMagnetFiles     types.Bool   `tfsdk:"save_magnet_files"`
-	ReadOnly            types.Bool   `tfsdk:"read_only"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	TorrentFolder            types.String `tfsdk:"torrent_folder"`
+	WatchFolder              types.String `tfsdk:"watch_folder"`
+	MagnetFileExtension      types.String `tfsdk:"magnet_file_extension"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	ID                       types.Int64  `tfsdk:"id"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	SaveMagnetFiles          types.Bool   `tfsdk:"save_magnet_files"`
+	ReadOnly                 types.Bool   `tfsdk:"read_only"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientTorrentBlackhole) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:                d.Tags,
-		Name:                d.Name,
-		TorrentFolder:       d.TorrentFolder,
-		WatchFolder:         d.WatchFolder,
-		MagnetFileExtension: d.MagnetFileExtension,
-		Priority:            d.Priority,
-		ID:                  d.ID,
-		Enable:              d.Enable,
-		SaveMagnetFiles:     d.SaveMagnetFiles,
-		ReadOnly:            d.ReadOnly,
-		Implementation:      types.StringValue(downloadClientTorrentBlackholeImplementation),
-		ConfigContract:      types.StringValue(downloadClientTorrentBlackholeConfigContract),
-		Protocol:            types.StringValue(downloadClientTorrentBlackholeProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		TorrentFolder:            d.TorrentFolder,
+		WatchFolder:              d.WatchFolder,
+		MagnetFileExtension:      d.MagnetFileExtension,
+		Priority:                 d.Priority,
+		ID:                       d.ID,
+		Enable:                   d.Enable,
+		SaveMagnetFiles:          d.SaveMagnetFiles,
+		ReadOnly:                 d.ReadOnly,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientTorrentBlackholeImplementation),
+		ConfigContract:           types.StringValue(downloadClientTorrentBlackholeConfigContract),
+		Protocol:                 types.StringValue(downloadClientTorrentBlackholeProtocol),
 	}
 }
 
@@ -81,6 +85,8 @@ func (d *DownloadClientTorrentBlackhole) fromDownloadClient(client *DownloadClie
 	d.Enable = client.Enable
 	d.SaveMagnetFiles = client.SaveMagnetFiles
 	d.ReadOnly = client.ReadOnly
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientTorrentBlackholeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -93,6 +99,16 @@ func (r *DownloadClientTorrentBlackholeResource) Schema(ctx context.Context, req
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -40,37 +40,41 @@ type DownloadClientUsenetDownloadStationResource struct {
 
 // DownloadClientUsenetDownloadStation describes the download client data model.
 type DownloadClientUsenetDownloadStation struct {
-	Tags          types.Set    `tfsdk:"tags"`
-	Name          types.String `tfsdk:"name"`
-	Host          types.String `tfsdk:"host"`
-	Username      types.String `tfsdk:"username"`
-	Password      types.String `tfsdk:"password"`
-	MusicCategory types.String `tfsdk:"book_category"`
-	TVDirectory   types.String `tfsdk:"book_directory"`
-	Priority      types.Int64  `tfsdk:"priority"`
-	Port          types.Int64  `tfsdk:"port"`
-	ID            types.Int64  `tfsdk:"id"`
-	UseSsl        types.Bool   `tfsdk:"use_ssl"`
-	Enable        types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	TVDirectory              types.String `tfsdk:"book_directory"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientUsenetDownloadStation) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:           d.Tags,
-		Name:           d.Name,
-		Host:           d.Host,
-		Username:       d.Username,
-		Password:       d.Password,
-		MusicCategory:  d.MusicCategory,
-		TVDirectory:    d.TVDirectory,
-		Priority:       d.Priority,
-		Port:           d.Port,
-		ID:             d.ID,
-		UseSsl:         d.UseSsl,
-		Enable:         d.Enable,
-		Implementation: types.StringValue(downloadClientUsenetDownloadStationImplementation),
-		ConfigContract: types.StringValue(downloadClientUsenetDownloadStationConfigContract),
-		Protocol:       types.StringValue(downloadClientUsenetDownloadStationProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		TVDirectory:              d.TVDirectory,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientUsenetDownloadStationImplementation),
+		ConfigContract:           types.StringValue(downloadClientUsenetDownloadStationConfigContract),
+		Protocol:                 types.StringValue(downloadClientUsenetDownloadStationProtocol),
 	}
 }
 
@@ -87,6 +91,8 @@ func (d *DownloadClientUsenetDownloadStation) fromDownloadClient(client *Downloa
 	d.ID = client.ID
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientUsenetDownloadStationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -99,6 +105,16 @@ func (r *DownloadClientUsenetDownloadStationResource) Schema(ctx context.Context
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

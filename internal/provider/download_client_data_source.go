@@ -39,6 +39,14 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Enable flag.",
 				Computed:            true,
 			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
+				Computed:            true,
+			},
 			"priority": schema.Int64Attribute{
 				MarkdownDescription: "Priority.",
 				Computed:            true,

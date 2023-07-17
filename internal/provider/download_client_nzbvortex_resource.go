@@ -42,37 +42,41 @@ type DownloadClientNzbvortexResource struct {
 
 // DownloadClientNzbvortex describes the download client data model.
 type DownloadClientNzbvortex struct {
-	Tags             types.Set    `tfsdk:"tags"`
-	Name             types.String `tfsdk:"name"`
-	Host             types.String `tfsdk:"host"`
-	URLBase          types.String `tfsdk:"url_base"`
-	APIKey           types.String `tfsdk:"api_key"`
-	MusicCategory    types.String `tfsdk:"book_category"`
-	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
-	Priority         types.Int64  `tfsdk:"priority"`
-	Port             types.Int64  `tfsdk:"port"`
-	ID               types.Int64  `tfsdk:"id"`
-	Enable           types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	APIKey                   types.String `tfsdk:"api_key"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientNzbvortex) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:             d.Tags,
-		Name:             d.Name,
-		Host:             d.Host,
-		URLBase:          d.URLBase,
-		APIKey:           d.APIKey,
-		MusicCategory:    d.MusicCategory,
-		RecentTVPriority: d.RecentTVPriority,
-		OlderTVPriority:  d.OlderTVPriority,
-		Priority:         d.Priority,
-		Port:             d.Port,
-		ID:               d.ID,
-		Enable:           d.Enable,
-		Implementation:   types.StringValue(downloadClientNzbvortexImplementation),
-		ConfigContract:   types.StringValue(downloadClientNzbvortexConfigContract),
-		Protocol:         types.StringValue(downloadClientNzbvortexProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		APIKey:                   d.APIKey,
+		MusicCategory:            d.MusicCategory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientNzbvortexImplementation),
+		ConfigContract:           types.StringValue(downloadClientNzbvortexConfigContract),
+		Protocol:                 types.StringValue(downloadClientNzbvortexProtocol),
 	}
 }
 
@@ -89,6 +93,8 @@ func (d *DownloadClientNzbvortex) fromDownloadClient(client *DownloadClient) {
 	d.Port = client.Port
 	d.ID = client.ID
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientNzbvortexResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -101,6 +107,16 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

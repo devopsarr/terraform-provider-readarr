@@ -43,6 +43,8 @@ resource "readarr_download_client_hadouken" "example" {
 - `host` (String) host.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.

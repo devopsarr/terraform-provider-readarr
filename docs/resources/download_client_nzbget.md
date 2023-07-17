@@ -43,6 +43,8 @@ resource "readarr_download_client_nzbget" "example" {
 - `port` (Number) Port.
 - `priority` (Number) Priority.
 - `recent_book_priority` (Number) Recent Music priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.

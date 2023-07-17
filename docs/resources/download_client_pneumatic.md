@@ -37,6 +37,8 @@ resource "readarr_download_client_pneumatic" "example" {
 
 - `enable` (Boolean) Enable flag.
 - `priority` (Number) Priority.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

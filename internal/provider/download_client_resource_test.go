@@ -56,6 +56,8 @@ func testAccDownloadClientResourceConfig(name, enable string) string {
 	return fmt.Sprintf(`
 	resource "readarr_download_client" "test" {
 		enable = %s
+		remove_completed_downloads = false
+		remove_failed_downloads = false
 		priority = 1
 		name = "%s"
 		implementation = "Transmission"

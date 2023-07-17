@@ -42,45 +42,49 @@ type DownloadClientVuzeResource struct {
 
 // DownloadClientVuze describes the download client data model.
 type DownloadClientVuze struct {
-	Tags             types.Set    `tfsdk:"tags"`
-	Name             types.String `tfsdk:"name"`
-	Host             types.String `tfsdk:"host"`
-	URLBase          types.String `tfsdk:"url_base"`
-	Username         types.String `tfsdk:"username"`
-	Password         types.String `tfsdk:"password"`
-	MusicCategory    types.String `tfsdk:"book_category"`
-	TVDirectory      types.String `tfsdk:"book_directory"`
-	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
-	Priority         types.Int64  `tfsdk:"priority"`
-	Port             types.Int64  `tfsdk:"port"`
-	ID               types.Int64  `tfsdk:"id"`
-	AddPaused        types.Bool   `tfsdk:"add_paused"`
-	UseSsl           types.Bool   `tfsdk:"use_ssl"`
-	Enable           types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	TVDirectory              types.String `tfsdk:"book_directory"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddPaused                types.Bool   `tfsdk:"add_paused"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientVuze) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:             d.Tags,
-		Name:             d.Name,
-		Host:             d.Host,
-		URLBase:          d.URLBase,
-		Username:         d.Username,
-		Password:         d.Password,
-		MusicCategory:    d.MusicCategory,
-		TVDirectory:      d.TVDirectory,
-		RecentTVPriority: d.RecentTVPriority,
-		OlderTVPriority:  d.OlderTVPriority,
-		Priority:         d.Priority,
-		Port:             d.Port,
-		ID:               d.ID,
-		AddPaused:        d.AddPaused,
-		UseSsl:           d.UseSsl,
-		Enable:           d.Enable,
-		Implementation:   types.StringValue(downloadClientVuzeImplementation),
-		ConfigContract:   types.StringValue(downloadClientVuzeConfigContract),
-		Protocol:         types.StringValue(downloadClientVuzeProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		TVDirectory:              d.TVDirectory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		AddPaused:                d.AddPaused,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientVuzeImplementation),
+		ConfigContract:           types.StringValue(downloadClientVuzeConfigContract),
+		Protocol:                 types.StringValue(downloadClientVuzeProtocol),
 	}
 }
 
@@ -101,6 +105,8 @@ func (d *DownloadClientVuze) fromDownloadClient(client *DownloadClient) {
 	d.AddPaused = client.AddPaused
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientVuzeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -113,6 +119,16 @@ func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.Sc
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

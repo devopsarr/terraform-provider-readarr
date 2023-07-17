@@ -36,8 +36,6 @@ type DownloadClientConfigResource struct {
 type DownloadClientConfig struct {
 	DownloadClientWorkingFolders    types.String `tfsdk:"download_client_working_folders"`
 	ID                              types.Int64  `tfsdk:"id"`
-	RemoveFailedDownloads           types.Bool   `tfsdk:"remove_failed_downloads"`
-	RemoveCompletedDownloads        types.Bool   `tfsdk:"remove_completed_downloads"`
 	EnableCompletedDownloadHandling types.Bool   `tfsdk:"enable_completed_download_handling"`
 	AutoRedownloadFailed            types.Bool   `tfsdk:"auto_redownload_failed"`
 }
@@ -63,14 +61,6 @@ func (r *DownloadClientConfigResource) Schema(ctx context.Context, req resource.
 			},
 			"auto_redownload_failed": schema.BoolAttribute{
 				MarkdownDescription: "Auto Redownload Failed flag.",
-				Required:            true,
-			},
-			"remove_completed_downloads": schema.BoolAttribute{
-				MarkdownDescription: "Remove completed downloads flag.",
-				Required:            true,
-			},
-			"remove_failed_downloads": schema.BoolAttribute{
-				MarkdownDescription: "Remove failed downloads flag.",
 				Required:            true,
 			},
 			"download_client_working_folders": schema.StringAttribute{
@@ -181,8 +171,6 @@ func (r *DownloadClientConfigResource) ImportState(ctx context.Context, req reso
 func (c *DownloadClientConfig) write(downloadClientConfig *readarr.DownloadClientConfigResource) {
 	c.EnableCompletedDownloadHandling = types.BoolValue(downloadClientConfig.GetEnableCompletedDownloadHandling())
 	c.AutoRedownloadFailed = types.BoolValue(downloadClientConfig.GetAutoRedownloadFailed())
-	c.RemoveCompletedDownloads = types.BoolValue(downloadClientConfig.GetRemoveCompletedDownloads())
-	c.RemoveFailedDownloads = types.BoolValue(downloadClientConfig.GetRemoveFailedDownloads())
 	c.ID = types.Int64Value(int64(downloadClientConfig.GetId()))
 	c.DownloadClientWorkingFolders = types.StringValue(downloadClientConfig.GetDownloadClientWorkingFolders())
 }
@@ -191,8 +179,6 @@ func (c *DownloadClientConfig) read() *readarr.DownloadClientConfigResource {
 	config := readarr.NewDownloadClientConfigResource()
 	config.SetEnableCompletedDownloadHandling(c.EnableCompletedDownloadHandling.ValueBool())
 	config.SetAutoRedownloadFailed(c.AutoRedownloadFailed.ValueBool())
-	config.SetRemoveCompletedDownloads(c.RemoveCompletedDownloads.ValueBool())
-	config.SetRemoveFailedDownloads(c.RemoveFailedDownloads.ValueBool())
 	config.SetId(int32(c.ID.ValueInt64()))
 	config.SetDownloadClientWorkingFolders(c.DownloadClientWorkingFolders.ValueString())
 

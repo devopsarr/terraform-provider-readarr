@@ -18,6 +18,7 @@ For more information refer to [Naming](https://wiki.servarr.com/readarr/settings
 resource "readarr_media_management" "example" {
   rename_books               = true
   replace_illegal_characters = true
+  colon_replacement_format   = 0
   author_folder_format       = "{Author Name}"
   standard_book_format       = "{Book Title}/{Author Name} - {Book Title}{ (PartNumber)}"
 }
@@ -29,6 +30,7 @@ resource "readarr_media_management" "example" {
 ### Required
 
 - `author_folder_format` (String) Author folder format.
+- `colon_replacement_format` (Number) Change how Readarr handles colon replacement. '0' Delete, '1' Dash, '2' Space Dash, '3' Space Dash Space, '4' Smart.
 - `rename_books` (Boolean) Readarr will use the existing file name if false.
 - `replace_illegal_characters` (Boolean) Replace illegal characters. They will be removed if false.
 - `standard_book_format` (String) Standard book formatss.

@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -35,9 +36,9 @@ type MetadataProfileResource struct {
 
 // MetadataProfile describes the metadata profile data model.
 type MetadataProfile struct {
+	Ignored             types.Set     `tfsdk:"ignored"`
 	Name                types.String  `tfsdk:"name"`
 	AllowedLanguages    types.String  `tfsdk:"allowed_languages"`
-	Ignored             types.String  `tfsdk:"ignored"`
 	ID                  types.Int64   `tfsdk:"id"`
 	MinPages            types.Int64   `tfsdk:"min_pages"`
 	MinPopularity       types.Float64 `tfsdk:"min_popularity"`
@@ -50,9 +51,9 @@ type MetadataProfile struct {
 func (p MetadataProfile) getType() attr.Type {
 	return types.ObjectType{}.WithAttributeTypes(
 		map[string]attr.Type{
+			"ignored":               types.SetType{}.WithElementType(types.StringType),
 			"name":                  types.StringType,
 			"allowed_languages":     types.StringType,
-			"ignored":               types.StringType,
 			"id":                    types.Int64Type,
 			"min_pages":             types.Int64Type,
 			"min_popularity":        types.Float64Type,
@@ -83,8 +84,9 @@ func (r *MetadataProfileResource) Schema(ctx context.Context, req resource.Schem
 				Optional:            true,
 				Computed:            true,
 			},
-			"ignored": schema.StringAttribute{
-				MarkdownDescription: "Terms to ignore. Comma separated list.",
+			"ignored": schema.SetAttribute{
+				MarkdownDescription: "Terms to ignore.",
+				ElementType:         types.StringType,
 				Optional:            true,
 				Computed:            true,
 			},
@@ -143,7 +145,7 @@ func (r *MetadataProfileResource) Create(ctx context.Context, req resource.Creat
 	}
 
 	// Create new MetadataProfile
-	request := profile.read()
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataProfileApi.CreateMetadataProfile(ctx).MetadataProfileResource(*request).Execute()
 	if err != nil {
@@ -154,7 +156,7 @@ func (r *MetadataProfileResource) Create(ctx context.Context, req resource.Creat
 
 	tflog.Trace(ctx, "created "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -178,7 +180,7 @@ func (r *MetadataProfileResource) Read(ctx context.Context, req resource.ReadReq
 
 	tflog.Trace(ctx, "read "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	profile.write(response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -193,7 +195,7 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 	}
 
 	// Update MetadataProfile
-	request := profile.read()
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataProfileApi.UpdateMetadataProfile(ctx, strconv.Itoa(int(request.GetId()))).MetadataProfileResource(*request).Execute()
 	if err != nil {
@@ -204,7 +206,7 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 
 	tflog.Trace(ctx, "updated "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -234,31 +236,34 @@ func (r *MetadataProfileResource) ImportState(ctx context.Context, req resource.
 	tflog.Trace(ctx, "imported "+metadataProfileResourceName+": "+req.ID)
 }
 
-func (p *MetadataProfile) write(profile *readarr.MetadataProfileResource) {
+func (p *MetadataProfile) write(ctx context.Context, profile *readarr.MetadataProfileResource, diags *diag.Diagnostics) {
+	var tempDiag diag.Diagnostics
+
 	p.ID = types.Int64Value(int64(profile.GetId()))
 	p.Name = types.StringValue(profile.GetName())
 	p.MinPopularity = types.Float64Value(profile.GetMinPopularity())
 	p.MinPages = types.Int64Value(int64(profile.GetMinPages()))
 	p.AllowedLanguages = types.StringValue(profile.GetAllowedLanguages())
-	p.Ignored = types.StringValue(profile.GetIgnored())
 	p.SkipMissingDate = types.BoolValue(profile.GetSkipMissingDate())
 	p.SkipMissingIsbn = types.BoolValue(profile.GetSkipMissingIsbn())
 	p.SkipPartsAndSets = types.BoolValue(profile.GetSkipPartsAndSets())
 	p.SkipSeriesSecondary = types.BoolValue(profile.GetSkipSeriesSecondary())
+	p.Ignored, tempDiag = types.SetValueFrom(ctx, types.StringType, profile.GetIgnored())
+	diags.Append(tempDiag...)
 }
 
-func (p *MetadataProfile) read() *readarr.MetadataProfileResource {
+func (p *MetadataProfile) read(ctx context.Context, diags *diag.Diagnostics) *readarr.MetadataProfileResource {
 	profile := readarr.NewMetadataProfileResource()
 	profile.SetName(p.Name.ValueString())
 	profile.SetId(int32(p.ID.ValueInt64()))
 	profile.SetMinPopularity(p.MinPopularity.ValueFloat64())
 	profile.SetMinPages(int32(p.MinPages.ValueInt64()))
 	profile.SetAllowedLanguages(p.AllowedLanguages.ValueString())
-	profile.SetIgnored(p.Ignored.ValueString())
 	profile.SetSkipMissingDate(p.SkipMissingDate.ValueBool())
 	profile.SetSkipMissingIsbn(p.SkipMissingIsbn.ValueBool())
 	profile.SetSkipPartsAndSets(p.SkipPartsAndSets.ValueBool())
 	profile.SetSkipSeriesSecondary(p.SkipSeriesSecondary.ValueBool())
+	diags.Append(p.Ignored.ElementsAs(ctx, &profile.Ignored, true)...)
 
 	return profile
 }
