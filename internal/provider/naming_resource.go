@@ -6,11 +6,13 @@ import (
 
 	"github.com/devopsarr/readarr-go/readarr"
 	"github.com/devopsarr/terraform-provider-readarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -36,6 +38,7 @@ type NamingResource struct {
 type Naming struct {
 	AuthorFolderFormat       types.String `tfsdk:"author_folder_format"`
 	StandardBookFormat       types.String `tfsdk:"standard_book_format"`
+	ColonReplacementFormat   types.Int64  `tfsdk:"colon_replacement_format"`
 	ID                       types.Int64  `tfsdk:"id"`
 	RenameBooks              types.Bool   `tfsdk:"rename_books"`
 	ReplaceIllegalCharacters types.Bool   `tfsdk:"replace_illegal_characters"`
@@ -63,6 +66,13 @@ func (r *NamingResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			"replace_illegal_characters": schema.BoolAttribute{
 				MarkdownDescription: "Replace illegal characters. They will be removed if false.",
 				Required:            true,
+			},
+			"colon_replacement_format": schema.Int64Attribute{
+				MarkdownDescription: "Change how Readarr handles colon replacement. '0' Delete, '1' Dash, '2' Space Dash, '3' Space Dash Space, '4' Smart.",
+				Required:            true,
+				Validators: []validator.Int64{
+					int64validator.OneOf(0, 1, 2, 3, 4),
+				},
 			},
 			"author_folder_format": schema.StringAttribute{
 				MarkdownDescription: "Author folder format.",
@@ -183,6 +193,7 @@ func (n *Naming) write(naming *readarr.NamingConfigResource) {
 	n.RenameBooks = types.BoolValue(naming.GetRenameBooks())
 	n.ReplaceIllegalCharacters = types.BoolValue(naming.GetReplaceIllegalCharacters())
 	n.ID = types.Int64Value(int64(naming.GetId()))
+	n.ColonReplacementFormat = types.Int64Value(int64(naming.GetColonReplacementFormat()))
 	n.AuthorFolderFormat = types.StringValue(naming.GetAuthorFolderFormat())
 	n.StandardBookFormat = types.StringValue(naming.GetStandardBookFormat())
 }
@@ -190,6 +201,7 @@ func (n *Naming) write(naming *readarr.NamingConfigResource) {
 func (n *Naming) read() *readarr.NamingConfigResource {
 	naming := readarr.NewNamingConfigResource()
 	naming.SetId(int32(n.ID.ValueInt64()))
+	naming.SetColonReplacementFormat(int32(n.ColonReplacementFormat.ValueInt64()))
 	naming.SetRenameBooks(n.RenameBooks.ValueBool())
 	naming.SetReplaceIllegalCharacters(n.ReplaceIllegalCharacters.ValueBool())
 	naming.SetAuthorFolderFormat(n.AuthorFolderFormat.ValueString())

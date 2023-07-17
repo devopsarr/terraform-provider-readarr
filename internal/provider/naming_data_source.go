@@ -45,6 +45,10 @@ func (d *NamingDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Replace illegal characters. They will be removed if false.",
 				Computed:            true,
 			},
+			"colon_replacement_format": schema.Int64Attribute{
+				MarkdownDescription: "Change how Readarr handles colon replacement. '0' Delete, '1' Dash, '2' Space Dash, '3' Space Dash Space, '4' Smart.",
+				Computed:            true,
+			},
 			"author_folder_format": schema.StringAttribute{
 				MarkdownDescription: "Author folder format.",
 				Computed:            true,

@@ -54,6 +54,7 @@ func TestAccNamingResource(t *testing.T) {
 func testAccNamingResourceConfig(author string) string {
 	return fmt.Sprintf(`
 	resource "readarr_naming" "test" {
+		colon_replacement_format   = 1
 		rename_books               = true
 		replace_illegal_characters = true
 		author_folder_format       = "%s"

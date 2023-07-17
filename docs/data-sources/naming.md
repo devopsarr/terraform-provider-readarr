@@ -23,6 +23,7 @@ data "readarr_naming" "example" {
 ### Read-Only
 
 - `author_folder_format` (String) Author folder format.
+- `colon_replacement_format` (Number) Change how Readarr handles colon replacement. '0' Delete, '1' Dash, '2' Space Dash, '3' Space Dash Space, '4' Smart.
 - `id` (Number) Naming ID.
 - `rename_books` (Boolean) Readarr will use the existing file name if false.
 - `replace_illegal_characters` (Boolean) Replace illegal characters. They will be removed if false.
