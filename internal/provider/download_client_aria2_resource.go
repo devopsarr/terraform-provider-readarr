@@ -40,33 +40,37 @@ type DownloadClientAria2Resource struct {
 
 // DownloadClientAria2 describes the download client data model.
 type DownloadClientAria2 struct {
-	Tags        types.Set    `tfsdk:"tags"`
-	Name        types.String `tfsdk:"name"`
-	Host        types.String `tfsdk:"host"`
-	RPCPath     types.String `tfsdk:"rpc_path"`
-	SecretToken types.String `tfsdk:"secret_token"`
-	Priority    types.Int64  `tfsdk:"priority"`
-	Port        types.Int64  `tfsdk:"port"`
-	ID          types.Int64  `tfsdk:"id"`
-	UseSsl      types.Bool   `tfsdk:"use_ssl"`
-	Enable      types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	RPCPath                  types.String `tfsdk:"rpc_path"`
+	SecretToken              types.String `tfsdk:"secret_token"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientAria2) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:           d.Tags,
-		Name:           d.Name,
-		Host:           d.Host,
-		RPCPath:        d.RPCPath,
-		SecretToken:    d.SecretToken,
-		Priority:       d.Priority,
-		Port:           d.Port,
-		ID:             d.ID,
-		UseSsl:         d.UseSsl,
-		Enable:         d.Enable,
-		Implementation: types.StringValue(downloadClientAria2Implementation),
-		ConfigContract: types.StringValue(downloadClientAria2ConfigContract),
-		Protocol:       types.StringValue(downloadClientAria2Protocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		RPCPath:                  d.RPCPath,
+		SecretToken:              d.SecretToken,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientAria2Implementation),
+		ConfigContract:           types.StringValue(downloadClientAria2ConfigContract),
+		Protocol:                 types.StringValue(downloadClientAria2Protocol),
 	}
 }
 
@@ -81,6 +85,8 @@ func (d *DownloadClientAria2) fromDownloadClient(client *DownloadClient) {
 	d.ID = client.ID
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientAria2Resource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -93,6 +99,16 @@ func (r *DownloadClientAria2Resource) Schema(ctx context.Context, req resource.S
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

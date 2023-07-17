@@ -45,14 +45,6 @@ func (d *DownloadClientConfigDataSource) Schema(ctx context.Context, req datasou
 				MarkdownDescription: "Auto Redownload Failed flag.",
 				Computed:            true,
 			},
-			"remove_completed_downloads": schema.BoolAttribute{
-				MarkdownDescription: "Remove completed downloads flag.",
-				Computed:            true,
-			},
-			"remove_failed_downloads": schema.BoolAttribute{
-				MarkdownDescription: "Remove failed downloads flag.",
-				Computed:            true,
-			},
 			"download_client_working_folders": schema.StringAttribute{
 				MarkdownDescription: "Download Client Working Folders.",
 				Computed:            true,

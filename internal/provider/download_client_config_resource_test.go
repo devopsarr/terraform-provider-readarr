@@ -54,8 +54,6 @@ func TestAccDownloadClientConfigResource(t *testing.T) {
 func testAccDownloadClientConfigResourceConfig(redownload string) string {
 	return fmt.Sprintf(`
 	resource "readarr_download_client_config" "test" {
-		remove_completed_downloads = false
-		remove_failed_downloads = false
 		enable_completed_download_handling = true
 		auto_redownload_failed = %s
 	}`, redownload)

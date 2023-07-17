@@ -45,6 +45,8 @@ resource "readarr_download_client_utorrent" "example" {
 - `port` (Number) Port.
 - `priority` (Number) Priority.
 - `recent_book_priority` (Number) Recent Music priority. `0` Last, `1` First.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.

@@ -48,95 +48,99 @@ type DownloadClientResource struct {
 
 // DownloadClient describes the download client data model.
 type DownloadClient struct {
-	Tags                  types.Set    `tfsdk:"tags"`
-	PostImportTags        types.Set    `tfsdk:"post_import_tags"`
-	FieldTags             types.Set    `tfsdk:"field_tags"`
-	AdditionalTags        types.Set    `tfsdk:"additional_tags"`
-	NzbFolder             types.String `tfsdk:"nzb_folder"`
-	Category              types.String `tfsdk:"category"`
-	Implementation        types.String `tfsdk:"implementation"`
-	Name                  types.String `tfsdk:"name"`
-	Protocol              types.String `tfsdk:"protocol"`
-	MagnetFileExtension   types.String `tfsdk:"magnet_file_extension"`
-	TorrentFolder         types.String `tfsdk:"torrent_folder"`
-	StrmFolder            types.String `tfsdk:"strm_folder"`
-	Host                  types.String `tfsdk:"host"`
-	ConfigContract        types.String `tfsdk:"config_contract"`
-	Destination           types.String `tfsdk:"destination"`
-	MusicDirectory        types.String `tfsdk:"bookdirectory"`
-	TVDirectory           types.String `tfsdk:"book_directory"`
-	Username              types.String `tfsdk:"username"`
-	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
-	MusicCategory         types.String `tfsdk:"book_category"`
-	Password              types.String `tfsdk:"password"`
-	SecretToken           types.String `tfsdk:"secret_token"`
-	RPCPath               types.String `tfsdk:"rpc_path"`
-	URLBase               types.String `tfsdk:"url_base"`
-	APIKey                types.String `tfsdk:"api_key"`
-	WatchFolder           types.String `tfsdk:"watch_folder"`
-	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
-	IntialState           types.Int64  `tfsdk:"intial_state"`
-	InitialState          types.Int64  `tfsdk:"initial_state"`
-	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	Port                  types.Int64  `tfsdk:"port"`
-	ID                    types.Int64  `tfsdk:"id"`
-	AddStopped            types.Bool   `tfsdk:"add_stopped"`
-	SaveMagnetFiles       types.Bool   `tfsdk:"save_magnet_files"`
-	ReadOnly              types.Bool   `tfsdk:"read_only"`
-	FirstAndLast          types.Bool   `tfsdk:"first_and_last"`
-	SequentialOrder       types.Bool   `tfsdk:"sequential_order"`
-	StartOnAdd            types.Bool   `tfsdk:"start_on_add"`
-	UseSsl                types.Bool   `tfsdk:"use_ssl"`
-	AddPaused             types.Bool   `tfsdk:"add_paused"`
-	Enable                types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	PostImportTags           types.Set    `tfsdk:"post_import_tags"`
+	FieldTags                types.Set    `tfsdk:"field_tags"`
+	AdditionalTags           types.Set    `tfsdk:"additional_tags"`
+	NzbFolder                types.String `tfsdk:"nzb_folder"`
+	Category                 types.String `tfsdk:"category"`
+	Implementation           types.String `tfsdk:"implementation"`
+	Name                     types.String `tfsdk:"name"`
+	Protocol                 types.String `tfsdk:"protocol"`
+	MagnetFileExtension      types.String `tfsdk:"magnet_file_extension"`
+	TorrentFolder            types.String `tfsdk:"torrent_folder"`
+	StrmFolder               types.String `tfsdk:"strm_folder"`
+	Host                     types.String `tfsdk:"host"`
+	ConfigContract           types.String `tfsdk:"config_contract"`
+	Destination              types.String `tfsdk:"destination"`
+	MusicDirectory           types.String `tfsdk:"bookdirectory"`
+	TVDirectory              types.String `tfsdk:"book_directory"`
+	Username                 types.String `tfsdk:"username"`
+	MusicImportedCategory    types.String `tfsdk:"book_imported_category"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	Password                 types.String `tfsdk:"password"`
+	SecretToken              types.String `tfsdk:"secret_token"`
+	RPCPath                  types.String `tfsdk:"rpc_path"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	APIKey                   types.String `tfsdk:"api_key"`
+	WatchFolder              types.String `tfsdk:"watch_folder"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	IntialState              types.Int64  `tfsdk:"intial_state"`
+	InitialState             types.Int64  `tfsdk:"initial_state"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddStopped               types.Bool   `tfsdk:"add_stopped"`
+	SaveMagnetFiles          types.Bool   `tfsdk:"save_magnet_files"`
+	ReadOnly                 types.Bool   `tfsdk:"read_only"`
+	FirstAndLast             types.Bool   `tfsdk:"first_and_last"`
+	SequentialOrder          types.Bool   `tfsdk:"sequential_order"`
+	StartOnAdd               types.Bool   `tfsdk:"start_on_add"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	AddPaused                types.Bool   `tfsdk:"add_paused"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClient) getType() attr.Type {
 	return types.ObjectType{}.WithAttributeTypes(
 		map[string]attr.Type{
-			"tags":                   types.SetType{}.WithElementType(types.Int64Type),
-			"additional_tags":        types.SetType{}.WithElementType(types.Int64Type),
-			"post_import_tags":       types.SetType{}.WithElementType(types.StringType),
-			"field_tags":             types.SetType{}.WithElementType(types.StringType),
-			"nzb_folder":             types.StringType,
-			"category":               types.StringType,
-			"implementation":         types.StringType,
-			"name":                   types.StringType,
-			"protocol":               types.StringType,
-			"magnet_file_extension":  types.StringType,
-			"torrent_folder":         types.StringType,
-			"strm_folder":            types.StringType,
-			"host":                   types.StringType,
-			"config_contract":        types.StringType,
-			"destination":            types.StringType,
-			"bookdirectory":          types.StringType,
-			"book_directory":         types.StringType,
-			"username":               types.StringType,
-			"book_imported_category": types.StringType,
-			"book_category":          types.StringType,
-			"password":               types.StringType,
-			"secret_token":           types.StringType,
-			"rpc_path":               types.StringType,
-			"url_base":               types.StringType,
-			"api_key":                types.StringType,
-			"watch_folder":           types.StringType,
-			"recent_book_priority":   types.Int64Type,
-			"intial_state":           types.Int64Type,
-			"initial_state":          types.Int64Type,
-			"older_book_priority":    types.Int64Type,
-			"priority":               types.Int64Type,
-			"port":                   types.Int64Type,
-			"id":                     types.Int64Type,
-			"add_stopped":            types.BoolType,
-			"save_magnet_files":      types.BoolType,
-			"read_only":              types.BoolType,
-			"first_and_last":         types.BoolType,
-			"sequential_order":       types.BoolType,
-			"start_on_add":           types.BoolType,
-			"use_ssl":                types.BoolType,
-			"add_paused":             types.BoolType,
-			"enable":                 types.BoolType,
+			"tags":                       types.SetType{}.WithElementType(types.Int64Type),
+			"additional_tags":            types.SetType{}.WithElementType(types.Int64Type),
+			"post_import_tags":           types.SetType{}.WithElementType(types.StringType),
+			"field_tags":                 types.SetType{}.WithElementType(types.StringType),
+			"nzb_folder":                 types.StringType,
+			"category":                   types.StringType,
+			"implementation":             types.StringType,
+			"name":                       types.StringType,
+			"protocol":                   types.StringType,
+			"magnet_file_extension":      types.StringType,
+			"torrent_folder":             types.StringType,
+			"strm_folder":                types.StringType,
+			"host":                       types.StringType,
+			"config_contract":            types.StringType,
+			"destination":                types.StringType,
+			"bookdirectory":              types.StringType,
+			"book_directory":             types.StringType,
+			"username":                   types.StringType,
+			"book_imported_category":     types.StringType,
+			"book_category":              types.StringType,
+			"password":                   types.StringType,
+			"secret_token":               types.StringType,
+			"rpc_path":                   types.StringType,
+			"url_base":                   types.StringType,
+			"api_key":                    types.StringType,
+			"watch_folder":               types.StringType,
+			"recent_book_priority":       types.Int64Type,
+			"intial_state":               types.Int64Type,
+			"initial_state":              types.Int64Type,
+			"older_book_priority":        types.Int64Type,
+			"priority":                   types.Int64Type,
+			"port":                       types.Int64Type,
+			"id":                         types.Int64Type,
+			"add_stopped":                types.BoolType,
+			"save_magnet_files":          types.BoolType,
+			"read_only":                  types.BoolType,
+			"first_and_last":             types.BoolType,
+			"sequential_order":           types.BoolType,
+			"start_on_add":               types.BoolType,
+			"use_ssl":                    types.BoolType,
+			"add_paused":                 types.BoolType,
+			"enable":                     types.BoolType,
+			"remove_failed_downloads":    types.BoolType,
+			"remove_completed_downloads": types.BoolType,
 		})
 }
 
@@ -150,6 +154,16 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -503,6 +517,8 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.Down
 	diags.Append(localDiag...)
 
 	d.Enable = types.BoolValue(downloadClient.GetEnable())
+	d.RemoveCompletedDownloads = types.BoolValue(downloadClient.GetRemoveCompletedDownloads())
+	d.RemoveFailedDownloads = types.BoolValue(downloadClient.GetRemoveFailedDownloads())
 	d.Priority = types.Int64Value(int64(downloadClient.GetPriority()))
 	d.ID = types.Int64Value(int64(downloadClient.GetId()))
 	d.ConfigContract = types.StringValue(downloadClient.GetConfigContract())
@@ -518,6 +534,8 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *readarr.Down
 func (d *DownloadClient) read(ctx context.Context, diags *diag.Diagnostics) *readarr.DownloadClientResource {
 	client := readarr.NewDownloadClientResource()
 	client.SetEnable(d.Enable.ValueBool())
+	client.SetRemoveCompletedDownloads(d.RemoveCompletedDownloads.ValueBool())
+	client.SetRemoveFailedDownloads(d.RemoveFailedDownloads.ValueBool())
 	client.SetPriority(int32(d.Priority.ValueInt64()))
 	client.SetId(int32(d.ID.ValueInt64()))
 	client.SetConfigContract(d.ConfigContract.ValueString())

@@ -42,43 +42,47 @@ type DownloadClientDelugeResource struct {
 
 // DownloadClientDeluge describes the download client data model.
 type DownloadClientDeluge struct {
-	Tags                  types.Set    `tfsdk:"tags"`
-	Name                  types.String `tfsdk:"name"`
-	Host                  types.String `tfsdk:"host"`
-	URLBase               types.String `tfsdk:"url_base"`
-	Password              types.String `tfsdk:"password"`
-	MusicCategory         types.String `tfsdk:"book_category"`
-	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
-	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	Port                  types.Int64  `tfsdk:"port"`
-	ID                    types.Int64  `tfsdk:"id"`
-	AddPaused             types.Bool   `tfsdk:"add_paused"`
-	UseSsl                types.Bool   `tfsdk:"use_ssl"`
-	Enable                types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	MusicImportedCategory    types.String `tfsdk:"book_imported_category"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddPaused                types.Bool   `tfsdk:"add_paused"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientDeluge) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:                  d.Tags,
-		Name:                  d.Name,
-		Host:                  d.Host,
-		URLBase:               d.URLBase,
-		Password:              d.Password,
-		MusicCategory:         d.MusicCategory,
-		MusicImportedCategory: d.MusicImportedCategory,
-		RecentTVPriority:      d.RecentTVPriority,
-		OlderTVPriority:       d.OlderTVPriority,
-		Priority:              d.Priority,
-		Port:                  d.Port,
-		ID:                    d.ID,
-		AddPaused:             d.AddPaused,
-		UseSsl:                d.UseSsl,
-		Enable:                d.Enable,
-		Implementation:        types.StringValue(downloadClientDelugeImplementation),
-		ConfigContract:        types.StringValue(downloadClientDelugeConfigContract),
-		Protocol:              types.StringValue(downloadClientDelugeProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		MusicImportedCategory:    d.MusicImportedCategory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		AddPaused:                d.AddPaused,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientDelugeImplementation),
+		ConfigContract:           types.StringValue(downloadClientDelugeConfigContract),
+		Protocol:                 types.StringValue(downloadClientDelugeProtocol),
 	}
 }
 
@@ -98,6 +102,8 @@ func (d *DownloadClientDeluge) fromDownloadClient(client *DownloadClient) {
 	d.AddPaused = client.AddPaused
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientDelugeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -110,6 +116,16 @@ func (r *DownloadClientDelugeResource) Schema(ctx context.Context, req resource.
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

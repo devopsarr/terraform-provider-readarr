@@ -42,45 +42,49 @@ type DownloadClientTransmissionResource struct {
 
 // DownloadClientTransmission describes the download client data model.
 type DownloadClientTransmission struct {
-	Tags             types.Set    `tfsdk:"tags"`
-	Name             types.String `tfsdk:"name"`
-	Host             types.String `tfsdk:"host"`
-	URLBase          types.String `tfsdk:"url_base"`
-	Username         types.String `tfsdk:"username"`
-	Password         types.String `tfsdk:"password"`
-	MusicCategory    types.String `tfsdk:"book_category"`
-	TVDirectory      types.String `tfsdk:"book_directory"`
-	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
-	Priority         types.Int64  `tfsdk:"priority"`
-	Port             types.Int64  `tfsdk:"port"`
-	ID               types.Int64  `tfsdk:"id"`
-	AddPaused        types.Bool   `tfsdk:"add_paused"`
-	UseSsl           types.Bool   `tfsdk:"use_ssl"`
-	Enable           types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	TVDirectory              types.String `tfsdk:"book_directory"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddPaused                types.Bool   `tfsdk:"add_paused"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:             d.Tags,
-		Name:             d.Name,
-		Host:             d.Host,
-		URLBase:          d.URLBase,
-		Username:         d.Username,
-		Password:         d.Password,
-		MusicCategory:    d.MusicCategory,
-		TVDirectory:      d.TVDirectory,
-		RecentTVPriority: d.RecentTVPriority,
-		OlderTVPriority:  d.OlderTVPriority,
-		Priority:         d.Priority,
-		Port:             d.Port,
-		ID:               d.ID,
-		AddPaused:        d.AddPaused,
-		UseSsl:           d.UseSsl,
-		Enable:           d.Enable,
-		Implementation:   types.StringValue(downloadClientTransmissionImplementation),
-		ConfigContract:   types.StringValue(downloadClientTransmissionConfigContract),
-		Protocol:         types.StringValue(downloadClientTransmissionProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		TVDirectory:              d.TVDirectory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		AddPaused:                d.AddPaused,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientTransmissionImplementation),
+		ConfigContract:           types.StringValue(downloadClientTransmissionConfigContract),
+		Protocol:                 types.StringValue(downloadClientTransmissionProtocol),
 	}
 }
 
@@ -101,6 +105,8 @@ func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) 
 	d.AddPaused = client.AddPaused
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientTransmissionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -116,7 +122,16 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Optional:            true,
 				Computed:            true,
 			},
-
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"priority": schema.Int64Attribute{
 				MarkdownDescription: "Priority.",
 				Optional:            true,

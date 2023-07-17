@@ -26,7 +26,5 @@ data "readarr_download_client_config" "example" {
 - `download_client_working_folders` (String) Download Client Working Folders.
 - `enable_completed_download_handling` (Boolean) Enable Completed Download Handling flag.
 - `id` (Number) Download Client Config ID.
-- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
-- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 
 

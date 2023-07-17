@@ -56,6 +56,8 @@ data "readarr_download_client" "test" {
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `read_only` (Boolean) Read only flag.
 - `recent_book_priority` (Number) Recent Book priority. `0` Last, `1` First.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `secret_token` (String) Secret token.

@@ -40,6 +40,8 @@ resource "readarr_download_client_torrent_blackhole" "example" {
 - `magnet_file_extension` (String) Magnet file extension.
 - `priority` (Number) Priority.
 - `read_only` (Boolean) Read only flag.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `tags` (Set of Number) List of associated tags.
 

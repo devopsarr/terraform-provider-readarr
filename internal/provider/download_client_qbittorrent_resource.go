@@ -44,49 +44,53 @@ type DownloadClientQbittorrentResource struct {
 
 // DownloadClientQbittorrent describes the download client data model.
 type DownloadClientQbittorrent struct {
-	Tags                  types.Set    `tfsdk:"tags"`
-	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
-	Name                  types.String `tfsdk:"name"`
-	Host                  types.String `tfsdk:"host"`
-	URLBase               types.String `tfsdk:"url_base"`
-	Username              types.String `tfsdk:"username"`
-	Password              types.String `tfsdk:"password"`
-	MusicCategory         types.String `tfsdk:"book_category"`
-	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	Port                  types.Int64  `tfsdk:"port"`
-	ID                    types.Int64  `tfsdk:"id"`
-	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
-	InitialState          types.Int64  `tfsdk:"initial_state"`
-	UseSsl                types.Bool   `tfsdk:"use_ssl"`
-	Enable                types.Bool   `tfsdk:"enable"`
-	FirstAndLast          types.Bool   `tfsdk:"first_and_last"`
-	SequentialOrder       types.Bool   `tfsdk:"sequential_order"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	MusicImportedCategory    types.String `tfsdk:"book_imported_category"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	InitialState             types.Int64  `tfsdk:"initial_state"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	FirstAndLast             types.Bool   `tfsdk:"first_and_last"`
+	SequentialOrder          types.Bool   `tfsdk:"sequential_order"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientQbittorrent) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:                  d.Tags,
-		Name:                  d.Name,
-		Host:                  d.Host,
-		URLBase:               d.URLBase,
-		Username:              d.Username,
-		Password:              d.Password,
-		MusicCategory:         d.MusicCategory,
-		RecentTVPriority:      d.RecentTVPriority,
-		OlderTVPriority:       d.OlderTVPriority,
-		Priority:              d.Priority,
-		Port:                  d.Port,
-		ID:                    d.ID,
-		MusicImportedCategory: d.MusicImportedCategory,
-		InitialState:          d.InitialState,
-		UseSsl:                d.UseSsl,
-		Enable:                d.Enable,
-		FirstAndLast:          d.FirstAndLast,
-		SequentialOrder:       d.SequentialOrder,
-		Implementation:        types.StringValue(downloadClientQbittorrentImplementation),
-		ConfigContract:        types.StringValue(downloadClientQbittorrentConfigContract),
-		Protocol:              types.StringValue(downloadClientQbittorrentProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		MusicImportedCategory:    d.MusicImportedCategory,
+		InitialState:             d.InitialState,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		FirstAndLast:             d.FirstAndLast,
+		SequentialOrder:          d.SequentialOrder,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientQbittorrentImplementation),
+		ConfigContract:           types.StringValue(downloadClientQbittorrentConfigContract),
+		Protocol:                 types.StringValue(downloadClientQbittorrentProtocol),
 	}
 }
 
@@ -109,6 +113,8 @@ func (d *DownloadClientQbittorrent) fromDownloadClient(client *DownloadClient) {
 	d.Enable = client.Enable
 	d.FirstAndLast = client.FirstAndLast
 	d.SequentialOrder = client.SequentialOrder
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientQbittorrentResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -121,6 +127,16 @@ func (r *DownloadClientQbittorrentResource) Schema(ctx context.Context, req reso
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

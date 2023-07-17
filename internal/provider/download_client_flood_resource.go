@@ -40,45 +40,49 @@ type DownloadClientFloodResource struct {
 
 // DownloadClientFlood describes the download client data model.
 type DownloadClientFlood struct {
-	Tags           types.Set    `tfsdk:"tags"`
-	FieldTags      types.Set    `tfsdk:"field_tags"`
-	AdditionalTags types.Set    `tfsdk:"additional_tags"`
-	PostImportTags types.Set    `tfsdk:"post_import_tags"`
-	Name           types.String `tfsdk:"name"`
-	Host           types.String `tfsdk:"host"`
-	URLBase        types.String `tfsdk:"url_base"`
-	Username       types.String `tfsdk:"username"`
-	Password       types.String `tfsdk:"password"`
-	Destination    types.String `tfsdk:"destination"`
-	Priority       types.Int64  `tfsdk:"priority"`
-	Port           types.Int64  `tfsdk:"port"`
-	ID             types.Int64  `tfsdk:"id"`
-	AddPaused      types.Bool   `tfsdk:"add_paused"`
-	UseSsl         types.Bool   `tfsdk:"use_ssl"`
-	Enable         types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	FieldTags                types.Set    `tfsdk:"field_tags"`
+	AdditionalTags           types.Set    `tfsdk:"additional_tags"`
+	PostImportTags           types.Set    `tfsdk:"post_import_tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	Destination              types.String `tfsdk:"destination"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddPaused                types.Bool   `tfsdk:"add_paused"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientFlood) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:           d.Tags,
-		FieldTags:      d.FieldTags,
-		PostImportTags: d.PostImportTags,
-		AdditionalTags: d.AdditionalTags,
-		Name:           d.Name,
-		Host:           d.Host,
-		URLBase:        d.URLBase,
-		Username:       d.Username,
-		Password:       d.Password,
-		Destination:    d.Destination,
-		Priority:       d.Priority,
-		Port:           d.Port,
-		ID:             d.ID,
-		AddPaused:      d.AddPaused,
-		UseSsl:         d.UseSsl,
-		Enable:         d.Enable,
-		Implementation: types.StringValue(downloadClientFloodImplementation),
-		ConfigContract: types.StringValue(downloadClientFloodConfigContract),
-		Protocol:       types.StringValue(downloadClientFloodProtocol),
+		Tags:                     d.Tags,
+		FieldTags:                d.FieldTags,
+		PostImportTags:           d.PostImportTags,
+		AdditionalTags:           d.AdditionalTags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		Destination:              d.Destination,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		AddPaused:                d.AddPaused,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientFloodImplementation),
+		ConfigContract:           types.StringValue(downloadClientFloodConfigContract),
+		Protocol:                 types.StringValue(downloadClientFloodProtocol),
 	}
 }
 
@@ -99,6 +103,8 @@ func (d *DownloadClientFlood) fromDownloadClient(client *DownloadClient) {
 	d.AddPaused = client.AddPaused
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientFloodResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -111,6 +117,16 @@ func (r *DownloadClientFloodResource) Schema(ctx context.Context, req resource.S
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

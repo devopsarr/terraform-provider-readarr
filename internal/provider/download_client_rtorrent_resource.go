@@ -42,47 +42,51 @@ type DownloadClientRtorrentResource struct {
 
 // DownloadClientRtorrent describes the download client data model.
 type DownloadClientRtorrent struct {
-	Tags                  types.Set    `tfsdk:"tags"`
-	Name                  types.String `tfsdk:"name"`
-	Host                  types.String `tfsdk:"host"`
-	URLBase               types.String `tfsdk:"url_base"`
-	Username              types.String `tfsdk:"username"`
-	Password              types.String `tfsdk:"password"`
-	MusicCategory         types.String `tfsdk:"book_category"`
-	MusicDirectory        types.String `tfsdk:"book_directory"`
-	MusicImportedCategory types.String `tfsdk:"book_imported_category"`
-	RecentTVPriority      types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority       types.Int64  `tfsdk:"older_book_priority"`
-	Priority              types.Int64  `tfsdk:"priority"`
-	Port                  types.Int64  `tfsdk:"port"`
-	ID                    types.Int64  `tfsdk:"id"`
-	AddStopped            types.Bool   `tfsdk:"add_stopped"`
-	UseSsl                types.Bool   `tfsdk:"use_ssl"`
-	Enable                types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	MusicDirectory           types.String `tfsdk:"book_directory"`
+	MusicImportedCategory    types.String `tfsdk:"book_imported_category"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	AddStopped               types.Bool   `tfsdk:"add_stopped"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientRtorrent) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:                  d.Tags,
-		Name:                  d.Name,
-		Host:                  d.Host,
-		URLBase:               d.URLBase,
-		Username:              d.Username,
-		Password:              d.Password,
-		MusicCategory:         d.MusicCategory,
-		MusicDirectory:        d.MusicDirectory,
-		MusicImportedCategory: d.MusicImportedCategory,
-		RecentTVPriority:      d.RecentTVPriority,
-		OlderTVPriority:       d.OlderTVPriority,
-		Priority:              d.Priority,
-		Port:                  d.Port,
-		ID:                    d.ID,
-		AddStopped:            d.AddStopped,
-		UseSsl:                d.UseSsl,
-		Enable:                d.Enable,
-		Implementation:        types.StringValue(downloadClientRtorrentImplementation),
-		ConfigContract:        types.StringValue(downloadClientRtorrentConfigContract),
-		Protocol:              types.StringValue(downloadClientRtorrentProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		MusicDirectory:           d.MusicDirectory,
+		MusicImportedCategory:    d.MusicImportedCategory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		AddStopped:               d.AddStopped,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientRtorrentImplementation),
+		ConfigContract:           types.StringValue(downloadClientRtorrentConfigContract),
+		Protocol:                 types.StringValue(downloadClientRtorrentProtocol),
 	}
 }
 
@@ -104,6 +108,8 @@ func (d *DownloadClientRtorrent) fromDownloadClient(client *DownloadClient) {
 	d.AddStopped = client.AddStopped
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientRtorrentResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -116,6 +122,16 @@ func (r *DownloadClientRtorrentResource) Schema(ctx context.Context, req resourc
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

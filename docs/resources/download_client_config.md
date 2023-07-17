@@ -16,8 +16,6 @@ For more information refer to [Download Client](https://wiki.servarr.com/readarr
 
 ```terraform
 resource "readarr_download_client_config" "example" {
-  remove_completed_downloads         = false
-  remove_failed_downloads            = false
   enable_completed_download_handling = true
   auto_redownload_failed             = false
 }
@@ -30,8 +28,6 @@ resource "readarr_download_client_config" "example" {
 
 - `auto_redownload_failed` (Boolean) Auto Redownload Failed flag.
 - `enable_completed_download_handling` (Boolean) Enable Completed Download Handling flag.
-- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
-- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 
 ### Read-Only
 

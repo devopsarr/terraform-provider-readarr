@@ -40,27 +40,31 @@ type DownloadClientPneumaticResource struct {
 
 // DownloadClientPneumatic describes the download client data model.
 type DownloadClientPneumatic struct {
-	Tags       types.Set    `tfsdk:"tags"`
-	Name       types.String `tfsdk:"name"`
-	NzbFolder  types.String `tfsdk:"nzb_folder"`
-	StrmFolder types.String `tfsdk:"strm_folder"`
-	Priority   types.Int64  `tfsdk:"priority"`
-	ID         types.Int64  `tfsdk:"id"`
-	Enable     types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	NzbFolder                types.String `tfsdk:"nzb_folder"`
+	StrmFolder               types.String `tfsdk:"strm_folder"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	ID                       types.Int64  `tfsdk:"id"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientPneumatic) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:           d.Tags,
-		Name:           d.Name,
-		NzbFolder:      d.NzbFolder,
-		StrmFolder:     d.StrmFolder,
-		Priority:       d.Priority,
-		ID:             d.ID,
-		Enable:         d.Enable,
-		Implementation: types.StringValue(downloadClientPneumaticImplementation),
-		ConfigContract: types.StringValue(downloadClientPneumaticConfigContract),
-		Protocol:       types.StringValue(downloadClientPneumaticProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		NzbFolder:                d.NzbFolder,
+		StrmFolder:               d.StrmFolder,
+		Priority:                 d.Priority,
+		ID:                       d.ID,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientPneumaticImplementation),
+		ConfigContract:           types.StringValue(downloadClientPneumaticConfigContract),
+		Protocol:                 types.StringValue(downloadClientPneumaticProtocol),
 	}
 }
 
@@ -72,6 +76,8 @@ func (d *DownloadClientPneumatic) fromDownloadClient(client *DownloadClient) {
 	d.Priority = client.Priority
 	d.ID = client.ID
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientPneumaticResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -84,6 +90,16 @@ func (r *DownloadClientPneumaticResource) Schema(ctx context.Context, req resour
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

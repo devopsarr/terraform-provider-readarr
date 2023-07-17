@@ -16,15 +16,17 @@ For more information refer to [Download Client](https://wiki.servarr.com/readarr
 
 ```terraform
 resource "readarr_download_client" "example" {
-  enable          = true
-  priority        = 1
-  name            = "Example"
-  implementation  = "Transmission"
-  protocol        = "torrent"
-  config_contract = "TransmissionSettings"
-  host            = "transmission"
-  url_base        = "/transmission/"
-  port            = 9091
+  enable                     = true
+  remove_completed_downloads = false
+  remove_failed_downloads    = false
+  priority                   = 1
+  name                       = "Example"
+  implementation             = "Transmission"
+  protocol                   = "torrent"
+  config_contract            = "TransmissionSettings"
+  host                       = "transmission"
+  url_base                   = "/transmission/"
+  port                       = 9091
 }
 ```
 
@@ -65,6 +67,8 @@ resource "readarr_download_client" "example" {
 - `priority` (Number) Priority.
 - `read_only` (Boolean) Read only flag.
 - `recent_book_priority` (Number) Recent Book priority. `0` Last, `1` First.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
 - `secret_token` (String) Secret token.

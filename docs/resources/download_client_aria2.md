@@ -38,6 +38,8 @@ resource "readarr_download_client_aria2" "example" {
 - `host` (String) host.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
+- `remove_completed_downloads` (Boolean) Remove completed downloads flag.
+- `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.
 - `secret_token` (String) Secret token.
 - `tags` (Set of Number) List of associated tags.

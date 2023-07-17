@@ -42,43 +42,47 @@ type DownloadClientSabnzbdResource struct {
 
 // DownloadClientSabnzbd describes the download client data model.
 type DownloadClientSabnzbd struct {
-	Tags             types.Set    `tfsdk:"tags"`
-	Name             types.String `tfsdk:"name"`
-	Host             types.String `tfsdk:"host"`
-	URLBase          types.String `tfsdk:"url_base"`
-	APIKey           types.String `tfsdk:"api_key"`
-	Username         types.String `tfsdk:"username"`
-	Password         types.String `tfsdk:"password"`
-	MusicCategory    types.String `tfsdk:"book_category"`
-	RecentTVPriority types.Int64  `tfsdk:"recent_book_priority"`
-	OlderTVPriority  types.Int64  `tfsdk:"older_book_priority"`
-	Priority         types.Int64  `tfsdk:"priority"`
-	Port             types.Int64  `tfsdk:"port"`
-	ID               types.Int64  `tfsdk:"id"`
-	UseSsl           types.Bool   `tfsdk:"use_ssl"`
-	Enable           types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	Host                     types.String `tfsdk:"host"`
+	URLBase                  types.String `tfsdk:"url_base"`
+	APIKey                   types.String `tfsdk:"api_key"`
+	Username                 types.String `tfsdk:"username"`
+	Password                 types.String `tfsdk:"password"`
+	MusicCategory            types.String `tfsdk:"book_category"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_book_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_book_priority"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	Port                     types.Int64  `tfsdk:"port"`
+	ID                       types.Int64  `tfsdk:"id"`
+	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientSabnzbd) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:             d.Tags,
-		Name:             d.Name,
-		Host:             d.Host,
-		URLBase:          d.URLBase,
-		APIKey:           d.APIKey,
-		Username:         d.Username,
-		Password:         d.Password,
-		MusicCategory:    d.MusicCategory,
-		RecentTVPriority: d.RecentTVPriority,
-		OlderTVPriority:  d.OlderTVPriority,
-		Priority:         d.Priority,
-		Port:             d.Port,
-		ID:               d.ID,
-		UseSsl:           d.UseSsl,
-		Enable:           d.Enable,
-		Implementation:   types.StringValue(downloadClientSabnzbdImplementation),
-		ConfigContract:   types.StringValue(downloadClientSabnzbdConfigContract),
-		Protocol:         types.StringValue(downloadClientSabnzbdProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		Host:                     d.Host,
+		URLBase:                  d.URLBase,
+		APIKey:                   d.APIKey,
+		Username:                 d.Username,
+		Password:                 d.Password,
+		MusicCategory:            d.MusicCategory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
+		Priority:                 d.Priority,
+		Port:                     d.Port,
+		ID:                       d.ID,
+		UseSsl:                   d.UseSsl,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientSabnzbdImplementation),
+		ConfigContract:           types.StringValue(downloadClientSabnzbdConfigContract),
+		Protocol:                 types.StringValue(downloadClientSabnzbdProtocol),
 	}
 }
 
@@ -98,6 +102,8 @@ func (d *DownloadClientSabnzbd) fromDownloadClient(client *DownloadClient) {
 	d.ID = client.ID
 	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientSabnzbdResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -110,6 +116,16 @@ func (r *DownloadClientSabnzbdResource) Schema(ctx context.Context, req resource
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -40,27 +40,31 @@ type DownloadClientUsenetBlackholeResource struct {
 
 // DownloadClientUsenetBlackhole describes the download client data model.
 type DownloadClientUsenetBlackhole struct {
-	Tags        types.Set    `tfsdk:"tags"`
-	Name        types.String `tfsdk:"name"`
-	NzbFolder   types.String `tfsdk:"nzb_folder"`
-	WatchFolder types.String `tfsdk:"watch_folder"`
-	Priority    types.Int64  `tfsdk:"priority"`
-	ID          types.Int64  `tfsdk:"id"`
-	Enable      types.Bool   `tfsdk:"enable"`
+	Tags                     types.Set    `tfsdk:"tags"`
+	Name                     types.String `tfsdk:"name"`
+	NzbFolder                types.String `tfsdk:"nzb_folder"`
+	WatchFolder              types.String `tfsdk:"watch_folder"`
+	Priority                 types.Int64  `tfsdk:"priority"`
+	ID                       types.Int64  `tfsdk:"id"`
+	Enable                   types.Bool   `tfsdk:"enable"`
+	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
+	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
 }
 
 func (d DownloadClientUsenetBlackhole) toDownloadClient() *DownloadClient {
 	return &DownloadClient{
-		Tags:           d.Tags,
-		Name:           d.Name,
-		NzbFolder:      d.NzbFolder,
-		WatchFolder:    d.WatchFolder,
-		Priority:       d.Priority,
-		ID:             d.ID,
-		Enable:         d.Enable,
-		Implementation: types.StringValue(downloadClientUsenetBlackholeImplementation),
-		ConfigContract: types.StringValue(downloadClientUsenetBlackholeConfigContract),
-		Protocol:       types.StringValue(downloadClientUsenetBlackholeProtocol),
+		Tags:                     d.Tags,
+		Name:                     d.Name,
+		NzbFolder:                d.NzbFolder,
+		WatchFolder:              d.WatchFolder,
+		Priority:                 d.Priority,
+		ID:                       d.ID,
+		Enable:                   d.Enable,
+		RemoveFailedDownloads:    d.RemoveFailedDownloads,
+		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientUsenetBlackholeImplementation),
+		ConfigContract:           types.StringValue(downloadClientUsenetBlackholeConfigContract),
+		Protocol:                 types.StringValue(downloadClientUsenetBlackholeProtocol),
 	}
 }
 
@@ -72,6 +76,8 @@ func (d *DownloadClientUsenetBlackhole) fromDownloadClient(client *DownloadClien
 	d.Priority = client.Priority
 	d.ID = client.ID
 	d.Enable = client.Enable
+	d.RemoveFailedDownloads = client.RemoveFailedDownloads
+	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
 }
 
 func (r *DownloadClientUsenetBlackholeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -84,6 +90,16 @@ func (r *DownloadClientUsenetBlackholeResource) Schema(ctx context.Context, req 
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_completed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove completed downloads flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"remove_failed_downloads": schema.BoolAttribute{
+				MarkdownDescription: "Remove failed downloads flag.",
 				Optional:            true,
 				Computed:            true,
 			},
