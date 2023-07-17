@@ -18,6 +18,7 @@ For more information refer to [Metadata Profile](https://wiki.servarr.com/readar
 resource "readarr_metadata_profile" "example" {
   name                  = "Example"
   allowed_languages     = "eng,ita"
+  ignored               = ["alpha", "beta"]
   min_popularity        = 3.5
   min_pages             = 10
   skip_missing_date     = false
@@ -37,7 +38,7 @@ resource "readarr_metadata_profile" "example" {
 ### Optional
 
 - `allowed_languages` (String) Allowed languages. Comma separated list of ISO 639-3 language codes.
-- `ignored` (String) Terms to ignore. Comma separated list.
+- `ignored` (Set of String) Terms to ignore.
 - `min_pages` (Number) Minimum pages.
 - `min_popularity` (Number) Minimum popularity.
 - `skip_missing_date` (Boolean) Skip missing date.

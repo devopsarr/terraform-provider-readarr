@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -46,8 +47,9 @@ func (d *MetadataProfileDataSource) Schema(ctx context.Context, req datasource.S
 				MarkdownDescription: "Allowed languages. Comma separated list of ISO 639-3 language codes.",
 				Computed:            true,
 			},
-			"ignored": schema.StringAttribute{
-				MarkdownDescription: "Terms to ignore. Comma separated list.",
+			"ignored": schema.SetAttribute{
+				MarkdownDescription: "Terms to ignore.",
+				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"min_popularity": schema.Float64Attribute{
@@ -100,16 +102,16 @@ func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	data.find(data.Name.ValueString(), response, &resp.Diagnostics)
+	data.find(ctx, data.Name.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+metadataProfileDataSourceName)
 	// Map response body to resource schema attribute
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (m *MetadataProfile) find(name string, profiles []*readarr.MetadataProfileResource, diags *diag.Diagnostics) {
+func (m *MetadataProfile) find(ctx context.Context, name string, profiles []*readarr.MetadataProfileResource, diags *diag.Diagnostics) {
 	for _, p := range profiles {
 		if p.GetName() == name {
-			m.write(p)
+			m.write(ctx, p, diags)
 
 			return
 		}

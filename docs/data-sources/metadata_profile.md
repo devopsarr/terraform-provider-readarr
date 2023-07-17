@@ -29,7 +29,7 @@ data "readarr_metadata_profile" "example" {
 
 - `allowed_languages` (String) Allowed languages. Comma separated list of ISO 639-3 language codes.
 - `id` (Number) Metadata Profile ID.
-- `ignored` (String) Terms to ignore. Comma separated list.
+- `ignored` (Set of String) Terms to ignore.
 - `min_pages` (Number) Minimum pages.
 - `min_popularity` (Number) Minimum popularity.
 - `skip_missing_date` (Boolean) Skip missing date.

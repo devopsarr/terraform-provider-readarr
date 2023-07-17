@@ -62,8 +62,9 @@ func (d *MetadataProfilesDataSource) Schema(ctx context.Context, req datasource.
 							MarkdownDescription: "Allowed languages. Comma separated list of ISO 639-3 language codes.",
 							Computed:            true,
 						},
-						"ignored": schema.StringAttribute{
-							MarkdownDescription: "Terms to ignore. Comma separated list.",
+						"ignored": schema.SetAttribute{
+							MarkdownDescription: "Terms to ignore.",
+							ElementType:         types.StringType,
 							Computed:            true,
 						},
 						"min_popularity": schema.Float64Attribute{
@@ -116,7 +117,7 @@ func (d *MetadataProfilesDataSource) Read(ctx context.Context, req datasource.Re
 	// Map response body to resource schema attribute
 	profiles := make([]MetadataProfile, len(response))
 	for i, p := range response {
-		profiles[i].write(p)
+		profiles[i].write(ctx, p, &resp.Diagnostics)
 	}
 
 	profileList, diags := types.SetValueFrom(ctx, MetadataProfile{}.getType(), profiles)
