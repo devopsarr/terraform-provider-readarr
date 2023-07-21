@@ -120,11 +120,11 @@ func (n *NotificationSubsonic) fromNotification(notification *Notification) {
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationSubsonicResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationSubsonicResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationSubsonicResourceName
 }
 
-func (r *NotificationSubsonicResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationSubsonicResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Subsonic resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Subsonic](https://wiki.servarr.com/readarr/supported#subsonic).",
 		Attributes: map[string]schema.Attribute{

@@ -107,11 +107,11 @@ func (n *NotificationGotify) fromNotification(notification *Notification) {
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationGotifyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationGotifyResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationGotifyResourceName
 }
 
-func (r *NotificationGotifyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationGotifyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Gotify resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Gotify](https://wiki.servarr.com/readarr/supported#gotify).",
 		Attributes: map[string]schema.Attribute{

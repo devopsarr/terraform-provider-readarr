@@ -44,11 +44,11 @@ type MetadataConfig struct {
 	EmbedMetadata  types.Bool   `tfsdk:"embed_metadata"`
 }
 
-func (r *MetadataConfigResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *MetadataConfigResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataConfigResourceName
 }
 
-func (r *MetadataConfigResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *MetadataConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Metadata -->Metadata Config resource.\nFor more information refer to [Metadata](https://wiki.servarr.com/readarr/settings#options) documentation.",
 		Attributes: map[string]schema.Attribute{
@@ -174,13 +174,13 @@ func (r *MetadataConfigResource) Update(ctx context.Context, req resource.Update
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 }
 
-func (r *MetadataConfigResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *MetadataConfigResource) Delete(ctx context.Context, _ resource.DeleteRequest, resp *resource.DeleteResponse) {
 	// MetadataConfig cannot be really deleted just removing configuration
 	tflog.Trace(ctx, "decoupled "+metadataConfigResourceName+": 1")
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *MetadataConfigResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *MetadataConfigResource) ImportState(ctx context.Context, _ resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	tflog.Trace(ctx, "imported "+metadataConfigResourceName+": 1")
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), 1)...)
 }

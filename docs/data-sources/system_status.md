@@ -37,7 +37,6 @@ data "readarr_system_status" "example" {
 - `is_debug` (Boolean) Is debug flag.
 - `is_docker` (Boolean) Is docker flag.
 - `is_linux` (Boolean) Is linux flag.
-- `is_mono` (Boolean) Is mono flag.
 - `is_net_core` (Boolean) Is net core flag.
 - `is_osx` (Boolean) Is osx flag.
 - `is_production` (Boolean) Is production flag.
@@ -49,6 +48,7 @@ data "readarr_system_status" "example" {
 - `os_version` (String) OS version.
 - `package_author` (String) Package author.
 - `package_update_mechanism` (String) Package update mechanism.
+- `package_update_mechanism_message` (String) Package update mechanism message.
 - `package_version` (String) Package version.
 - `runtime_name` (String) Runtime name.
 - `runtime_version` (String) Runtime version.

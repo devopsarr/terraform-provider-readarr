@@ -94,11 +94,11 @@ func (i *ImportListGoodreadsList) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListGoodreadsListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ImportListGoodreadsListResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + importListGoodreadsListResourceName
 }
 
-func (r *ImportListGoodreadsListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListGoodreadsListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Goodreads List resource.\nFor more information refer to [Import List](https://wiki.servarr.com/readarr/settings#import-lists) and [Goodreads List](https://wiki.servarr.com/readarr/supported#goodreadslist).",
 		Attributes: map[string]schema.Attribute{
