@@ -92,11 +92,11 @@ func (n *NotificationGoodreadsOwnedBooks) fromNotification(notification *Notific
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationGoodreadsOwnedBooksResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationGoodreadsOwnedBooksResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationGoodreadsOwnedBooksResourceName
 }
 
-func (r *NotificationGoodreadsOwnedBooksResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationGoodreadsOwnedBooksResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification GoodreadsOwnedBooks resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [GoodreadsOwnedBooks](https://wiki.servarr.com/readarr/supported#goodreadsownedbooks).",
 		Attributes: map[string]schema.Attribute{

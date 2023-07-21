@@ -93,11 +93,11 @@ func (n *NotificationKavita) fromNotification(notification *Notification) {
 	n.OnBookRetag = notification.OnBookRetag
 }
 
-func (r *NotificationKavitaResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationKavitaResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationKavitaResourceName
 }
 
-func (r *NotificationKavitaResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationKavitaResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Kavita resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Kavita](https://wiki.servarr.com/readarr/supported#kavita).",
 		Attributes: map[string]schema.Attribute{

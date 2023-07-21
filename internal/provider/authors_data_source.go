@@ -32,11 +32,11 @@ type Authors struct {
 	ID      types.String `tfsdk:"id"`
 }
 
-func (d *AuthorsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *AuthorsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + authorsDataSourceName
 }
 
-func (d *AuthorsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *AuthorsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "<!-- subcategory:Authors -->List all available [Authors](../resources/author).",
@@ -105,7 +105,7 @@ func (d *AuthorsDataSource) Configure(ctx context.Context, req datasource.Config
 	}
 }
 
-func (d *AuthorsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *AuthorsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get authors current value
 	response, _, err := d.client.AuthorApi.ListAuthor(ctx).Execute()
 	if err != nil {

@@ -103,11 +103,11 @@ func (i *ImportListReadarr) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListReadarrResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ImportListReadarrResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + importListReadarrResourceName
 }
 
-func (r *ImportListReadarrResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListReadarrResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Readarr resource.\nFor more information refer to [Import List](https://wiki.servarr.com/readarr/settings#import-lists) and [Readarr](https://wiki.servarr.com/readarr/supported#readarrimport).",
 		Attributes: map[string]schema.Attribute{

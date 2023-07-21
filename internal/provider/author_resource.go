@@ -75,11 +75,11 @@ func (a Author) getType() attr.Type {
 		})
 }
 
-func (r *AuthorResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *AuthorResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + authorResourceName
 }
 
-func (r *AuthorResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *AuthorResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Authors -->Author resource.\nFor more information refer to [Authors](https://wiki.servarr.com/readarr/library#authors) documentation.",
 		Attributes: map[string]schema.Attribute{

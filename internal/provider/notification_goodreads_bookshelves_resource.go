@@ -102,11 +102,11 @@ func (n *NotificationGoodreadsBookshelves) fromNotification(notification *Notifi
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationGoodreadsBookshelvesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationGoodreadsBookshelvesResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationGoodreadsBookshelvesResourceName
 }
 
-func (r *NotificationGoodreadsBookshelvesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationGoodreadsBookshelvesResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification GoodreadsBookshelves resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [GoodreadsBookshelves](https://wiki.servarr.com/readarr/supported#goodreadsbookshelf).",
 		Attributes: map[string]schema.Attribute{

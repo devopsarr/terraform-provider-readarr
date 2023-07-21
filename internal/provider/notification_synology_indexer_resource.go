@@ -87,11 +87,11 @@ func (n *NotificationSynology) fromNotification(notification *Notification) {
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationSynologyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationSynologyResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationSynologyResourceName
 }
 
-func (r *NotificationSynologyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationSynologyResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Synology resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Synology](https://wiki.servarr.com/readarr/supported#synologyindexer).",
 		Attributes: map[string]schema.Attribute{

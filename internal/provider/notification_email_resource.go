@@ -126,11 +126,11 @@ func (n *NotificationEmail) fromNotification(notification *Notification) {
 	n.OnReleaseImport = notification.OnReleaseImport
 }
 
-func (r *NotificationEmailResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationEmailResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationEmailResourceName
 }
 
-func (r *NotificationEmailResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationEmailResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Email resource.\nFor more information refer to [Notification](https://wiki.servarr.com/readarr/settings#connect) and [Email](https://wiki.servarr.com/readarr/supported#email).",
 		Attributes: map[string]schema.Attribute{

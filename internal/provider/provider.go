@@ -32,12 +32,12 @@ type Readarr struct {
 	URL    types.String `tfsdk:"url"`
 }
 
-func (p *ReadarrProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *ReadarrProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "readarr"
 	resp.Version = p.version
 }
 
-func (p *ReadarrProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *ReadarrProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "The Readarr provider is used to interact with any [Readarr](https://readarr.com/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.",
 		Attributes: map[string]schema.Attribute{
@@ -129,7 +129,7 @@ func (p *ReadarrProvider) Configure(ctx context.Context, req provider.ConfigureR
 	resp.ResourceData = client
 }
 
-func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *ReadarrProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		// Author
 		NewAuthorResource,
@@ -224,7 +224,7 @@ func (p *ReadarrProvider) Resources(ctx context.Context) []func() resource.Resou
 	}
 }
 
-func (p *ReadarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *ReadarrProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		// Author
 		NewAuthorDataSource,
