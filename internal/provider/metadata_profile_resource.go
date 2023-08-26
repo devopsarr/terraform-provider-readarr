@@ -36,12 +36,12 @@ type MetadataProfileResource struct {
 
 // MetadataProfile describes the metadata profile data model.
 type MetadataProfile struct {
+	MinPopularity       types.Float64 `tfsdk:"min_popularity"`
 	Ignored             types.Set     `tfsdk:"ignored"`
 	Name                types.String  `tfsdk:"name"`
 	AllowedLanguages    types.String  `tfsdk:"allowed_languages"`
 	ID                  types.Int64   `tfsdk:"id"`
 	MinPages            types.Int64   `tfsdk:"min_pages"`
-	MinPopularity       types.Float64 `tfsdk:"min_popularity"`
 	SkipMissingDate     types.Bool    `tfsdk:"skip_missing_date"`
 	SkipMissingIsbn     types.Bool    `tfsdk:"skip_missing_isbn"`
 	SkipPartsAndSets    types.Bool    `tfsdk:"skip_parts_and_sets"`
