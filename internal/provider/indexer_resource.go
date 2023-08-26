@@ -48,28 +48,28 @@ type IndexerResource struct {
 
 // Indexer describes the indexer data model.
 type Indexer struct {
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Tags                    types.Set     `tfsdk:"tags"`
 	Categories              types.Set     `tfsdk:"categories"`
-	APIUser                 types.String  `tfsdk:"api_user"`
-	AdditionalParameters    types.String  `tfsdk:"additional_parameters"`
-	Name                    types.String  `tfsdk:"name"`
+	Protocol                types.String  `tfsdk:"protocol"`
+	APIPath                 types.String  `tfsdk:"api_path"`
 	Implementation          types.String  `tfsdk:"implementation"`
 	CaptchaToken            types.String  `tfsdk:"captcha_token"`
-	Protocol                types.String  `tfsdk:"protocol"`
+	AdditionalParameters    types.String  `tfsdk:"additional_parameters"`
 	ConfigContract          types.String  `tfsdk:"config_contract"`
 	APIKey                  types.String  `tfsdk:"api_key"`
-	APIPath                 types.String  `tfsdk:"api_path"`
+	APIUser                 types.String  `tfsdk:"api_user"`
 	Cookie                  types.String  `tfsdk:"cookie"`
 	BaseURL                 types.String  `tfsdk:"base_url"`
 	Username                types.String  `tfsdk:"username"`
 	Password                types.String  `tfsdk:"password"`
 	Passkey                 types.String  `tfsdk:"passkey"`
+	Name                    types.String  `tfsdk:"name"`
 	EarlyReleaseLimit       types.Int64   `tfsdk:"early_release_limit"`
-	SeedTime                types.Int64   `tfsdk:"seed_time"`
 	Delay                   types.Int64   `tfsdk:"delay"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	ID                      types.Int64   `tfsdk:"id"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
+	SeedTime                types.Int64   `tfsdk:"seed_time"`
 	Priority                types.Int64   `tfsdk:"priority"`
 	DiscographySeedTime     types.Int64   `tfsdk:"author_seed_time"`
 	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`

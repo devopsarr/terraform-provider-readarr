@@ -41,6 +41,7 @@ type IndexerTorznabResource struct {
 
 // IndexerTorznab describes the Torznab indexer data model.
 type IndexerTorznab struct {
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Tags                    types.Set     `tfsdk:"tags"`
 	Categories              types.Set     `tfsdk:"categories"`
 	Name                    types.String  `tfsdk:"name"`
@@ -48,13 +49,12 @@ type IndexerTorznab struct {
 	APIPath                 types.String  `tfsdk:"api_path"`
 	APIKey                  types.String  `tfsdk:"api_key"`
 	AdditionalParameters    types.String  `tfsdk:"additional_parameters"`
-	Priority                types.Int64   `tfsdk:"priority"`
 	ID                      types.Int64   `tfsdk:"id"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	EarlyReleaseLimit       types.Int64   `tfsdk:"early_release_limit"`
 	SeedTime                types.Int64   `tfsdk:"seed_time"`
 	DiscographySeedTime     types.Int64   `tfsdk:"author_seed_time"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
+	Priority                types.Int64   `tfsdk:"priority"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
 	EnableRss               types.Bool    `tfsdk:"enable_rss"`
 	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`
