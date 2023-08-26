@@ -43,5 +43,5 @@ Import is supported using the following syntax:
 
 ```shell
 # import does not need parameters
-terraform import readarr_indexer_config.example
+terraform import readarr_indexer_config.example ""
 ```
