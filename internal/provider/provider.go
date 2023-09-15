@@ -219,6 +219,9 @@ func (p *ReadarrProvider) Resources(_ context.Context) []func() resource.Resourc
 		NewReleaseProfileResource,
 		NewCustomFormatResource,
 
+		// System
+		NewHostResource,
+
 		// Tags
 		NewTagResource,
 	}
@@ -280,7 +283,8 @@ func (p *ReadarrProvider) DataSources(_ context.Context) []func() datasource.Dat
 		NewCustomFormatConditionReleaseTitleDataSource,
 		NewCustomFormatConditionSizeDataSource,
 
-		// System Status
+		// System
+		NewHostDataSource,
 		NewSystemStatusDataSource,
 
 		// Tags
