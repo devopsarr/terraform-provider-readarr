@@ -280,7 +280,7 @@ func (p *ReadarrProvider) DataSources(_ context.Context) []func() datasource.Dat
 		NewCustomFormatConditionReleaseTitleDataSource,
 		NewCustomFormatConditionSizeDataSource,
 
-		// System Status
+		// System
 		NewSystemStatusDataSource,
 
 		// Tags
