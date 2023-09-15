@@ -219,6 +219,9 @@ func (p *ReadarrProvider) Resources(_ context.Context) []func() resource.Resourc
 		NewReleaseProfileResource,
 		NewCustomFormatResource,
 
+		// System
+		NewHostResource,
+
 		// Tags
 		NewTagResource,
 	}
