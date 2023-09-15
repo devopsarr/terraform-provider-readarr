@@ -284,6 +284,7 @@ func (p *ReadarrProvider) DataSources(_ context.Context) []func() datasource.Dat
 		NewCustomFormatConditionSizeDataSource,
 
 		// System
+		NewHostDataSource,
 		NewSystemStatusDataSource,
 
 		// Tags
