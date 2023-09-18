@@ -2,7 +2,7 @@
 version: "3.9"
 services:
   readarr:
-    image: hotio/readarr:testing-0.3.4.2207@sha256:ba5fb32113d186ec28f5ebb9a7f85373f6b418995039b649d36dff396278da92
+    image: hotio/readarr:testing-0.3.5.2217@sha256:e6a8a29194b5e5d6fd8c4bd3e00eb66156f37df3cae4091f41671a53bff1dad3
     container_name: readarr
     depends_on:
       - transmission
