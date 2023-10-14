@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.1.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v2.0.0...v2.1.0) (2023-10-14)
+
+
+### Features
+
+* add naming colon replacement format ([6374af8](https://github.com/devopsarr/terraform-provider-readarr/commit/6374af8994736b0958d2355b6a25338e3aa57356))
+* convert metadata profile ignored to set ([8a1e6bd](https://github.com/devopsarr/terraform-provider-readarr/commit/8a1e6bdd32b2885f1bd23c9a3700a8dfb7b21a74))
+* **devopsarr/terraform-provider-radarr#203:** add host data source ([568ddc9](https://github.com/devopsarr/terraform-provider-readarr/commit/568ddc9b115b254dd735151561e7d0716f7d7c21))
+* **devopsarr/terraform-provider-radarr#203:** add host resource ([fbb9878](https://github.com/devopsarr/terraform-provider-readarr/commit/fbb9878a5c7a220b5565ada617bfe40aa7e4b4b7))
+* enable import list new flags ([7142fb4](https://github.com/devopsarr/terraform-provider-readarr/commit/7142fb47e83b4cf1cb561a76a8075b0c80e9d4e0))
+* improve diagnostics part 1 ([dd3846d](https://github.com/devopsarr/terraform-provider-readarr/commit/dd3846da1a561d8e74d351c79158f064db8921f3))
+* improve diagnostics part 2 ([7023a9b](https://github.com/devopsarr/terraform-provider-readarr/commit/7023a9bda3f98dd58eb7d3e93240d761e2e9680c))
+* move download client config flags to clients ([e3c0f69](https://github.com/devopsarr/terraform-provider-readarr/commit/e3c0f69735800c87e03ef80507bcd57d494666a3))
+
+
+### Bug Fixes
+
+* quality profile use all formats and ordered quality groups ([473aaf1](https://github.com/devopsarr/terraform-provider-readarr/commit/473aaf1f3663dc4a34851a5485616bcc3e2cb8f5))
+* resource delete error message ([ffcbb5f](https://github.com/devopsarr/terraform-provider-readarr/commit/ffcbb5f8117a5821731ee5fb657e0bd0ba937f26))
+
 ## [2.0.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v1.5.0...v2.0.0) (2023-05-24)
 
 
