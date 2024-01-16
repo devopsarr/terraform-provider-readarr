@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v2.1.0...v2.2.0) (2024-01-16)
+
+
+### Features
+
+* update go to 1.21 ([81d9ac2](https://github.com/devopsarr/terraform-provider-readarr/commit/81d9ac2f28e12b5af736248e59fc7d5d6bc6c98c))
+
 ## [2.1.0](https://github.com/devopsarr/terraform-provider-readarr/compare/v2.0.0...v2.1.0) (2023-10-14)
 
 
