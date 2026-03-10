@@ -17,41 +17,44 @@ func TestAccNotificationNtfyResource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized Create
 			{
-				Config:      testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key1") + testUnauthorizedProvider,
+				Config:      testAccNotificationNtfyResourceConfig("error", "key1", "testtoken123") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Create and Read testing
 			{
-				Config: testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key1"),
+				Config: testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key1", "testtoken123"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_notification_ntfy.test", "password", "key1"),
+					resource.TestCheckResourceAttr("readarr_notification_ntfy.test", "access_token", "testtoken123"),
 					resource.TestCheckResourceAttrSet("readarr_notification_ntfy.test", "id"),
 				),
 			},
 			// Unauthorized Read
 			{
-				Config:      testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key1") + testUnauthorizedProvider,
+				Config:      testAccNotificationNtfyResourceConfig("error", "key1", "testtoken123") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{
-				Config: testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key2"),
+				Config: testAccNotificationNtfyResourceConfig("resourceNtfyTest", "key2", "testtoken234"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("readarr_notification_ntfy.test", "password", "key2"),
+					resource.TestCheckResourceAttr("readarr_notification_ntfy.test", "access_token", "testtoken234"),
 				),
 			},
 			// ImportState testing
 			{
-				ResourceName:      "readarr_notification_ntfy.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "readarr_notification_ntfy.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"access_token"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
 	})
 }
 
-func testAccNotificationNtfyResourceConfig(name, password string) string {
+func testAccNotificationNtfyResourceConfig(name, password, accessToken string) string {
 	return fmt.Sprintf(`
 	resource "readarr_notification_ntfy" "test" {
 		on_grab                           = false
@@ -70,7 +73,8 @@ func testAccNotificationNtfyResourceConfig(name, password string) string {
 		server_url = "https://ntfy.sh"
 		username = "User"
 		password = "%s"
+		access_token = "%s"
 		topics = ["Topic1234","Topic4321"]
 		field_tags = ["warning","skull"]
-	}`, name, password)
+	}`, name, password, accessToken)
 }
